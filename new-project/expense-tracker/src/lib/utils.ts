@@ -83,18 +83,3 @@ export function calculateSummary(expenses: Expense[]): ExpenseSummary {
   };
 }
 
-export function exportToCSV(expenses: Expense[]): string {
-  const headers = ['Date', 'Description', 'Category', 'Amount'];
-  const rows = expenses.map(expense => [
-    formatDate(expense.date),
-    expense.description,
-    expense.category,
-    expense.amount.toString(),
-  ]);
-
-  const csvContent = [headers, ...rows]
-    .map(row => row.map(cell => `"${cell}"`).join(','))
-    .join('\n');
-
-  return csvContent;
-}

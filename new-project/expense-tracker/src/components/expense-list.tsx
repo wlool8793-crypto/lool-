@@ -7,20 +7,19 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { Search, Filter, Edit, Trash2, Download } from 'lucide-react';
+import { Search, Filter, Edit, Trash2 } from 'lucide-react';
 
 interface ExpenseListProps {
   expenses: Expense[];
   onEdit: (expense: Expense) => void;
   onDelete: (id: string) => void;
-  onExport: () => void;
   filters: ExpenseFilters;
   onFiltersChange: (filters: ExpenseFilters) => void;
 }
 
 const categories: ExpenseCategory[] = ['Food', 'Transportation', 'Entertainment', 'Shopping', 'Bills', 'Other'];
 
-export function ExpenseList({ expenses, onEdit, onDelete, onExport, filters, onFiltersChange }: ExpenseListProps) {
+export function ExpenseList({ expenses, onEdit, onDelete, filters, onFiltersChange }: ExpenseListProps) {
   const [showFilters, setShowFilters] = useState(false);
 
   const categoryColors: Record<ExpenseCategory, string> = {
@@ -51,24 +50,14 @@ export function ExpenseList({ expenses, onEdit, onDelete, onExport, filters, onF
             <Search className="h-5 w-5" />
             Expenses ({expenses.length})
           </CardTitle>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onExport}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export CSV
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter className="h-4 w-4 mr-2" />
+            Filters
+          </Button>
         </div>
 
         {showFilters && (

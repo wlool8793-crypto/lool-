@@ -2,11 +2,13 @@
 
 import { ExpenseSummary, ExpenseCategory } from '@/types/expense';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
-import { TrendingUp, DollarSign, Calendar, Target } from 'lucide-react';
+import { TrendingUp, DollarSign, Calendar, Target, Download } from 'lucide-react';
 
 interface DashboardProps {
   summary: ExpenseSummary;
+  onExportClick: () => void;
 }
 
 const categoryIcons: Record<ExpenseCategory, React.ReactNode> = {
@@ -27,13 +29,36 @@ const categoryColors: Record<ExpenseCategory, string> = {
   Other: 'text-gray-600',
 };
 
-export function Dashboard({ summary }: DashboardProps) {
+export function Dashboard({ summary, onExportClick }: DashboardProps) {
   const topCategories = Object.entries(summary.categoryTotals)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 5);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-6">
+      {/* Export Action Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <Download className="h-5 w-5" />
+              Export Data
+            </span>
+            <Button onClick={onExportClick} className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Advanced Export
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-600">
+            Export your expense data with custom filters, multiple formats (CSV, JSON, PDF),
+            and advanced options for professional reporting.
+          </p>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
@@ -122,6 +147,7 @@ export function Dashboard({ summary }: DashboardProps) {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

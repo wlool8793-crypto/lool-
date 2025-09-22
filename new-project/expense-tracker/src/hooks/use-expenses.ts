@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Expense, ExpenseFormData, ExpenseFilters, ExpenseSummary } from '@/types/expense';
-import { filterExpenses, calculateSummary, exportToCSV } from '@/lib/utils';
+import { filterExpenses, calculateSummary } from '@/lib/utils';
 
 const STORAGE_KEY = 'expense-tracker-data';
 
@@ -91,17 +91,7 @@ export function useExpenses() {
     setEditingExpense(null);
   };
 
-  const handleExport = () => {
-    const csv = exportToCSV(filteredExpenses);
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `expenses-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-
+  
   const updateFilters = (newFilters: ExpenseFilters) => {
     setFilters(newFilters);
   };
@@ -116,7 +106,6 @@ export function useExpenses() {
     deleteExpense,
     handleEdit,
     handleCancelEdit,
-    handleExport,
     updateFilters,
   };
 }
