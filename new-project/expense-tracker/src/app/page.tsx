@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { useExpenses } from '@/hooks/use-expenses';
 import { ExpenseForm } from '@/components/expense-form';
 import { ExpenseList } from '@/components/expense-list';
 import { Dashboard } from '@/components/dashboard';
 import { Charts } from '@/components/charts';
+import { CloudExportHub } from '@/components/cloud-export-hub';
 
 export default function Home() {
   const {
@@ -21,6 +23,8 @@ export default function Home() {
     updateFilters,
   } = useExpenses();
 
+  const [isCloudExportHubOpen, setIsCloudExportHubOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
@@ -31,7 +35,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <Dashboard summary={summary} />
+            <Dashboard summary={summary} onCloudExportClick={() => setIsCloudExportHubOpen(true)} />
             <Charts expenses={expenses} />
             <ExpenseList
               expenses={expenses}
@@ -55,6 +59,13 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Cloud Export Hub */}
+      <CloudExportHub
+        isOpen={isCloudExportHubOpen}
+        onClose={() => setIsCloudExportHubOpen(false)}
+        expenses={expenses}
+      />
     </div>
   );
 }
