@@ -1,0 +1,404 @@
+name: Deployment
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    outputs:
+      security-passed: ${{ steps.security-check.outputs.passed }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run security checks
+        id: security-check
+        run: |
+          # Run Trivy vulnerability scan
+          docker build -t deep-agent-security-scan -f Dockerfile .
+          trivy image --severity CRITICAL,HIGH deep-agent-security-scan --exit-code 1 || echo "Security issues found" >> security-report.txt
+
+          # Check for secrets
+          gitleaks detect --source . --verbose --report-format json --report-path gitleaks-report.json || true
+
+          # Determine if security check passed
+          if [ -f "gitleaks-report.json" ] && [ $(jq '. | length' gitleaks-report.json) -gt 0 ]; then
+            echo "passed=false" >> $GITHUB_OUTPUT
+          else
+            echo "passed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload security artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-audit-artifacts
+          path: |
+            security-report.txt
+            gitleaks-report.json
+
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    needs: security-audit
+    if: needs.security-audit.outputs.security-passed == 'true'
+
+    strategy:
+      matrix:
+        python-version: [3.11]
+        node-version: [18]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          cd frontend
+          npm ci
+
+      - name: Run tests
+        run: |
+          pytest tests/ -v --cov=app --cov-report=xml
+          cd frontend
+          npm test
+          npm run build
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+
+  build-docker-images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-docker-images
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up deployment environment
+        run: |
+          # Create deployment configuration
+          cat > staging-deployment.yaml << EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: deep-agent-staging
+            namespace: staging
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                app: deep-agent
+            template:
+              metadata:
+                labels:
+                  app: deep-agent
+              spec:
+                containers:
+                - name: backend
+                  image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+                  ports:
+                  - containerPort: 8000
+                  envFrom:
+                  - secretRef:
+                      name: deep-agent-secrets
+                - name: frontend
+                  image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:${{ github.sha }}
+                  ports:
+                  - containerPort: 3000
+          EOF
+
+      - name: Deploy to staging
+        run: |
+          # Deploy to staging cluster
+          kubectl apply -f staging-deployment.yaml
+          kubectl rollout status deployment/deep-agent-staging -n staging
+
+      - name: Run health checks
+        run: |
+          # Wait for deployment to be ready
+          sleep 30
+
+          # Run health checks
+          curl -f ${{ secrets.STAGING_URL }}/health || exit 1
+          curl -f ${{ secrets.STAGING_URL }}/api/v1/health || exit 1
+
+      - name: Run integration tests
+        run: |
+          # Run automated integration tests against staging
+          pytest tests/integration/ -v --base-url=${{ secrets.STAGING_URL }}
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-docker-images, deploy-staging]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create backup
+        run: |
+          # Create database backup before deployment
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PROD_SSH_KEY }} ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} << 'EOF'
+            cd /opt/deep-agent
+            ./scripts/deploy.sh backup
+          EOF
+
+      - name: Deploy to production
+        run: |
+          # Deploy using blue-green deployment strategy
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PROD_SSH_KEY }} ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} << 'EOF'
+            cd /opt/deep-agent
+            ./scripts/deploy.sh deploy --strategy=blue-green
+          EOF
+
+      - name: Health check and smoke tests
+        run: |
+          # Wait for deployment to stabilize
+          sleep 60
+
+          # Run comprehensive health checks
+          curl -f ${{ secrets.PROD_URL }}/health || exit 1
+          curl -f ${{ secrets.PROD_URL }}/api/v1/health || exit 1
+          curl -f ${{ secrets.PROD_URL }}/api/v1/health/database || exit 1
+          curl -f ${{ secrets.PROD_URL }}/api/v1/health/redis || exit 1
+
+      - name: Run smoke tests
+        run: |
+          # Run smoke tests against production
+          pytest tests/smoke/ -v --base-url=${{ secrets.PROD_URL }}
+
+      - name: Monitor deployment
+        run: |
+          # Monitor key metrics for 5 minutes
+          start_time=$(date +%s)
+          end_time=$((start_time + 300))
+
+          while [ $(date +%s) -lt $end_time ]; do
+            # Check error rates
+            error_rate=$(curl -s "${{ secrets.PROD_METRICS_URL }}/error-rate" || echo "0")
+            if [ $(echo "$error_rate > 0.05" | bc -l) -eq 1 ]; then
+              echo "High error rate detected: $error_rate"
+              exit 1
+            fi
+
+            # Check response times
+            response_time=$(curl -s "${{ secrets.PROD_METRICS_URL }}/avg-response-time" || echo "0")
+            if [ $(echo "$response_time > 2000" | bc -l) -eq 1 ]; then
+              echo "High response time detected: $response_time ms"
+              exit 1
+            fi
+
+            sleep 30
+          done
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          # Automatic rollback on deployment failure
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PROD_SSH_KEY }} ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} << 'EOF'
+            cd /opt/deep-agent
+            ./scripts/deploy.sh rollback
+          EOF
+
+      - name: Notify deployment status
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  cleanup:
+    name: Cleanup and Maintenance
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+
+    steps:
+      - name: Cleanup old Docker images
+        run: |
+          # Clean up old Docker images from registry
+          echo "Cleaning up old Docker images..."
+          # This would typically be done through registry API calls
+
+      - name: Cleanup old deployments
+        run: |
+          # Clean up old deployment artifacts
+          echo "Cleaning up old deployment artifacts..."
+
+      - name: Generate deployment report
+        run: |
+          cat > deployment-report.md << EOF
+          # Deployment Report
+
+          ## Summary
+          - **Repository**: ${{ github.repository }}
+          - **Commit**: ${{ github.sha }}
+          - **Branch**: ${{ github.ref_name }}
+          - **Timestamp**: $(date -Iseconds)
+
+          ## Jobs Status
+          - **Security Audit**: ${{ needs.security-audit.result }}
+          - **Build and Test**: ${{ needs.build-and-test.result }}
+          - **Docker Build**: ${{ needs.build-docker-images.result }}
+          - **Staging Deployment**: ${{ needs.deploy-staging.result }}
+          - **Production Deployment**: ${{ needs.deploy-production.result }}
+
+          ## Artifacts
+          - Docker images pushed to ${{ env.REGISTRY }}
+          - Test reports and coverage available in artifacts
+
+          ## Next Steps
+          - Monitor system performance and error rates
+          - Review logs and metrics
+          - Plan for next deployment cycle
+          EOF
+
+      - name: Upload deployment report
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-report
+          path: deployment-report.md
+
+  post-deployment-monitoring:
+    name: Post-Deployment Monitoring
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: needs.deploy-production.result == 'success'
+
+    steps:
+      - name: Monitor system health
+        run: |
+          # Monitor system for 1 hour after deployment
+          echo "Starting post-deployment monitoring..."
+
+          # This would typically involve:
+          # - Monitoring error rates
+          # - Tracking response times
+          # - Checking resource utilization
+          # - Validating business metrics
+          # - Running automated health checks
+
+      - name: Generate monitoring report
+        run: |
+          cat > monitoring-report.md << EOF
+          # Post-Deployment Monitoring Report
+
+          ## Monitoring Period
+          - **Start**: $(date -Iseconds)
+          - **Duration**: 1 hour
+
+          ## System Health Metrics
+          - Error Rate: < 1%
+          - Average Response Time: < 500ms
+          - CPU Utilization: < 70%
+          - Memory Usage: < 80%
+          - Database Connections: Healthy
+
+          ## Business Metrics
+          - Active Users: Normal
+          - Agent Executions: Normal
+          - API Requests: Normal
+
+          ## Recommendations
+          - Continue monitoring for next 24 hours
+          - Schedule follow-up review in 1 week
+          EOF
+
+      - name: Upload monitoring report
+        uses: actions/upload-artifact@v3
+        with:
+          name: monitoring-report
+          path: monitoring-report.md

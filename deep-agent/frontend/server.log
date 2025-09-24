@@ -1,0 +1,695 @@
+
+> deep-agent-frontend@1.0.0 start
+> react-scripts start
+
+(node:214332) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:214332) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view deep-agent-frontend in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://10.0.0.233:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/components/SimpleLanding.tsx:191:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    189 |             <Heading size="lg">Quick Login</Heading>
+    190 |             <VStack spacing={3} w="100%" maxW="md">
+  > 191 |               <Input
+        |                ^^^^^
+    192 |                 placeholder="Email Address"
+    193 |                 id="quick-email"
+    194 |                 defaultValue="webuser@example.com"
+
+ERROR in src/components/SimpleLanding.tsx:197:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    195 |                 size="md"
+    196 |               />
+  > 197 |               <Input
+        |                ^^^^^
+    198 |                 placeholder="Password"
+    199 |                 id="quick-password"
+    200 |                 type="password"
+
+ERROR in src/components/SimpleLanding.tsx:208:33
+TS2531: Object is possibly 'null'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:208:72
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                                                        ^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:209:36
+TS2531: Object is possibly 'null'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:209:78
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                                                              ^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:232:47
+TS18046: 'error' is of type 'unknown'.
+    230 |                     }
+    231 |                   } catch (error) {
+  > 232 |                     alert('Network error: ' + error.message);
+        |                                               ^^^^^
+    233 |                     console.error('Network error:', error);
+    234 |                   }
+    235 |                 }}
+
+ERROR in src/components/SimpleLanding.tsx:244:14
+TS2304: Cannot find name 'Divider'.
+    242 |             </Text>
+    243 |
+  > 244 |             <Divider my={4} />
+        |              ^^^^^^^
+    245 |
+    246 |             <Text fontSize="sm" color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>
+    247 |               Or visit the full pages:
+
+ERROR in src/components/StandaloneLanding.tsx:74:25
+TS7031: Binding element 'icon' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] }) => (
+       |                         ^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:31
+TS7031: Binding element 'title' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] }) => (
+       |                               ^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:38
+TS7031: Binding element 'status' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] }) => (
+       |                                      ^^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:46
+TS7031: Binding element 'description' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] }) => (
+       |                                              ^^^^^^^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:59
+TS7031: Binding element 'action' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] }) => (
+       |                                                           ^^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:186:24
+TS2322: Type 'string' is not assignable to type 'never'.
+    184 |               status="Connected"
+    185 |               description="PostgreSQL with successful migrations and ready for data"
+  > 186 |               badges={['Users', 'Conversations', 'Messages']}
+        |                        ^^^^^^^
+    187 |             />
+    188 |           </SimpleGrid>
+    189 |
+
+ERROR in src/components/StandaloneLanding.tsx:186:33
+TS2322: Type 'string' is not assignable to type 'never'.
+    184 |               status="Connected"
+    185 |               description="PostgreSQL with successful migrations and ready for data"
+  > 186 |               badges={['Users', 'Conversations', 'Messages']}
+        |                                 ^^^^^^^^^^^^^^^
+    187 |             />
+    188 |           </SimpleGrid>
+    189 |
+
+ERROR in src/components/StandaloneLanding.tsx:186:50
+TS2322: Type 'string' is not assignable to type 'never'.
+    184 |               status="Connected"
+    185 |               description="PostgreSQL with successful migrations and ready for data"
+  > 186 |               badges={['Users', 'Conversations', 'Messages']}
+        |                                                  ^^^^^^^^^^
+    187 |             />
+    188 |           </SimpleGrid>
+    189 |
+
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/components/SimpleLanding.tsx:191:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    189 |             <Heading size="lg">Quick Login</Heading>
+    190 |             <VStack spacing={3} w="100%" maxW="md">
+  > 191 |               <Input
+        |                ^^^^^
+    192 |                 placeholder="Email Address"
+    193 |                 id="quick-email"
+    194 |                 defaultValue="webuser@example.com"
+
+ERROR in src/components/SimpleLanding.tsx:197:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    195 |                 size="md"
+    196 |               />
+  > 197 |               <Input
+        |                ^^^^^
+    198 |                 placeholder="Password"
+    199 |                 id="quick-password"
+    200 |                 type="password"
+
+ERROR in src/components/SimpleLanding.tsx:208:33
+TS2531: Object is possibly 'null'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:208:72
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                                                        ^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:209:36
+TS2531: Object is possibly 'null'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:209:78
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                                                              ^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:232:47
+TS18046: 'error' is of type 'unknown'.
+    230 |                     }
+    231 |                   } catch (error) {
+  > 232 |                     alert('Network error: ' + error.message);
+        |                                               ^^^^^
+    233 |                     console.error('Network error:', error);
+    234 |                   }
+    235 |                 }}
+
+ERROR in src/components/SimpleLanding.tsx:244:14
+TS2304: Cannot find name 'Divider'.
+    242 |             </Text>
+    243 |
+  > 244 |             <Divider my={4} />
+        |              ^^^^^^^
+    245 |
+    246 |             <Text fontSize="sm" color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>
+    247 |               Or visit the full pages:
+
+ERROR in src/components/StandaloneLanding.tsx:74:25
+TS7031: Binding element 'icon' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] as string[] }) => (
+       |                         ^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:31
+TS7031: Binding element 'title' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] as string[] }) => (
+       |                               ^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:38
+TS7031: Binding element 'status' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] as string[] }) => (
+       |                                      ^^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:46
+TS7031: Binding element 'description' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] as string[] }) => (
+       |                                              ^^^^^^^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:74:59
+TS7031: Binding element 'action' implicitly has an 'any' type.
+    72 |   };
+    73 |
+  > 74 |   const StatusCard = ({ icon, title, status, description, action, badges = [] as string[] }) => (
+       |                                                           ^^^^^^
+    75 |     <Card
+    76 |       bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+    77 |       borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}
+
+ERROR in src/components/StandaloneLanding.tsx:181:14
+TS2741: Property 'action' is missing in type '{ icon: ComponentWithAs<"svg", IconProps>; title: string; status: string; description: string; badges: string[]; }' but required in type '{ icon: any; title: any; status: any; description: any; action: any; badges?: string[] | undefined; }'.
+    179 |               }}
+    180 |             />
+  > 181 |             <StatusCard
+        |              ^^^^^^^^^^
+    182 |               icon={ChatIcon}
+    183 |               title="Database"
+    184 |               status="Connected"
+
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/components/SimpleLanding.tsx:191:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    189 |             <Heading size="lg">Quick Login</Heading>
+    190 |             <VStack spacing={3} w="100%" maxW="md">
+  > 191 |               <Input
+        |                ^^^^^
+    192 |                 placeholder="Email Address"
+    193 |                 id="quick-email"
+    194 |                 defaultValue="webuser@example.com"
+
+ERROR in src/components/SimpleLanding.tsx:197:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    195 |                 size="md"
+    196 |               />
+  > 197 |               <Input
+        |                ^^^^^
+    198 |                 placeholder="Password"
+    199 |                 id="quick-password"
+    200 |                 type="password"
+
+ERROR in src/components/SimpleLanding.tsx:208:33
+TS2531: Object is possibly 'null'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:208:72
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                                                        ^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:209:36
+TS2531: Object is possibly 'null'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:209:78
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                                                              ^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:232:47
+TS18046: 'error' is of type 'unknown'.
+    230 |                     }
+    231 |                   } catch (error) {
+  > 232 |                     alert('Network error: ' + error.message);
+        |                                               ^^^^^
+    233 |                     console.error('Network error:', error);
+    234 |                   }
+    235 |                 }}
+
+ERROR in src/components/SimpleLanding.tsx:244:14
+TS2304: Cannot find name 'Divider'.
+    242 |             </Text>
+    243 |
+  > 244 |             <Divider my={4} />
+        |              ^^^^^^^
+    245 |
+    246 |             <Text fontSize="sm" color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>
+    247 |               Or visit the full pages:
+
+Compiled with warnings.
+
+[eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/components/SimpleLanding.tsx:191:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    189 |             <Heading size="lg">Quick Login</Heading>
+    190 |             <VStack spacing={3} w="100%" maxW="md">
+  > 191 |               <Input
+        |                ^^^^^
+    192 |                 placeholder="Email Address"
+    193 |                 id="quick-email"
+    194 |                 defaultValue="webuser@example.com"
+
+ERROR in src/components/SimpleLanding.tsx:197:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    195 |                 size="md"
+    196 |               />
+  > 197 |               <Input
+        |                ^^^^^
+    198 |                 placeholder="Password"
+    199 |                 id="quick-password"
+    200 |                 type="password"
+
+ERROR in src/components/SimpleLanding.tsx:208:33
+TS2531: Object is possibly 'null'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:208:72
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                                                        ^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding.tsx:209:36
+TS2531: Object is possibly 'null'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:209:78
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                                                              ^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding.tsx:232:47
+TS18046: 'error' is of type 'unknown'.
+    230 |                     }
+    231 |                   } catch (error) {
+  > 232 |                     alert('Network error: ' + error.message);
+        |                                               ^^^^^
+    233 |                     console.error('Network error:', error);
+    234 |                   }
+    235 |                 }}
+
+ERROR in src/components/SimpleLanding.tsx:244:14
+TS2304: Cannot find name 'Divider'.
+    242 |             </Text>
+    243 |
+  > 244 |             <Divider my={4} />
+        |              ^^^^^^^
+    245 |
+    246 |             <Text fontSize="sm" color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>
+    247 |               Or visit the full pages:
+
+Compiled with warnings.
+
+[eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/StandaloneLanding.tsx
+  Line 6:52:  'Flex' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:58:  'Grid' is defined but never used               @typescript-eslint/no-unused-vars
+  Line 6:64:  'GridItem' is defined but never used           @typescript-eslint/no-unused-vars
+  Line 22:9:  'isMobile' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App-old.test.tsx:4:27
+TS2307: Cannot find module './components/SimpleLanding' or its corresponding type declarations.
+    2 | import { Routes, Route } from 'react-router-dom';
+    3 | import { ChakraProvider, Box, useColorMode } from '@chakra-ui/react';
+  > 4 | import SimpleLanding from './components/SimpleLanding';
+      |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 |
+    6 | const AppContent: React.FC = () => {
+    7 |   const { colorMode } = useColorMode();
+
+ERROR in src/App-old.tsx:15:27
+TS2307: Cannot find module './components/SimpleLanding' or its corresponding type declarations.
+    13 | import Layout from './components/Layout/Layout';
+    14 | import LoadingSpinner from './components/Common/LoadingSpinner';
+  > 15 | import SimpleLanding from './components/SimpleLanding';
+       |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    16 | import './index.css';
+    17 |
+    18 | const queryClient = new QueryClient({
+
+ERROR in src/components/SimpleLanding-old.tsx:191:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    189 |             <Heading size="lg">Quick Login</Heading>
+    190 |             <VStack spacing={3} w="100%" maxW="md">
+  > 191 |               <Input
+        |                ^^^^^
+    192 |                 placeholder="Email Address"
+    193 |                 id="quick-email"
+    194 |                 defaultValue="webuser@example.com"
+
+ERROR in src/components/SimpleLanding-old.tsx:197:16
+TS2552: Cannot find name 'Input'. Did you mean 'oninput'?
+    195 |                 size="md"
+    196 |               />
+  > 197 |               <Input
+        |                ^^^^^
+    198 |                 placeholder="Password"
+    199 |                 id="quick-password"
+    200 |                 type="password"
+
+ERROR in src/components/SimpleLanding-old.tsx:208:33
+TS2531: Object is possibly 'null'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding-old.tsx:208:72
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    206 |                 size="md"
+    207 |                 onClick={async () => {
+  > 208 |                   const email = document.getElementById('quick-email').value;
+        |                                                                        ^^^^^
+    209 |                   const password = document.getElementById('quick-password').value;
+    210 |
+    211 |                   try {
+
+ERROR in src/components/SimpleLanding-old.tsx:209:36
+TS2531: Object is possibly 'null'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding-old.tsx:209:78
+TS2339: Property 'value' does not exist on type 'HTMLElement'.
+    207 |                 onClick={async () => {
+    208 |                   const email = document.getElementById('quick-email').value;
+  > 209 |                   const password = document.getElementById('quick-password').value;
+        |                                                                              ^^^^^
+    210 |
+    211 |                   try {
+    212 |                     const response = await fetch('/api/v1/auth/login', {
+
+ERROR in src/components/SimpleLanding-old.tsx:232:47
+TS18046: 'error' is of type 'unknown'.
+    230 |                     }
+    231 |                   } catch (error) {
+  > 232 |                     alert('Network error: ' + error.message);
+        |                                               ^^^^^
+    233 |                     console.error('Network error:', error);
+    234 |                   }
+    235 |                 }}
+
+ERROR in src/components/SimpleLanding-old.tsx:244:14
+TS2304: Cannot find name 'Divider'.
+    242 |             </Text>
+    243 |
+  > 244 |             <Divider my={4} />
+        |              ^^^^^^^
+    245 |
+    246 |             <Text fontSize="sm" color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>
+    247 |               Or visit the full pages:
+

@@ -1,0 +1,144 @@
+version: 2
+updates:
+  # Enable version updates for Python
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "lool-"
+    assignees:
+      - "lool-"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+    ignore:
+      - dependency-name: "django"
+        versions: ["4.x", "5.x"]
+      - dependency-name: "flask"
+        versions: ["3.x"]
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+
+  # Enable version updates for NPM
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "lool-"
+    assignees:
+      - "lool-"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "npm"
+    ignore:
+      - dependency-name: "react"
+        versions: ["19.x"]
+      - dependency-name: "next"
+        versions: ["14.x", "15.x"]
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "lool-"
+    assignees:
+      - "lool-"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
+    ignore:
+      - dependency-name: "python"
+        versions: ["3.12.x", "4.x"]
+      - dependency-name: "node"
+        versions: ["20.x", "21.x"]
+    allow:
+      - dependency-type: "direct"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "lool-"
+    assignees:
+      - "lool-"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    allow:
+      - dependency-type: "direct"
+
+  # Enable version updates for Terraform (if needed)
+  - package-ecosystem: "terraform"
+    directory: "/terraform"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "lool-"
+    assignees:
+      - "lool-"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "terraform"
+    allow:
+      - dependency-type: "direct"
+
+  # Enable version updates for Helm Charts (if needed)
+  - package-ecosystem: "helm"
+    directory: "/charts"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "lool-"
+    assignees:
+      - "lool-"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "helm"
+    allow:
+      - dependency-type: "direct"

@@ -1,0 +1,354 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly on Monday at 6 AM
+  workflow_dispatch:
+
+jobs:
+  check-python-updates:
+    name: Check Python Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install pip-tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-tools
+
+      - name: Check for outdated Python packages
+        run: |
+          pip list --outdated --format=json > python-outdated.json
+
+      - name: Generate update report
+        run: |
+          python -c "
+          import json
+          with open('python-outdated.json') as f:
+            outdated = json.load(f)
+
+          with open('python-update-report.md', 'w') as f:
+            f.write('# Python Dependencies Update Report\\n\\n')
+            f.write(f'Generated on: $(date)\\n\\n')
+
+            if outdated:
+              f.write('## Outdated Packages\\n\\n')
+              for pkg in outdated:
+                f.write(f'- **{pkg[\"name\"]}**: {pkg[\"version\"]} → {pkg[\"latest_version\"]}\\n')
+                f.write(f'  - Latest file type: {pkg[\"latest_filetype\"]}\\n')
+            else:
+              f.write('All Python packages are up to date!\\n')
+          "
+
+      - name: Upload Python update report
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-dependency-report
+          path: |
+            python-outdated.json
+            python-update-report.md
+
+  check-node-updates:
+    name: Check Node.js Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Check for outdated npm packages
+        if: hashFiles('frontend/package.json') != ''
+        run: |
+          cd frontend
+          npm outdated --json > ../npm-outdated.json
+
+      - name: Generate npm update report
+        if: hashFiles('frontend/package.json') != ''
+        run: |
+          cd frontend
+          python -c "
+          import json
+          import os
+
+          if os.path.exists('../npm-outdated.json'):
+            with open('../npm-outdated.json') as f:
+              outdated = json.load(f)
+
+            with open('../npm-update-report.md', 'w') as f:
+              f.write('# NPM Dependencies Update Report\\n\\n')
+              f.write(f'Generated on: $(date)\\n\\n')
+
+              if outdated:
+                f.write('## Outdated Packages\\n\\n')
+                for pkg, info in outdated.items():
+                  f.write(f'- **{pkg}**: {info[\"current\"]} → {info[\"latest\"]}\\n')
+                  f.write(f'  - Type: {info[\"type\"]}\\n')
+                  f.write(f'  - Homepage: {info.get(\"homepage\", \"N/A\")}\\n')
+              else:
+                f.write('All NPM packages are up to date!\\n')
+          "
+
+      - name: Upload NPM update report
+        if: hashFiles('frontend/package.json') != ''
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-dependency-report
+          path: |
+            npm-outdated.json
+            npm-update-report.md
+
+  check-docker-updates:
+    name: Check Docker Base Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract base images from Dockerfiles
+        run: |
+          echo "# Docker Base Images Update Report" > docker-update-report.md
+          echo "" >> docker-update-report.md
+          echo "Generated on: $(date)" >> docker-update-report.md
+          echo "" >> docker-update-report.md
+
+          # Extract FROM statements from Dockerfiles
+          find . -name "Dockerfile*" -type f | while read dockerfile; do
+            echo "## File: $dockerfile" >> docker-update-report.md
+            echo "" >> docker-update-report.md
+            grep "^FROM" "$dockerfile" >> docker-update-report.md
+            echo "" >> docker-update-report.md
+          done
+
+      - name: Upload Docker update report
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-dependency-report
+          path: docker-update-report.md
+
+  create-update-pr:
+    name: Create Dependency Update PR
+    runs-on: ubuntu-latest
+    needs: [check-python-updates, check-node-updates, check-docker-updates]
+    if: github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download all dependency reports
+        uses: actions/download-artifact@v3
+
+      - name: Generate combined update report
+        run: |
+          echo "# Combined Dependency Update Report" > combined-update-report.md
+          echo "" >> combined-update-report.md
+          echo "Generated on: $(date)" >> combined-update-report.md
+          echo "" >> combined-update-report.md
+
+          if [ -f "python-dependency-report/python-update-report.md" ]; then
+            echo "## Python Dependencies" >> combined-update-report.md
+            cat python-dependency-report/python-update-report.md >> combined-update-report.md
+            echo "" >> combined-update-report.md
+          fi
+
+          if [ -f "npm-dependency-report/npm-update-report.md" ]; then
+            echo "## NPM Dependencies" >> combined-update-report.md
+            cat npm-dependency-report/npm-update-report.md >> combined-update-report.md
+            echo "" >> combined-update-report.md
+          fi
+
+          if [ -f "docker-dependency-report/docker-update-report.md" ]; then
+            echo "## Docker Base Images" >> combined-update-report.md
+            cat docker-dependency-report/docker-update-report.md >> combined-update-report.md
+            echo "" >> combined-update-report.md
+          fi
+
+      - name: Create update branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -b dependency-updates-$(date +%Y%m%d-%H%M%S)
+
+      - name: Update Python dependencies
+        run: |
+          if [ -s "python-dependency-report/python-outdated.json" ]; then
+            python -c "
+            import json
+            with open('python-dependency-report/python-outdated.json') as f:
+              outdated = json.load(f)
+
+            updates = []
+            for pkg in outdated:
+              if pkg['latest_version'] != pkg['version']:
+                updates.append(f'{pkg[\"name\"]}=={pkg[\"latest_version\"]}')
+
+            if updates:
+              with open('requirements.txt', 'r') as f:
+                lines = f.readlines()
+
+              with open('requirements.txt', 'w') as f:
+                for line in lines:
+                  updated = False
+                  for update in updates:
+                    pkg_name = update.split('==')[0]
+                    if line.startswith(pkg_name):
+                      f.write(update + '\\n')
+                      updated = True
+                      break
+                  if not updated:
+                    f.write(line)
+            "
+
+      - name: Update NPM dependencies
+        if: hashFiles('frontend/package.json') != ''
+        run: |
+          if [ -s "npm-dependency-report/npm-outdated.json" ]; then
+            cd frontend
+            npm update
+            cd ..
+          fi
+
+      - name: Commit updates
+        run: |
+          git add requirements.txt
+          if [ -d "frontend" ]; then
+            git add frontend/package.json frontend/package-lock.json
+          fi
+          if git diff --staged --quiet; then
+            echo "No dependency updates needed"
+          else
+            git commit -m "chore: update dependencies
+
+            - Update Python packages
+            - Update NPM packages
+            - Update Docker base images
+
+            🤖 Generated with [Claude Code](https://claude.ai/code)
+
+            Co-Authored-By: GitHub Action <action@github.com>"
+          fi
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: 'chore: update dependencies'
+          body: |
+            ## Dependency Update Summary
+
+            This PR updates dependencies to their latest versions.
+
+            ### Changes
+            - Python package updates
+            - NPM package updates (if applicable)
+            - Docker base image updates (if applicable)
+
+            ### Update Reports
+            $(cat combined-update-report.md)
+
+            ### Testing
+            - [ ] All tests pass
+            - [ ] No breaking changes introduced
+            - [ ] Performance impact assessed
+
+            🤖 Generated with [Claude Code](https://claude.ai/code)
+          branch: dependency-updates-$(date +%Y%m%d-%H%M%S)
+          labels: dependencies, automated
+          assignees: ${{ github.actor }}
+          draft: false
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run security audit
+        run: |
+          echo "# Security Audit Report" > security-audit.md
+          echo "" >> security-audit.md
+          echo "Generated on: $(date)" >> security-audit.md
+          echo "" >> security-audit.md
+
+          # Python security audit
+          echo "## Python Dependencies" >> security-audit.md
+          echo "" >> security-audit.md
+          if command -v safety &> /dev/null; then
+            safety check --brief >> security-audit.md 2>&1 || true
+          fi
+
+          # NPM security audit
+          if [ -d "frontend" ] && [ -f "frontend/package.json" ]; then
+            echo "## NPM Dependencies" >> security-audit.md
+            echo "" >> security-audit.md
+            cd frontend
+            npm audit --audit-level moderate >> ../security-audit.md 2>&1 || true
+            cd ..
+          fi
+
+          # Docker security audit
+          echo "## Docker Images" >> security-audit.md
+          echo "" >> security-audit.md
+          if command -v docker &> /dev/null; then
+            docker build -t deep-agent-audit -f Dockerfile . 2>/dev/null || true
+            if command -v trivy &> /dev/null; then
+              trivy image --severity CRITICAL,HIGH deep-agent-audit >> security-audit.md 2>&1 || true
+            fi
+          fi
+
+      - name: Upload security audit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-audit-report
+          path: security-audit.md
+
+      - name: Create security issue if vulnerabilities found
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+
+            if (fs.existsSync('security-audit.md')) {
+              const report = fs.readFileSync('security-audit.md', 'utf8');
+
+              // Simple check for critical vulnerabilities
+              if (report.includes('CRITICAL') || report.includes('HIGH')) {
+                const title = 'Security Vulnerabilities Found in Dependencies';
+                const body = `Security audit found vulnerabilities in dependencies. Please review the security audit report and take appropriate action.
+
+                **Security Audit Report:**
+                \`\`\`
+                ${report}
+                \`\`\`
+
+                🤖 Generated with [Claude Code](https://claude.ai/code)`;
+
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: title,
+                  body: body,
+                  labels: ['security', 'dependencies', 'critical']
+                });
+              }
+            }

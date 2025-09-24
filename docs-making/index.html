@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docs Clone - Collaborative Document Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Document Management Modal -->
+    <div id="documentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>My Documents</h2>
+                <button class="close-btn" onclick="closeDocumentModal()">&times;</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="createNewDocument()">
+                    <i class="fas fa-plus"></i> New Document
+                </button>
+            </div>
+            <div class="document-list" id="documentList">
+                <!-- Documents will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="btn btn-icon" onclick="openDocumentModal()" title="Documents">
+                    <i class="fas fa-folder"></i>
+                </button>
+                <input type="text" id="documentTitle" class="document-title" placeholder="Untitled Document" value="Untitled Document">
+            </div>
+            <div class="header-right">
+                <div class="document-stats">
+                    <span id="wordCount">0</span> words • <span id="charCount">0</span> chars • <span id="readingTime">0</span> min read
+                </div>
+                <div class="save-status" id="saveStatus">
+                    <i class="fas fa-check"></i> Saved
+                </div>
+                <button class="btn btn-icon" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <button class="btn btn-icon" onclick="openFindReplaceModal()" title="Find & Replace (Ctrl+F)">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-icon" onclick="openTemplatesModal()" title="Templates">
+                    <i class="fas fa-file-alt"></i>
+                </button>
+                <button class="btn btn-secondary" onclick="exportDocument()" title="Export">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <button class="toolbar-btn" onclick="formatText('bold')" title="Bold (Ctrl+B)">
+                    <i class="fas fa-bold"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('italic')" title="Italic (Ctrl+I)">
+                    <i class="fas fa-italic"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('underline')" title="Underline (Ctrl+U)">
+                    <i class="fas fa-underline"></i>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" onclick="formatText('strikeThrough')" title="Strikethrough">
+                    <i class="fas fa-strikethrough"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('subscript')" title="Subscript">
+                    <i class="fas fa-subscript"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('superscript')" title="Superscript">
+                    <i class="fas fa-superscript"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-group">
+                <select class="toolbar-select" onchange="formatText('formatBlock', this.value)">
+                    <option value="p">Normal</option>
+                    <option value="h1">Heading 1</option>
+                    <option value="h2">Heading 2</option>
+                    <option value="h3">Heading 3</option>
+                    <option value="h4">Heading 4</option>
+                    <option value="h5">Heading 5</option>
+                    <option value="h6">Heading 6</option>
+                </select>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Bullet List">
+                    <i class="fas fa-list-ul"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('insertOrderedList')" title="Numbered List">
+                    <i class="fas fa-list-ol"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-group">
+                <button class="toolbar-btn" onclick="formatText('justifyLeft')" title="Align Left">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('justifyCenter')" title="Align Center">
+                    <i class="fas fa-align-center"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('justifyRight')" title="Align Right">
+                    <i class="fas fa-align-right"></i>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('justifyFull')" title="Justify">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-group">
+                <input type="color" class="toolbar-color" onchange="formatText('foreColor', this.value)" title="Text Color">
+                <input type="color" class="toolbar-color" onchange="formatText('backColor', this.value)" title="Highlight Color">
+            </div>
+
+            <div class="toolbar-group">
+                <button class="toolbar-btn" onclick="undo()" title="Undo (Ctrl+Z)">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="toolbar-btn" onclick="redo()" title="Redo (Ctrl+Y)">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" onclick="insertTable()" title="Insert Table">
+                    <i class="fas fa-table"></i>
+                </button>
+                <button class="toolbar-btn" onclick="insertImage()" title="Insert Image">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button class="toolbar-btn" onclick="insertLink()" title="Insert Link">
+                    <i class="fas fa-link"></i>
+                </button>
+            </div>
+            <div class="toolbar-group">
+                <button class="btn btn-icon" onclick="showHelp()" title="Keyboard Shortcuts (Ctrl+H)">
+                    <i class="fas fa-keyboard"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Editor -->
+        <main class="editor-container">
+            <div id="editor" class="editor" contenteditable="true" placeholder="Start typing your document...">
+                <!-- Document content will be here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Find & Replace Modal -->
+    <div id="findReplaceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Find & Replace</h2>
+                <button class="close-btn" onclick="closeFindReplaceModal()">&times;</button>
+            </div>
+            <div class="find-replace-content">
+                <div class="form-group">
+                    <label for="findInput">Find:</label>
+                    <input type="text" id="findInput" class="form-control" placeholder="Text to find...">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="matchCase" class="form-checkbox">
+                        <label for="matchCase">Match case</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="matchWholeWord" class="form-checkbox">
+                        <label for="matchWholeWord">Match whole word</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="replaceInput">Replace with:</label>
+                    <input type="text" id="replaceInput" class="form-control" placeholder="Replacement text...">
+                </div>
+                <div class="find-replace-actions">
+                    <button class="btn btn-primary" onclick="findNext()">Find Next</button>
+                    <button class="btn btn-secondary" onclick="replaceAll()">Replace All</button>
+                    <button class="btn btn-secondary" onclick="closeFindReplaceModal()">Close</button>
+                </div>
+                <div class="find-results" id="findResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Modal -->
+    <div id="templatesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Document Templates</h2>
+                <button class="close-btn" onclick="closeTemplatesModal()">&times;</button>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card" onclick="loadTemplate('blank')">
+                    <i class="fas fa-file"></i>
+                    <h3>Blank Document</h3>
+                    <p>Start with a clean slate</p>
+                </div>
+                <div class="template-card" onclick="loadTemplate('letter')">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Formal Letter</h3>
+                    <p>Professional letter format</p>
+                </div>
+                <div class="template-card" onclick="loadTemplate('memo')">
+                    <i class="fas fa-clipboard"></i>
+                    <h3>Memo</h3>
+                    <p>Internal memorandum</p>
+                </div>
+                <div class="template-card" onclick="loadTemplate('report')">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Report</h3>
+                    <p>Business report format</p>
+                </div>
+                <div class="template-card" onclick="loadTemplate('essay')">
+                    <i class="fas fa-pen"></i>
+                    <h3>Essay</h3>
+                    <p>Academic essay format</p>
+                </div>
+                <div class="template-card" onclick="loadTemplate('meeting')">
+                    <i class="fas fa-users"></i>
+                    <h3>Meeting Notes</h3>
+                    <p>Meeting minutes template</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Keyboard Shortcuts</h2>
+                <button class="close-btn" onclick="closeHelpModal()">&times;</button>
+            </div>
+            <div class="help-content">
+                <div class="shortcut-section">
+                    <h3>Document Operations</h3>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>N</kbd>
+                        <span>New Document</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>O</kbd>
+                        <span>Open Documents</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                        <span>Save Document</span>
+                    </div>
+                </div>
+                <div class="shortcut-section">
+                    <h3>Text Formatting</h3>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>B</kbd>
+                        <span>Bold</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>I</kbd>
+                        <span>Italic</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>U</kbd>
+                        <span>Underline</span>
+                    </div>
+                </div>
+                <div class="shortcut-section">
+                    <h3>Editing</h3>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>Z</kbd>
+                        <span>Undo</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>Y</kbd>
+                        <span>Redo</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>F</kbd>
+                        <span>Find & Replace</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Export Document</h2>
+                <button class="close-btn" onclick="closeExportModal()">&times;</button>
+            </div>
+            <div class="export-options">
+                <button class="btn btn-primary" onclick="exportAsHTML()">
+                    <i class="fas fa-code"></i> Export as HTML
+                </button>
+                <button class="btn btn-secondary" onclick="exportAsPlainText()">
+                    <i class="fas fa-file-text"></i> Export as Plain Text
+                </button>
+                <button class="btn btn-secondary" onclick="exportAsMarkdown()">
+                    <i class="fab fa-markdown"></i> Export as Markdown
+                </button>
+                <button class="btn btn-secondary" onclick="exportAsPDF()">
+                    <i class="fas fa-file-pdf"></i> Export as PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKx2oSmqKjO+tT3lmkZW7/mC81aLO6e7RiU4v7GJKOQm7vLsWk5FyhC2KhA1j8pcX+qgAvcrnmao1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="script.js"></script>
+</body>
+</html>

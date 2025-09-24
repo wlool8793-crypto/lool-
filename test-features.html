@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docs Clone - Feature Testing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #4285f4;
+            background: #f8f9fa;
+        }
+        .test-button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #3367d6;
+        }
+        .success {
+            color: #34a853;
+            font-weight: bold;
+        }
+        .error {
+            color: #ea4335;
+            font-weight: bold;
+        }
+        .warning {
+            color: #fbbc04;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Docs Clone Feature Testing</h1>
+
+    <div class="test-section">
+        <h2>📋 Test Overview</h2>
+        <p>This page will help you test all the features of the Docs Clone application. Open the main application in another tab and follow these test steps.</p>
+        <button class="test-button" onclick="window.open('index.html', '_blank')">Open Main App</button>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ Core Features Test</h2>
+
+        <div class="test-item">
+            <h3>1. Text Formatting</h3>
+            <p>Type some text and test these formatting options:</p>
+            <ul>
+                <li>Bold (Ctrl+B) - <strong>Bold text</strong></li>
+                <li>Italic (Ctrl+I) - <em>Italic text</em></li>
+                <li>Underline (Ctrl+U) - <u>Underlined text</u></li>
+                <li>Headings (H1-H6)</li>
+                <li>Text colors and highlighting</li>
+                <li>Alignment options</li>
+            </ul>
+            <span class="success">✓ Should format text immediately</span>
+        </div>
+
+        <div class="test-item">
+            <h3>2. Document Management</h3>
+            <p>Test the folder icon (📁) in the header:</p>
+            <ul>
+                <li>Click folder icon to open document manager</li>
+                <li>Create new document</li>
+                <li>Change document title</li>
+                <li>Auto-save should trigger every 5 seconds</li>
+                <li>Reopen saved documents</li>
+            </ul>
+            <span class="success">✓ Should show saving status and persist documents</span>
+        </div>
+
+        <div class="test-item">
+            <h3>3. Undo/Redo</h3>
+            <p>Test the undo/redo arrows in toolbar:</p>
+            <ul>
+                <li>Type some text</li>
+                <li>Click undo (or Ctrl+Z)</li>
+                <li>Click redo (or Ctrl+Y)</li>
+            </ul>
+            <span class="success">✓ Should revert and restore changes</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🚀 Advanced Features Test</h2>
+
+        <div class="test-item">
+            <h3>4. Table Insertion</h3>
+            <p>Click the table icon (📊) in toolbar:</p>
+            <ul>
+                <li>Enter number of rows and columns</li>
+                <li>Table should be inserted</li>
+                <li>Test editing table cells</li>
+            </ul>
+            <span class="success">✓ Should create editable table</span>
+        </div>
+
+        <div class="test-item">
+            <h3>5. Image Insertion</h3>
+            <p>Click the image icon (🖼️) in toolbar:</p>
+            <ul>
+                <li>Select an image file from your device</li>
+                <li>Image should be inserted and displayed</li>
+                <li>Test resizing and positioning</li>
+            </ul>
+            <span class="success">✓ Should insert base64 encoded image</span>
+        </div>
+
+        <div class="test-item">
+            <h3>6. Link Insertion</h3>
+            <p>Click the link icon (🔗) in toolbar:</p>
+            <ul>
+                <li>Enter a URL (https://example.com)</li>
+                <li>Enter link text</li>
+                <li>Link should be clickable</li>
+            </ul>
+            <span class="success">✓ Should create clickable hyperlink</span>
+        </div>
+
+        <div class="test-item">
+            <h3>7. Find & Replace</h3>
+            <p>Click the search icon (🔍) in header:</p>
+            <ul>
+                <li>Type some text in editor</li>
+                <li>Open find & replace modal</li>
+                <li>Search for text</li>
+                <li>Test "Match case" and "Match whole word"</li>
+                <li>Test replace functionality</li>
+            </ul>
+            <span class="success">✓ Should find and replace text with options</span>
+        </div>
+
+        <div class="test-item">
+            <h3>8. Dark Mode</h3>
+            <p>Click the moon/sun icon (🌙/☀️) in header:</p>
+            <ul>
+                <li>Should toggle between light and dark themes</li>
+                <li>Theme preference should be saved</li>
+                <li>Refresh page - theme should persist</li>
+            </ul>
+            <span class="success">✓ Should toggle and save theme preference</span>
+        </div>
+
+        <div class="test-item">
+            <h3>9. Document Templates</h3>
+            <p>Click the template icon (📄) in header:</p>
+            <ul>
+                <li>Template modal should open</li>
+                <li>Test different templates (Letter, Memo, Report, etc.)</li>
+                <li>Template content should load immediately</li>
+            </ul>
+            <span class="success">✓ Should load pre-built templates</span>
+        </div>
+
+        <div class="test-item">
+            <h3>10. Export Options</h3>
+            <p>Click the download icon (⬇️) in header:</p>
+            <ul>
+                <li>Export as HTML - should download formatted file</li>
+                <li>Export as Plain Text - should download text file</li>
+                <li>Export as Markdown - should download .md file</li>
+                <li>Export as PDF - should download PDF file</li>
+            </ul>
+            <span class="success">✓ Should download files in correct formats</span>
+        </div>
+
+        <div class="test-item">
+            <h3>11. Keyboard Shortcuts</h3>
+            <p>Click the keyboard icon (⌨️) in header:</p>
+            <ul>
+                <li>Help modal should open with all shortcuts</li>
+                <li>Test these shortcuts in the editor:</li>
+                <li>Ctrl+B (Bold), Ctrl+I (Italic), Ctrl+U (Underline)</li>
+                <li>Ctrl+S (Save), Ctrl+O (Open), Ctrl+N (New)</li>
+                <li>Ctrl+F (Find), Ctrl+H (Help), Ctrl+P (Print)</li>
+            </ul>
+            <span class="success">✓ Should show shortcuts and respond to keys</span>
+        </div>
+
+        <div class="test-item">
+            <h3>12. Document Statistics</h3>
+            <p>Look at the header bar:</p>
+            <ul>
+                <li>Word count should update as you type</li>
+                <li>Character count should exclude spaces</li>
+                <li>Reading time should be calculated (200 words/min)</li>
+            </ul>
+            <span class="success">✓ Should show live statistics</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📱 Responsive Design Test</h2>
+
+        <div class="test-item">
+            <h3>13. Mobile Testing</h3>
+            <p>Test on different screen sizes:</p>
+            <ul>
+                <li>Resize browser window to mobile width</li>
+                <li>Toolbar should scroll horizontally</li>
+                <li>Mobile menu should adapt</li>
+                <li>All modals should work on mobile</li>
+            </ul>
+            <span class="success">✓ Should be fully responsive</span>
+        </div>
+
+        <div class="test-item">
+            <h3>14. Print Testing</h3>
+            <p>Test print functionality:</p>
+            <ul>
+                <li>Press Ctrl+P or use browser print</li>
+                <li>Print preview should hide UI elements</li>
+                <li>Only document content should appear</li>
+                <li>Should be print-friendly</li>
+            </ul>
+            <span class="success">✓ Should show print-optimized version</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Technical Tests</h2>
+
+        <div class="test-item">
+            <h3>15. Browser Compatibility</h3>
+            <p>Test in different browsers (if available):</p>
+            <ul>
+                <li>Chrome/Chromium - should work perfectly</li>
+                <li>Firefox - should work perfectly</li>
+                <li>Safari - should work perfectly</li>
+                <li>Edge - should work perfectly</li>
+            </ul>
+            <span class="success">✓ Should work in all modern browsers</span>
+        </div>
+
+        <div class="test-item">
+            <h3>16. Data Persistence</h3>
+            <p>Test localStorage functionality:</p>
+            <ul>
+                <li>Create a document with content</li>
+                <li>Close and reopen browser</li>
+                <li>Documents should still be available</li>
+                <li>Dark mode preference should persist</li>
+            </ul>
+            <span class="success">✓ Should persist data in localStorage</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Performance Tests</h2>
+
+        <div class="test-item">
+            <h3>17. Large Document Test</h3>
+            <p>Test with large content:</p>
+            <ul>
+                <li>Copy and paste large amounts of text</li>
+                <li>Insert multiple images and tables</li>
+                <li>Performance should remain smooth</li>
+                <li>Auto-save should still work</li>
+            </ul>
+            <span class="success">✓ Should handle large documents well</span>
+        </div>
+
+        <div class="test-item">
+            <h3>18. Memory Management</h3>
+            <p>Test undo/redo limits:</p>
+            <ul>
+                <li>Make more than 50 changes</li>
+                <li>Undo stack should be limited to 50 states</li>
+                <li>Application should remain responsive</li>
+            </ul>
+            <span class="success">✓ Should manage memory properly</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Test Results</h2>
+        <p>Use this checklist to track your testing:</p>
+        <div id="checklist">
+            <!-- Will be populated by JavaScript -->
+        </div>
+        <button class="test-button" onclick="generateReport()">Generate Test Report</button>
+    </div>
+
+    <script>
+        const testItems = [
+            "Text Formatting (Bold, Italic, Underline)",
+            "Headings and Text Styles",
+            "Colors and Highlighting",
+            "Text Alignment",
+            "Lists (Bulleted and Numbered)",
+            "Document Management (Save, Load, New)",
+            "Auto-save Functionality",
+            "Undo/Redo Operations",
+            "Table Insertion and Editing",
+            "Image Insertion (Base64)",
+            "Link Insertion",
+            "Find & Replace with Options",
+            "Dark Mode Toggle",
+            "Theme Persistence",
+            "Document Templates",
+            "Export to HTML",
+            "Export to Plain Text",
+            "Export to Markdown",
+            "Export to PDF",
+            "Keyboard Shortcuts",
+            "Help Modal",
+            "Live Statistics (Words, Characters, Reading Time)",
+            "Responsive Design",
+            "Print Functionality",
+            "Cross-browser Compatibility",
+            "Data Persistence",
+            "Large Document Performance",
+            "Memory Management"
+        ];
+
+        function generateChecklist() {
+            const checklist = document.getElementById('checklist');
+            checklist.innerHTML = testItems.map(item => `
+                <div style="margin: 8px 0;">
+                    <input type="checkbox" id="test-${item.replace(/\s+/g, '-')}" style="margin-right: 8px;">
+                    <label for="test-${item.replace(/\s+/g, '-')}">${item}</label>
+                </div>
+            `).join('');
+        }
+
+        function generateReport() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percentage = Math.round((checked / total) * 100);
+
+            const report = `
+Test Results Report
+==================
+Total Tests: ${total}
+Passed: ${checked}
+Failed: ${total - checked}
+Success Rate: ${percentage}%
+
+Test Summary: ${percentage >= 80 ? '✅ EXCELLENT' : percentage >= 60 ? '⚠️ NEEDS IMPROVEMENT' : '❌ CRITICAL ISSUES'}
+
+Generated: ${new Date().toLocaleString()}
+            `;
+
+            alert(report);
+            console.log(report);
+        }
+
+        // Generate checklist on load
+        generateChecklist();
+
+        // Auto-open main application
+        setTimeout(() => {
+            window.open('index.html', '_blank');
+        }, 1000);
+    </script>
+</body>
+</html>

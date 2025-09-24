@@ -1,0 +1,179 @@
+site_name: LangGraph Deep Web Agent
+site_description: Comprehensive documentation for the LangGraph Deep Web Agent system
+site_author: Development Team
+site_url: https://your-domain.com/docs
+
+repo_name: deep-agent
+repo_url: https://github.com/your-username/deep-agent
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Configuration: getting-started/configuration.md
+    - Development Setup: getting-started/development.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - System Components: architecture/components.md
+    - Data Flow: architecture/data-flow.md
+    - Deployment Options: architecture/deployment.md
+  - API Documentation:
+    - REST API: api/rest-api.md
+    - WebSocket API: api/websocket-api.md
+    - Authentication: api/authentication.md
+    - Rate Limiting: api/rate-limiting.md
+    - Error Handling: api/error-handling.md
+  - Core Features:
+    - LangGraph Orchestration: features/langgraph.md
+    - Agent System: features/agent-system.md
+    - Memory Management: features/memory.md
+    - Tool Integration: features/tools.md
+    - Multi-modal Processing: features/multimodal.md
+  - External Integrations:
+    - Cloud Services: integrations/cloud.md
+    - Social Media: integrations/social.md
+    - Payment Systems: integrations/payment.md
+    - Custom APIs: integrations/custom.md
+    - Webhooks: integrations/webhooks.md
+  - Security:
+    - Authentication: security/authentication.md
+    - Authorization: security/authorization.md
+    - Data Encryption: security/encryption.md
+    - Security Monitoring: security/monitoring.md
+    - Compliance: security/compliance.md
+  - Deployment:
+    - Docker Deployment: deployment/docker.md
+    - Kubernetes Deployment: deployment/kubernetes.md
+    - CI/CD Pipeline: deployment/cicd.md
+    - Environment Management: deployment/environments.md
+    - Monitoring: deployment/monitoring.md
+  - Development:
+    - Local Development: development/local.md
+    - Testing: development/testing.md
+    - Debugging: development/debugging.md
+    - Contributing: development/contributing.md
+    - Code Style: development/code-style.md
+  - Operations:
+    - Monitoring: operations/monitoring.md
+    - Logging: operations/logging.md
+    - Performance Tuning: operations/performance.md
+    - Backup & Recovery: operations/backup.md
+    - Troubleshooting: operations/troubleshooting.md
+  - Reference:
+    - Configuration Reference: reference/configuration.md
+    - Environment Variables: reference/environment.md
+    - API Endpoints: reference/endpoints.md
+    - Database Schema: reference/database.md
+    - Error Codes: reference/errors.md
+    - Changelog: reference/changelog.md
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - header.autohide
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: light-blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: light-blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+  - mermaid2:
+      javascript: https://unpkg.com/mermaid/dist/mermaid.min.js
+  - git-revision-date-localized:
+      type: date
+      timezone: UTC
+      locale: en
+      fallback_to_build_date: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - codehilite:
+      guess_lang: false
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: your-username
+      repo: deep-agent
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra:
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-username/deep-agent
+    - icon: fontawesome/solid/envelope
+      link: mailto:your-email@example.com
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/your-username
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+watch:
+  - docs

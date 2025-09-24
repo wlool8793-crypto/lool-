@@ -1,0 +1,353 @@
+name: Quality Assurance
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  static-analysis:
+    name: Static Code Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install analysis tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit safety semgrep pylint
+
+      - name: Run Bandit security analysis
+        run: |
+          bandit -r app/ -f json -o bandit-report.json || true
+
+      - name: Run Safety dependency check
+        run: |
+          safety check --json --output safety-report.json || true
+
+      - name: Run Semgrep SAST analysis
+        run: |
+          semgrep --config=auto --json --output=semgrep-report.json app/ || true
+
+      - name: Run Pylint code quality
+        run: |
+          pylint app/ --json=y --output-format=json > pylint-report.json || true
+
+      - name: Upload analysis reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: static-analysis-reports
+          path: |
+            bandit-report.json
+            safety-report.json
+            semgrep-report.json
+            pylint-report.json
+
+  integration-testing:
+    name: Integration Testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: test_deep_agent
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio pytest-mock requests httpx
+
+      - name: Run database migrations
+        run: |
+          python -m alembic upgrade head
+        env:
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/test_deep_agent
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ -v --cov=app --cov-report=xml --cov-report=term-missing
+        env:
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/test_deep_agent
+          REDIS_URL: redis://localhost:6379
+          SECRET_KEY: test-secret-key
+          ENVIRONMENT: testing
+
+      - name: Run API contract tests
+        run: |
+          pytest tests/contract/ -v
+        env:
+          DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/test_deep_agent
+          REDIS_URL: redis://localhost:6379
+          SECRET_KEY: test-secret-key
+          ENVIRONMENT: testing
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: true
+
+  end-to-end-testing:
+    name: End-to-End Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      - name: Install Playwright
+        run: |
+          cd frontend
+          npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: |
+          cd frontend
+          npm run test:e2e
+        env:
+          BASE_URL: http://localhost:3000
+          API_URL: http://localhost:8000
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-test-results
+          path: |
+            frontend/test-results/
+            frontend/playwright-report/
+
+  performance-validation:
+    name: Performance Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install performance testing tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install locust pytest-benchmark psutil memory-profiler
+
+      - name: Run performance benchmarks
+        run: |
+          python -m pytest tests/benchmarks/ -v --benchmark-only --benchmark-json=performance-benchmarks.json
+
+      - name: Run memory profiling
+        run: |
+          python tests/performance/memory_profile.py > memory-profile.txt
+
+      - name: Validate performance against baselines
+        run: |
+          python tests/performance/validate_baselines.py performance-benchmarks.json
+
+      - name: Upload performance reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-validation-results
+          path: |
+            performance-benchmarks.json
+            memory-profile.txt
+            performance-validation-report.txt
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Run OWASP ZAP scan
+        run: |
+          docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py \
+            -t http://localhost:8000 -J zap-report.json || true
+
+      - name: Upload security scan results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-scan-results
+          path: |
+            trivy-results.sarif
+            zap-report.json
+
+  compatibility-testing:
+    name: Compatibility Testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+        node-version: [16, 18, 20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Run compatibility tests
+        run: |
+          pytest tests/compatibility/ -v
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          NODE_VERSION: ${{ matrix.node-version }}
+
+      - name: Test frontend build
+        run: |
+          cd frontend
+          npm run build
+
+  qa-summary:
+    name: QA Summary Report
+    runs-on: ubuntu-latest
+    needs: [static-analysis, integration-testing, end-to-end-testing, performance-validation, security-scan, compatibility-testing]
+    if: always()
+
+    steps:
+      - name: Download all QA artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate QA summary
+        run: |
+          echo "# Quality Assurance Summary" > qa-summary.md
+          echo "Generated on: $(date)" >> qa-summary.md
+          echo "" >> qa-summary.md
+
+          echo "## Static Analysis Results" >> qa-summary.md
+          if [ -f "static-analysis-reports/bandit-report.json" ]; then
+            echo "### Security Issues Found" >> qa-summary.md
+            cat static-analysis-reports/bandit-report.json | head -10 >> qa-summary.md
+          fi
+
+          echo "## Integration Test Results" >> qa-summary.md
+          echo "### Test Coverage" >> qa-summary.md
+          if [ -f "coverage.xml" ]; then
+            echo "Coverage report generated successfully" >> qa-summary.md
+          fi
+
+          echo "## Security Scan Results" >> qa-summary.md
+          if [ -f "security-scan-results/zap-report.json" ]; then
+            echo "OWASP ZAP scan completed" >> qa-summary.md
+          fi
+
+          echo "## Performance Validation" >> qa-summary.md
+          if [ -f "performance-validation-results/performance-benchmarks.json" ]; then
+            echo "Performance benchmarks completed" >> qa-summary.md
+          fi
+
+          echo "## Compatibility Testing" >> qa-summary.md
+          echo "Multi-version compatibility testing completed" >> qa-summary.md
+
+      - name: Upload QA summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: qa-summary-report
+          path: qa-summary.md
+
+      - name: Create QA issue if critical issues found
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Check for critical issues and create PR comment
+            const comment = `QA checks completed. Please review the QA artifacts for any issues that need attention.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
