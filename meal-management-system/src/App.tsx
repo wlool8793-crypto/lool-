@@ -31,6 +31,7 @@ import Offline from './pages/Offline';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
 import OfflineIndicator from './components/common/OfflineIndicator';
 import InstallPrompt from './components/common/InstallPrompt';
+import { AppLayout } from './components/layout/AppLayout';
 
 // Protected Route Components
 interface ProtectedRouteProps {
@@ -118,97 +119,46 @@ const AppRoutes: React.FC = () => {
         }
       />
 
-      {/* Student Routes */}
+      {/* Student Routes with Layout */}
       <Route
-        path="/student/dashboard"
+        path="/student/*"
         element={
           <ProtectedRoute requiredRole="student">
-            <StudentDashboard />
+            <AppLayout
+              userName={user?.full_name || 'Student'}
+              userRole="student"
+              onLogout={() => window.location.href = '/login'}
+            />
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/student/meals"
-        element={
-          <ProtectedRoute requiredRole="student">
-            <MealPlanner />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/student/deposits"
-        element={
-          <ProtectedRoute requiredRole="student">
-            <FinancialSummary />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/student/profile"
-        element={
-          <ProtectedRoute requiredRole="student">
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route path="dashboard" element={<StudentDashboard />} />
+        <Route path="meals" element={<MealPlanner />} />
+        <Route path="deposits" element={<FinancialSummary />} />
+        <Route path="profile" element={<Profile />} />
+      </Route>
 
-      {/* Manager Routes */}
+      {/* Manager Routes with Layout */}
       <Route
-        path="/manager/dashboard"
+        path="/manager/*"
         element={
           <ProtectedRoute requiredRole="manager">
-            <ManagerDashboard />
+            <AppLayout
+              userName={user?.full_name || 'Manager'}
+              userRole="manager"
+              onLogout={() => window.location.href = '/login'}
+            />
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/manager/meals"
-        element={
-          <ProtectedRoute requiredRole="manager">
-            <MealManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/manager/deposits"
-        element={
-          <ProtectedRoute requiredRole="manager">
-            <Deposits />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/manager/expenses"
-        element={
-          <ProtectedRoute requiredRole="manager">
-            <Expenses />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/manager/menu"
-        element={
-          <ProtectedRoute requiredRole="manager">
-            <Menu />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/manager/users"
-        element={
-          <ProtectedRoute requiredRole="manager">
-            <Students />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/manager/settings"
-        element={
-          <ProtectedRoute requiredRole="manager">
-            <Settings />
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route path="dashboard" element={<ManagerDashboard />} />
+        <Route path="meals" element={<MealManagement />} />
+        <Route path="deposits" element={<Deposits />} />
+        <Route path="expenses" element={<Expenses />} />
+        <Route path="menu" element={<Menu />} />
+        <Route path="users" element={<Students />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
 
       {/* Root Route - Redirect based on authentication */}
       <Route

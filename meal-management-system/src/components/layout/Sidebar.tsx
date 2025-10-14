@@ -28,52 +28,52 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    path: '/dashboard',
+    path: 'dashboard',
     label: 'Dashboard',
     icon: LayoutDashboard,
     roles: ['admin', 'manager', 'student'],
   },
   {
-    path: '/meals',
+    path: 'meals',
     label: 'Meals',
     icon: UtensilsCrossed,
     roles: ['admin', 'manager', 'student'],
   },
   {
-    path: '/menu',
+    path: 'menu',
     label: 'Menu Planning',
     icon: CalendarDays,
     roles: ['admin', 'manager'],
   },
   {
-    path: '/orders',
-    label: 'Orders',
+    path: 'deposits',
+    label: 'Deposits',
     icon: Receipt,
-    roles: ['admin', 'manager', 'student'],
+    roles: ['admin', 'manager'],
   },
   {
-    path: '/students',
+    path: 'expenses',
+    label: 'Expenses',
+    icon: Receipt,
+    roles: ['admin', 'manager'],
+  },
+  {
+    path: 'users',
     label: 'Students',
     icon: Users,
     roles: ['admin', 'manager'],
   },
   {
-    path: '/reports',
-    label: 'Reports',
-    icon: BarChart3,
-    roles: ['admin', 'manager'],
-  },
-  {
-    path: '/feedback',
-    label: 'Feedback',
-    icon: FileText,
-    roles: ['admin', 'manager', 'student'],
-  },
-  {
-    path: '/settings',
+    path: 'settings',
     label: 'Settings',
     icon: Settings,
     roles: ['admin', 'manager', 'student'],
+  },
+  {
+    path: 'profile',
+    label: 'Profile',
+    icon: Users,
+    roles: ['student'],
   },
 ];
 
