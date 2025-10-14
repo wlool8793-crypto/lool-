@@ -31,7 +31,7 @@ import Offline from './pages/Offline';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
 import OfflineIndicator from './components/common/OfflineIndicator';
 import InstallPrompt from './components/common/InstallPrompt';
-import { AppLayout } from './components/layout/AppLayout';
+import { LayoutWrapper } from './components/layout/LayoutWrapper';
 
 // Protected Route Components
 interface ProtectedRouteProps {
@@ -120,18 +120,7 @@ const AppRoutes: React.FC = () => {
       />
 
       {/* Student Routes with Layout */}
-      <Route
-        path="/student/*"
-        element={
-          <ProtectedRoute requiredRole="student">
-            <AppLayout
-              userName={user?.full_name || 'Student'}
-              userRole="student"
-              onLogout={() => window.location.href = '/login'}
-            />
-          </ProtectedRoute>
-        }
-      >
+      <Route path="/student/*" element={<LayoutWrapper requiredRole="student" />}>
         <Route path="dashboard" element={<StudentDashboard />} />
         <Route path="meals" element={<MealPlanner />} />
         <Route path="deposits" element={<FinancialSummary />} />
@@ -139,18 +128,7 @@ const AppRoutes: React.FC = () => {
       </Route>
 
       {/* Manager Routes with Layout */}
-      <Route
-        path="/manager/*"
-        element={
-          <ProtectedRoute requiredRole="manager">
-            <AppLayout
-              userName={user?.full_name || 'Manager'}
-              userRole="manager"
-              onLogout={() => window.location.href = '/login'}
-            />
-          </ProtectedRoute>
-        }
-      >
+      <Route path="/manager/*" element={<LayoutWrapper requiredRole="manager" />}>
         <Route path="dashboard" element={<ManagerDashboard />} />
         <Route path="meals" element={<MealManagement />} />
         <Route path="deposits" element={<Deposits />} />
