@@ -1,0 +1,29 @@
+{
+  "relationship_type": "RESPONDENT",
+  "description": "A party is the respondent/defendant in a case",
+  "from_node": "Party",
+  "to_node": "Case",
+  "properties": {
+    "party_role": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Specific role of party",
+      "examples": ["Respondent", "Defendant", "Accused", "Opposite Party"]
+    },
+    "party_number": {
+      "type": "integer",
+      "required": false,
+      "description": "Party number (for multiple parties)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX respondent_role IF NOT EXISTS FOR ()-[r:RESPONDENT]-() ON (r.party_role)"
+  ],
+  "constraints": []
+}

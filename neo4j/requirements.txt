@@ -1,0 +1,44 @@
+# Neo4j Database
+neo4j==5.15.0
+python-dotenv==1.0.0
+
+# LLM & NLP
+openai==1.12.0
+google-generativeai==0.8.5
+anthropic==0.18.1
+langchain==0.1.10
+langchain-openai==0.0.6
+langchain-community==0.0.24
+
+# Embeddings
+sentence-transformers==2.3.1
+tiktoken==0.6.0
+
+# Text Processing
+spacy==3.7.4
+regex==2023.12.25
+
+# Data Structures
+pydantic==2.6.1
+pydantic-settings==2.1.0
+
+# Utility
+tqdm==4.66.1
+loguru==0.7.2
+tenacity==8.2.3
+pyyaml==6.0.1
+
+# PDF Processing
+PyMuPDF==1.23.8
+pdfplumber==0.10.3
+pytesseract==0.3.10
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Visualization (if not already in requirements)
+pyvis==0.3.2
+networkx==3.2.1
+matplotlib==3.8.2

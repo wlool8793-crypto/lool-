@@ -1,0 +1,343 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-10-22",
+  "description": "ISO country codes and legal system information for supported countries",
+  "countries": {
+    "IN": {
+      "iso_code": "IN",
+      "iso3_code": "IND",
+      "name": "India",
+      "official_name": "Republic of India",
+      "legal_system": "Common Law (British)",
+      "jurisdiction_levels": ["CENTRAL", "STATE"],
+      "states": [
+        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+        "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+        "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
+        "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
+        "West Bengal"
+      ],
+      "court_hierarchy": {
+        "SUPREME": {
+          "name": "Supreme Court of India",
+          "code": "SC",
+          "abbreviation": "SC",
+          "level": 1
+        },
+        "HIGH": {
+          "name": "High Court",
+          "code": "HC",
+          "abbreviation": "HC",
+          "level": 2,
+          "courts": [
+            "Allahabad HC", "Andhra Pradesh HC", "Bombay HC", "Calcutta HC",
+            "Chhattisgarh HC", "Delhi HC", "Gauhati HC", "Gujarat HC",
+            "Himachal Pradesh HC", "Jammu & Kashmir HC", "Jharkhand HC",
+            "Karnataka HC", "Kerala HC", "Madhya Pradesh HC", "Madras HC",
+            "Manipur HC", "Meghalaya HC", "Orissa HC", "Patna HC",
+            "Punjab & Haryana HC", "Rajasthan HC", "Sikkim HC", "Telangana HC",
+            "Tripura HC", "Uttarakhand HC"
+          ]
+        },
+        "DISTRICT": {
+          "name": "District Court",
+          "code": "DC",
+          "abbreviation": "Dist",
+          "level": 3
+        },
+        "SESSIONS": {
+          "name": "Sessions Court",
+          "code": "SESS",
+          "abbreviation": "Sess",
+          "level": 3
+        },
+        "MAGISTRATE": {
+          "name": "Magistrate Court",
+          "code": "MAG",
+          "abbreviation": "Mag",
+          "level": 4
+        }
+      },
+      "document_categories": {
+        "CASE": {
+          "name": "Judgment/Case Law",
+          "subcategories": ["CIVIL", "CRIMINAL", "CONSTITUTIONAL", "TAX", "COMPANY"]
+        },
+        "ACT": {
+          "name": "Act of Parliament/Legislature",
+          "subcategories": ["CENTRAL", "STATE"]
+        },
+        "RULE": {
+          "name": "Rules/Regulations",
+          "subcategories": ["CENTRAL", "STATE"]
+        },
+        "ORDER": {
+          "name": "Government Orders",
+          "subcategories": ["EXECUTIVE", "ADMINISTRATIVE"]
+        },
+        "NOTIFICATION": {
+          "name": "Official Notifications",
+          "subcategories": ["GAZETTE"]
+        }
+      },
+      "numbering_system": {
+        "acts": "Roman numerals (e.g., Act XLV of 1860)",
+        "cases": "Case number/year format",
+        "rules": "Year and number"
+      }
+    },
+    "BD": {
+      "iso_code": "BD",
+      "iso3_code": "BGD",
+      "name": "Bangladesh",
+      "official_name": "People's Republic of Bangladesh",
+      "legal_system": "Common Law (British)",
+      "jurisdiction_levels": ["CENTRAL"],
+      "court_hierarchy": {
+        "SUPREME_APPELLATE": {
+          "name": "Supreme Court - Appellate Division",
+          "code": "AD",
+          "abbreviation": "AD",
+          "level": 1
+        },
+        "SUPREME_HIGH": {
+          "name": "Supreme Court - High Court Division",
+          "code": "HCD",
+          "abbreviation": "HCD",
+          "level": 2
+        },
+        "DISTRICT": {
+          "name": "District Court",
+          "code": "DC",
+          "abbreviation": "Dist",
+          "level": 3
+        },
+        "SESSIONS": {
+          "name": "Sessions Court",
+          "code": "SESS",
+          "abbreviation": "Sess",
+          "level": 3
+        },
+        "MAGISTRATE": {
+          "name": "Magistrate Court",
+          "code": "MAG",
+          "abbreviation": "Mag",
+          "level": 4
+        }
+      },
+      "document_categories": {
+        "CASE": {
+          "name": "Judgment/Case Law",
+          "subcategories": ["CIVIL", "CRIMINAL", "CONSTITUTIONAL"]
+        },
+        "ACT": {
+          "name": "Act",
+          "subcategories": ["CENTRAL", "1799-1850", "1851-1900", "1901-1950", "1951-2000", "2001-2025"]
+        },
+        "ORDINANCE": {
+          "name": "Ordinance",
+          "subcategories": ["CENTRAL"]
+        },
+        "RULE": {
+          "name": "Rules",
+          "subcategories": ["CENTRAL"]
+        },
+        "ORDER": {
+          "name": "Presidential/Government Orders",
+          "subcategories": ["PRESIDENTIAL", "EXECUTIVE"]
+        }
+      },
+      "numbering_system": {
+        "acts": "Roman numerals or Arabic (e.g., Act XLV of 1860, Act 45 of 1973)",
+        "ordinances": "Arabic numerals",
+        "cases": "Case number/year format"
+      },
+      "official_sources": [
+        "http://bdlaws.minlaw.gov.bd",
+        "http://www.judiciary.gov.bd"
+      ]
+    },
+    "PK": {
+      "iso_code": "PK",
+      "iso3_code": "PAK",
+      "name": "Pakistan",
+      "official_name": "Islamic Republic of Pakistan",
+      "legal_system": "Common Law (British) with Islamic Law",
+      "jurisdiction_levels": ["FEDERAL", "PROVINCIAL"],
+      "provinces": ["Punjab", "Sindh", "Khyber Pakhtunkhwa", "Balochistan"],
+      "court_hierarchy": {
+        "SUPREME": {
+          "name": "Supreme Court of Pakistan",
+          "code": "SC",
+          "abbreviation": "SC",
+          "level": 1
+        },
+        "HIGH": {
+          "name": "High Court",
+          "code": "HC",
+          "abbreviation": "HC",
+          "level": 2,
+          "courts": [
+            "Lahore HC", "Sindh HC", "Peshawar HC", "Balochistan HC", "Islamabad HC"
+          ]
+        },
+        "DISTRICT": {
+          "name": "District Court",
+          "code": "DC",
+          "abbreviation": "Dist",
+          "level": 3
+        },
+        "SESSIONS": {
+          "name": "Sessions Court",
+          "code": "SESS",
+          "abbreviation": "Sess",
+          "level": 3
+        }
+      },
+      "document_categories": {
+        "CASE": {
+          "name": "Judgment",
+          "subcategories": ["CIVIL", "CRIMINAL", "CONSTITUTIONAL", "SHARIAT"]
+        },
+        "ACT": {
+          "name": "Act",
+          "subcategories": ["FEDERAL", "PROVINCIAL"]
+        },
+        "ORDINANCE": {
+          "name": "Ordinance",
+          "subcategories": ["FEDERAL", "PROVINCIAL"]
+        },
+        "RULE": {
+          "name": "Rules",
+          "subcategories": ["FEDERAL", "PROVINCIAL"]
+        },
+        "ORDER": {
+          "name": "Presidential/Government Orders",
+          "subcategories": ["PRESIDENTIAL", "EXECUTIVE"]
+        }
+      },
+      "numbering_system": {
+        "acts": "Arabic numerals (e.g., Act No. 45 of 1860)",
+        "ordinances": "Arabic numerals",
+        "cases": "Case number/year format"
+      }
+    },
+    "GB": {
+      "iso_code": "GB",
+      "iso3_code": "GBR",
+      "name": "United Kingdom",
+      "official_name": "United Kingdom of Great Britain and Northern Ireland",
+      "legal_system": "Common Law",
+      "jurisdiction_levels": ["UK", "ENGLAND_WALES", "SCOTLAND", "NORTHERN_IRELAND"],
+      "court_hierarchy": {
+        "SUPREME": {
+          "name": "UK Supreme Court",
+          "code": "UKSC",
+          "abbreviation": "UKSC",
+          "level": 1
+        },
+        "COURT_OF_APPEAL": {
+          "name": "Court of Appeal",
+          "code": "CA",
+          "abbreviation": "CA",
+          "level": 2
+        },
+        "HIGH": {
+          "name": "High Court",
+          "code": "HC",
+          "abbreviation": "HC",
+          "level": 3
+        }
+      },
+      "document_categories": {
+        "CASE": {
+          "name": "Judgment",
+          "subcategories": ["CIVIL", "CRIMINAL"]
+        },
+        "ACT": {
+          "name": "Act of Parliament",
+          "subcategories": ["UK", "ENGLAND_WALES", "SCOTLAND"]
+        },
+        "STATUTORY_INSTRUMENT": {
+          "name": "Statutory Instrument",
+          "subcategories": ["UK"]
+        }
+      }
+    },
+    "US": {
+      "iso_code": "US",
+      "iso3_code": "USA",
+      "name": "United States",
+      "official_name": "United States of America",
+      "legal_system": "Common Law (Federal + State)",
+      "jurisdiction_levels": ["FEDERAL", "STATE"],
+      "court_hierarchy": {
+        "SUPREME": {
+          "name": "U.S. Supreme Court",
+          "code": "SCOTUS",
+          "abbreviation": "SCOTUS",
+          "level": 1
+        },
+        "CIRCUIT": {
+          "name": "Circuit Court of Appeals",
+          "code": "CA",
+          "abbreviation": "Cir",
+          "level": 2
+        },
+        "DISTRICT": {
+          "name": "District Court",
+          "code": "DC",
+          "abbreviation": "Dist",
+          "level": 3
+        }
+      },
+      "document_categories": {
+        "CASE": {
+          "name": "Case Law",
+          "subcategories": ["FEDERAL", "STATE"]
+        },
+        "STATUTE": {
+          "name": "Statute",
+          "subcategories": ["FEDERAL", "STATE"]
+        },
+        "REGULATION": {
+          "name": "Regulation/CFR",
+          "subcategories": ["FEDERAL"]
+        }
+      }
+    },
+    "AU": {
+      "iso_code": "AU",
+      "iso3_code": "AUS",
+      "name": "Australia",
+      "official_name": "Commonwealth of Australia",
+      "legal_system": "Common Law",
+      "jurisdiction_levels": ["FEDERAL", "STATE", "TERRITORY"]
+    },
+    "CA": {
+      "iso_code": "CA",
+      "iso3_code": "CAN",
+      "name": "Canada",
+      "official_name": "Canada",
+      "legal_system": "Common Law (except Quebec - Civil Law)",
+      "jurisdiction_levels": ["FEDERAL", "PROVINCIAL", "TERRITORIAL"]
+    },
+    "NZ": {
+      "iso_code": "NZ",
+      "iso3_code": "NZL",
+      "name": "New Zealand",
+      "official_name": "New Zealand",
+      "legal_system": "Common Law",
+      "jurisdiction_levels": ["NATIONAL"]
+    },
+    "ZA": {
+      "iso_code": "ZA",
+      "iso3_code": "ZAF",
+      "name": "South Africa",
+      "official_name": "Republic of South Africa",
+      "legal_system": "Mixed (Roman-Dutch and Common Law)",
+      "jurisdiction_levels": ["NATIONAL", "PROVINCIAL"]
+    }
+  }
+}

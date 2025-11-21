@@ -1,0 +1,31 @@
+{
+  "relationship_type": "DECIDED_BY",
+  "description": "A case is decided by a judge",
+  "from_node": "Case",
+  "to_node": "Judge",
+  "properties": {
+    "role": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Judge's role in the case",
+      "examples": ["Presiding Judge", "Member", "Concurring", "Dissenting"]
+    },
+    "opinion_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type of opinion",
+      "examples": ["Majority", "Concurring", "Dissenting", "Separate"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX decided_by_role IF NOT EXISTS FOR ()-[r:DECIDED_BY]-() ON (r.role)"
+  ],
+  "constraints": []
+}

@@ -1,0 +1,121 @@
+[
+  {
+    "iteration": 1,
+    "schema_version": "v1.0",
+    "overall_score": 8.16,
+    "dimension_scores": {
+      "legal_completeness": 9.3,
+      "rag_effectiveness": 7.0,
+      "performance": 10.0,
+      "data_quality": 3.7,
+      "cross_jurisdictional": 10.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 10.0
+    },
+    "improvements_made": 4,
+    "duration_seconds": 236.48726
+  },
+  {
+    "iteration": 2,
+    "schema_version": "v2.0",
+    "overall_score": 9.14,
+    "dimension_scores": {
+      "legal_completeness": 10.0,
+      "rag_effectiveness": 10.0,
+      "performance": 10.0,
+      "data_quality": 4.3,
+      "cross_jurisdictional": 10.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 10.0
+    },
+    "improvements_made": 2,
+    "duration_seconds": 196.974795
+  },
+  {
+    "iteration": 3,
+    "schema_version": "v3.0",
+    "overall_score": 8.7,
+    "dimension_scores": {
+      "legal_completeness": 9.6,
+      "rag_effectiveness": 9.0,
+      "performance": 10.0,
+      "data_quality": 3.5,
+      "cross_jurisdictional": 10.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 10.0
+    },
+    "improvements_made": 2,
+    "duration_seconds": 246.519138
+  },
+  {
+    "iteration": 4,
+    "schema_version": "v4.0",
+    "overall_score": 8.61,
+    "dimension_scores": {
+      "legal_completeness": 9.8,
+      "rag_effectiveness": 8.0,
+      "performance": 10.0,
+      "data_quality": 4.3,
+      "cross_jurisdictional": 10.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 10.0
+    },
+    "improvements_made": 2,
+    "duration_seconds": 240.507495
+  },
+  {
+    "iteration": 5,
+    "schema_version": "v5.0",
+    "overall_score": 8.76,
+    "dimension_scores": {
+      "legal_completeness": 9.6,
+      "rag_effectiveness": 9.0,
+      "performance": 10.0,
+      "data_quality": 4.3,
+      "cross_jurisdictional": 10.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 9.0
+    },
+    "improvements_made": 2,
+    "duration_seconds": 229.350849
+  },
+  {
+    "iteration": 6,
+    "schema_version": "v6.0",
+    "overall_score": 8.77,
+    "dimension_scores": {
+      "legal_completeness": 9.8,
+      "rag_effectiveness": 9.0,
+      "performance": 10.0,
+      "data_quality": 3.7,
+      "cross_jurisdictional": 10.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 10.0
+    },
+    "improvements_made": 2,
+    "duration_seconds": 243.469592
+  },
+  {
+    "iteration": 7,
+    "schema_version": "v7.0",
+    "overall_score": 8.31,
+    "dimension_scores": {
+      "legal_completeness": 9.6,
+      "rag_effectiveness": 7.0,
+      "performance": 10.0,
+      "data_quality": 4.3,
+      "cross_jurisdictional": 10.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 10.0
+    },
+    "improvements_made": 4,
+    "duration_seconds": 216.599731
+  }
+]

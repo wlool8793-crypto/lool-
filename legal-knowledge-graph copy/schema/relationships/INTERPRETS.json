@@ -1,0 +1,29 @@
+{
+  "relationship_type": "INTERPRETS",
+  "description": "A case interprets a statute or section",
+  "from_node": "Case",
+  "to_node": ["Statute", "Section"],
+  "properties": {
+    "interpretation_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type of interpretation",
+      "examples": ["Literal", "Purposive", "Strict", "Liberal", "Harmonious"]
+    },
+    "holding": {
+      "type": "text",
+      "required": false,
+      "description": "Court's interpretation"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX interprets_type IF NOT EXISTS FOR ()-[r:INTERPRETS]-() ON (r.interpretation_type)"
+  ],
+  "constraints": []
+}

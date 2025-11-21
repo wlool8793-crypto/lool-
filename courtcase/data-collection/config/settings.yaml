@@ -1,0 +1,371 @@
+# Universal Legal Document System - Global Settings
+# Version: 1.0
+# Last Updated: 2025-10-22
+
+# System Information
+system:
+  name: "Universal Legal Document Management System"
+  version: "2.0.0"
+  environment: "production"  # development, staging, production
+  debug: false
+
+# Database Configuration
+database:
+  default_engine: "sqlite"  # sqlite, postgresql, mysql
+
+  sqlite:
+    path: "data/universal_legal.db"
+    timeout: 30
+    check_same_thread: false
+
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "legal_docs"
+    user: "indiankanoon_user"
+    password: "${DB_PASSWORD}"  # Use environment variable
+    pool_size: 10
+    max_overflow: 20
+
+  backup:
+    enabled: true
+    frequency: "daily"  # hourly, daily, weekly
+    retention_days: 30
+    location: "data/backups/"
+
+# File Storage
+storage:
+  base_path: "Legal_Database"
+  temp_path: "data/temp_pdfs"
+
+  organization:
+    mode: "hierarchical"  # flat, hierarchical, date-based
+    use_country_folders: true
+    use_category_folders: true
+    use_year_folders: false  # For cases
+    use_court_folders: true  # For cases
+
+  validation:
+    check_pdf_header: true
+    minimum_file_size_bytes: 1024
+    calculate_hash: true
+    hash_algorithm: "sha256"
+
+  cleanup:
+    auto_cleanup_temp: true
+    temp_file_age_hours: 24
+    keep_failed_downloads: false
+
+# Document Naming
+naming:
+  format: "universal"  # universal, legacy, custom
+
+  universal:
+    max_title_length: 40
+    use_roman_numerals: true  # For act numbers
+    date_format: "YYYYMMDD"  # YYYYMMDD, YYYY-MM-DD, YYYY
+
+  sanitization:
+    remove_special_chars: true
+    replace_spaces_with: "_"
+    lowercase: false
+    max_filename_length: 255
+
+  validation:
+    enforce_format: true
+    require_global_id: true
+    require_country_code: true
+
+# Subject Classification
+taxonomy:
+  auto_classify: true
+  confidence_threshold: 0.7
+  use_llm: false  # Use LLM for classification (requires API key)
+
+  sources:
+    taxonomy_file: "Legal_Database/_SYSTEM/taxonomy.json"
+    law_codes_file: "config/law_codes.json"
+    country_codes_file: "Legal_Database/_SYSTEM/country_codes.json"
+
+# Scraping Configuration
+scraping:
+  # General Settings
+  enabled: true
+  mode: "polite"  # aggressive, balanced, polite
+
+  # Rate Limiting
+  rate_limit:
+    requests_per_second: 0.5  # 1 request every 2 seconds
+    requests_per_minute: 20
+    burst_allowed: 3
+    delay_between_requests: 2.0  # seconds
+
+  # Retry Logic
+  retry:
+    max_attempts: 3
+    backoff_factor: 2  # exponential: 2, 4, 8 seconds
+    retry_on_status: [429, 500, 502, 503, 504]
+
+  # Timeouts
+  timeout:
+    connect: 10  # seconds
+    read: 30
+    total: 60
+
+  # User Agent
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+  # Concurrency
+  concurrent:
+    enabled: true
+    max_workers: 10
+    use_threading: true  # threading vs multiprocessing
+
+  # Checkpoints
+  checkpoint:
+    enabled: true
+    frequency: 10000  # Save every N URLs/documents
+    location: "data/checkpoints/"
+
+  # Proxies
+  proxy:
+    enabled: false
+    rotate: true
+    provider: "webshare"  # webshare, custom
+    retry_on_proxy_error: true
+
+# PDF Download
+pdf:
+  download_enabled: true
+  validate_after_download: true
+
+  validation:
+    check_header: true
+    min_size_bytes: 1024
+    max_size_mb: 100
+
+  storage:
+    organize_by_country: true
+    organize_by_category: true
+    keep_temp_copy: false
+
+# Cloud Storage
+cloud:
+  enabled: false  # Enable Google Drive upload
+  provider: "google_drive"  # google_drive, aws_s3, azure_blob
+
+  google_drive:
+    credentials_file: "config/credentials.json"
+    token_file: "config/token.pickle"
+    folder_name: "IndianKanoon_PDFs"
+    batch_upload_size: 50
+    delete_local_after_upload: true
+
+  aws_s3:
+    bucket: "legal-documents"
+    region: "us-east-1"
+    access_key: "${AWS_ACCESS_KEY}"
+    secret_key: "${AWS_SECRET_KEY}"
+
+  azure_blob:
+    account_name: "legaldocs"
+    container: "pdfs"
+    connection_string: "${AZURE_CONNECTION_STRING}"
+
+# Logging
+logging:
+  enabled: true
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+  console:
+    enabled: true
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    color: true
+
+  file:
+    enabled: true
+    path: "logs/system.log"
+    max_bytes: 10485760  # 10MB
+    backup_count: 5
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+  specific_loggers:
+    scraper: "DEBUG"
+    database: "INFO"
+    file_organizer: "INFO"
+    naming: "INFO"
+
+# Monitoring & Statistics
+monitoring:
+  enabled: true
+  update_frequency: 60  # seconds
+
+  metrics:
+    track_download_speed: true
+    track_success_rate: true
+    track_error_types: true
+    track_storage_usage: true
+
+  alerts:
+    enabled: false
+    email_on_error: false
+    email_on_completion: false
+    webhook_url: null
+
+# Performance
+performance:
+  # Database
+  batch_insert_size: 1000
+  use_connection_pool: true
+  enable_query_cache: true
+
+  # File Operations
+  read_chunk_size: 8192
+  write_chunk_size: 8192
+  use_buffering: true
+
+  # Memory
+  max_memory_mb: 2048
+  cache_size_mb: 256
+
+# Security
+security:
+  validate_sources: true
+  allowed_domains:
+    - "indiankanoon.org"
+    - "bdlaws.minlaw.gov.bd"
+    - "bdlex.com"
+    - "indiacode.nic.in"
+
+  sanitize_inputs: true
+  escape_sql: true
+  hash_sensitive_data: false
+
+  api:
+    require_auth: false
+    api_key: "${API_KEY}"
+    rate_limit_per_hour: 1000
+
+# Export
+export:
+  formats:
+    - "csv"
+    - "json"
+    - "xlsx"
+
+  csv:
+    delimiter: ","
+    quotechar: "\""
+    encoding: "utf-8-sig"
+    include_header: true
+
+  json:
+    indent: 2
+    ensure_ascii: false
+
+  xlsx:
+    max_rows_per_sheet: 100000
+    include_formatting: true
+
+# Search
+search:
+  full_text_enabled: true
+  fuzzy_matching: true
+  fuzzy_threshold: 0.8
+
+  indexing:
+    enabled: true
+    index_path: "data/search_index/"
+    rebuild_frequency: "weekly"
+
+  results:
+    default_limit: 100
+    max_limit: 10000
+    highlight_matches: true
+
+# API (if enabled)
+api:
+  enabled: false
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+
+  cors:
+    enabled: true
+    origins: ["*"]
+
+  rate_limit:
+    requests_per_minute: 60
+
+  endpoints:
+    - "/api/documents"
+    - "/api/search"
+    - "/api/stats"
+    - "/api/export"
+
+# Countries
+countries:
+  enabled: ["IN", "BD", "PK"]
+  primary: "BD"  # Default country for operations
+
+  india:
+    courts: ["SC", "DHC", "BHC", "CHC", "MHC", "KHC", "AHC"]
+    sources: ["indiankanoon.org", "indiacode.nic.in"]
+
+  bangladesh:
+    courts: ["AD", "HCD"]
+    sources: ["bdlaws.minlaw.gov.bd", "bdlex.com"]
+
+  pakistan:
+    courts: ["SC", "LHC", "IHC", "SHC", "PHC"]
+    sources: []
+
+# Maintenance
+maintenance:
+  auto_optimize_db: true
+  optimize_frequency: "weekly"
+
+  vacuum_db: true
+  vacuum_frequency: "monthly"
+
+  cleanup_logs: true
+  log_retention_days: 90
+
+  health_check:
+    enabled: true
+    check_frequency: 300  # seconds
+    endpoints:
+      - database
+      - storage
+      - network
+
+# Features
+features:
+  citation_tracking: true
+  amendment_history: true
+  relationship_mapping: true
+  automatic_tagging: true
+  duplicate_detection: true
+  quality_scoring: true
+  llm_integration: false  # Requires API key
+
+# Notifications
+notifications:
+  enabled: false
+
+  email:
+    smtp_host: "smtp.gmail.com"
+    smtp_port: 587
+    username: "${EMAIL_USER}"
+    password: "${EMAIL_PASSWORD}"
+    from_address: "noreply@legaldocs.com"
+
+  webhook:
+    url: null
+    auth_token: "${WEBHOOK_TOKEN}"
+
+  events:
+    - "scraping_complete"
+    - "error_occurred"
+    - "storage_full"
+    - "daily_summary"

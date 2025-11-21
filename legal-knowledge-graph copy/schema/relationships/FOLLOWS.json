@@ -1,0 +1,34 @@
+{
+  "relationship_type": "FOLLOWS",
+  "description": "A case follows the precedent set by another case",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "precedent_strength": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Strength of precedent followed",
+      "examples": ["Binding", "Persuasive", "Strong", "Weak"]
+    },
+    "ratio_decidendi": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether following the ratio decidendi"
+    },
+    "context": {
+      "type": "text",
+      "required": false,
+      "description": "Context in which precedent is followed"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX follows_strength IF NOT EXISTS FOR ()-[r:FOLLOWS]-() ON (r.precedent_strength)"
+  ],
+  "constraints": []
+}

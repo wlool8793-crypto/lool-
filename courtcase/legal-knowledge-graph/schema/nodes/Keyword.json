@@ -1,0 +1,119 @@
+{
+  "node_type": "Keyword",
+  "description": "Represents a legal keyword or term for search and classification",
+  "properties": {
+    "keyword_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier",
+      "examples": ["KW-MURDER", "KW-CONTRACT-BREACH"]
+    },
+    "term": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "indexed": true,
+      "description": "The keyword term",
+      "examples": ["murder", "contract breach", "fundamental rights"]
+    },
+    "normalized_term": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Normalized/stemmed version for matching"
+    },
+    "category": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Category of keyword",
+      "examples": ["Legal Concept", "Crime", "Remedy", "Procedure", "Right"]
+    },
+    "frequency": {
+      "type": "integer",
+      "required": false,
+      "description": "Usage frequency across documents"
+    },
+    "embedding": {
+      "type": "vector",
+      "required": false,
+      "vector_dimension": 1536,
+      "description": "Vector embedding for semantic search"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (increments on updates)",
+      "default": 1
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_keyword_id IF NOT EXISTS FOR (k:Keyword) REQUIRE k.keyword_id IS UNIQUE",
+    "CONSTRAINT unique_keyword_term IF NOT EXISTS FOR (k:Keyword) REQUIRE k.term IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX keyword_term IF NOT EXISTS FOR (k:Keyword) ON (k.term)",
+    "CREATE INDEX keyword_normalized IF NOT EXISTS FOR (k:Keyword) ON (k.normalized_term)",
+    "CREATE INDEX keyword_source IF NOT EXISTS FOR (k:Keyword) ON (k.source)",
+    "CREATE INDEX keyword_extracted_by IF NOT EXISTS FOR (k:Keyword) ON (k.extracted_by)",
+    "CREATE INDEX keyword_trust_score IF NOT EXISTS FOR (k:Keyword) ON (k.trust_score)",
+    "CREATE INDEX keyword_verification_status IF NOT EXISTS FOR (k:Keyword) ON (k.verification_status)",
+    "CREATE VECTOR INDEX keyword_embedding IF NOT EXISTS FOR (k:Keyword) ON (k.embedding) OPTIONS {indexConfig: {`vector.dimensions`: 1536, `vector.similarity_function`: 'cosine'}}"
+  ]
+}

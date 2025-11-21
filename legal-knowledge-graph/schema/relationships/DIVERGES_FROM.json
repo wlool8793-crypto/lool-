@@ -1,0 +1,99 @@
+{
+  "relationship_type": "DIVERGES_FROM",
+  "description": "Indicates cases with differing legal interpretations across jurisdictions, showing where jurisprudence has taken different paths on similar issues",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "jurisdictions": {
+      "type": "list<string>",
+      "required": true,
+      "description": "List of jurisdictions with divergent interpretations",
+      "indexed": true,
+      "examples": [
+        ["BD", "IN"],
+        ["IN", "PK"],
+        ["BD", "PK"]
+      ]
+    },
+    "reason": {
+      "type": "text",
+      "required": true,
+      "description": "Explanation of why the interpretations differ",
+      "examples": [
+        "Different constitutional frameworks for emergency powers",
+        "Divergent approaches to statutory interpretation",
+        "Different historical context and legislative intent"
+      ]
+    },
+    "point_of_divergence": {
+      "type": "text",
+      "required": true,
+      "description": "Specific legal issue or principle where divergence occurs",
+      "examples": [
+        "Scope of judicial review during emergency",
+        "Definition of 'public interest' in land acquisition",
+        "Application of rule against double jeopardy"
+      ]
+    },
+    "severity": {
+      "type": "enum",
+      "required": true,
+      "description": "Severity level of the divergence",
+      "indexed": true,
+      "values": ["Minor", "Moderate", "Significant"]
+    },
+    "legal_basis": {
+      "type": "string",
+      "required": false,
+      "description": "Legal basis for the divergence (constitutional provision, statute, precedent)"
+    },
+    "divergence_date": {
+      "type": "date",
+      "required": false,
+      "description": "Date when the divergence was first recognized or occurred"
+    },
+    "reconciliation_attempted": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether any attempt has been made to reconcile the divergent interpretations",
+      "default": false
+    },
+    "reconciliation_case_id": {
+      "type": "string",
+      "required": false,
+      "description": "Case that attempted or achieved reconciliation, if any"
+    },
+    "notes": {
+      "type": "text",
+      "required": false,
+      "description": "Additional context or scholarly commentary on the divergence"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX diverges_jurisdictions IF NOT EXISTS FOR ()-[r:DIVERGES_FROM]-() ON (r.jurisdictions)",
+    "CREATE INDEX diverges_severity IF NOT EXISTS FOR ()-[r:DIVERGES_FROM]-() ON (r.severity)"
+  ],
+  "constraints": [],
+  "examples": [
+    {
+      "description": "Bangladesh diverges from India on sedition law interpretation",
+      "from": "Case{case_id: 'bd_2019_sc_123', jurisdiction: 'BD'}",
+      "to": "Case{case_id: 'in_2016_sc_2181', jurisdiction: 'IN'}",
+      "properties": {
+        "jurisdictions": ["BD", "IN"],
+        "reason": "Different approach to balancing free speech against national security in post-colonial context",
+        "point_of_divergence": "Threshold for establishing seditious intent and requirement of actual incitement to violence",
+        "severity": "Significant",
+        "legal_basis": "Section 124A IPC (sedition law) interpreted differently",
+        "divergence_date": "2019-03-20",
+        "reconciliation_attempted": false,
+        "notes": "Bangladesh court took more restrictive view requiring clear and present danger, while Indian court emphasized constitutional limits on sedition charges"
+      }
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "node_type": "LegalPrinciple",
+  "description": "Legal principle, doctrine, or maxim",
+  "properties": {
+    "principle_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the principle",
+      "examples": ["PRIN-BASIC-STRUCTURE", "PRIN-EJUSDEM-GENERIS"]
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Name of the principle",
+      "examples": ["Basic Structure Doctrine", "Ejusdem Generis"]
+    },
+    "latin_maxim": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Latin phrase if applicable",
+      "examples": ["Nemo judex in causa sua", "Res judicata"]
+    },
+    "principle_type": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Category of principle",
+      "examples": ["Doctrine", "Maxim", "Rule of Interpretation", "Constitutional Principle"]
+    },
+    "definition": {
+      "type": "text",
+      "required": true,
+      "description": "Definition of the principle"
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "description": "Detailed explanation"
+    },
+    "domain": {
+      "type": "string[]",
+      "required": false,
+      "indexed": true,
+      "description": "Legal domains where principle applies",
+      "examples": ["Constitutional", "Criminal", "Civil", "Administrative"]
+    },
+    "embedding": {
+      "type": "vector",
+      "required": false,
+      "vector_dimension": 1536,
+      "description": "Vector embedding for semantic search"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (increments on updates)",
+      "default": 1
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_principle_id IF NOT EXISTS FOR (p:LegalPrinciple) REQUIRE p.principle_id IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX principle_name IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.name)",
+    "CREATE INDEX principle_type IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.principle_type)",
+    "CREATE INDEX principle_source IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.source)",
+    "CREATE INDEX principle_extracted_by IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.extracted_by)",
+    "CREATE INDEX principle_trust_score IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.trust_score)",
+    "CREATE INDEX principle_verification_status IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.verification_status)",
+    "CREATE TEXT INDEX principle_definition IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.definition)",
+    "CREATE VECTOR INDEX principle_embedding IF NOT EXISTS FOR (p:LegalPrinciple) ON (p.embedding) OPTIONS {indexConfig: {`vector.dimensions`: 1536, `vector.similarity_function`: 'cosine'}}"
+  ]
+}

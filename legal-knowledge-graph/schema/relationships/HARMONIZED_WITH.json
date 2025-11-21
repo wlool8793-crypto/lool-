@@ -1,0 +1,83 @@
+{
+  "relationship_type": "HARMONIZED_WITH",
+  "description": "Indicates cases with aligned legal interpretations across different jurisdictions (e.g., Bangladesh, India, Pakistan), showing harmonized jurisprudence",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "jurisdictions": {
+      "type": "list<string>",
+      "required": true,
+      "description": "List of jurisdictions involved in the harmonization",
+      "indexed": true,
+      "examples": [
+        ["BD", "IN"],
+        ["IN", "PK"],
+        ["BD", "IN", "PK"]
+      ]
+    },
+    "principle": {
+      "type": "text",
+      "required": true,
+      "description": "Shared legal principle or interpretation that is harmonized",
+      "examples": [
+        "Right to life includes right to livelihood",
+        "Natural justice requires hearing before adverse action",
+        "Delegated legislation must be within statutory limits"
+      ]
+    },
+    "reasoning_similarity": {
+      "type": "float",
+      "required": true,
+      "description": "Similarity score of legal reasoning between cases (0-1)",
+      "range": "0.0-1.0",
+      "indexed": true
+    },
+    "harmonized_by": {
+      "type": "string",
+      "required": false,
+      "description": "Case citation or reference that explicitly harmonized these interpretations"
+    },
+    "common_statute": {
+      "type": "string",
+      "required": false,
+      "description": "Statute or constitutional provision interpreted consistently across jurisdictions",
+      "examples": ["Article 32 (IN) / Article 102 (BD)", "Evidence Act Section 3"]
+    },
+    "harmonization_date": {
+      "type": "date",
+      "required": false,
+      "description": "Date when harmonization was recognized or established"
+    },
+    "notes": {
+      "type": "text",
+      "required": false,
+      "description": "Additional context about the harmonization"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX harmonized_jurisdictions IF NOT EXISTS FOR ()-[r:HARMONIZED_WITH]-() ON (r.jurisdictions)",
+    "CREATE INDEX harmonized_similarity IF NOT EXISTS FOR ()-[r:HARMONIZED_WITH]-() ON (r.reasoning_similarity)"
+  ],
+  "constraints": [],
+  "examples": [
+    {
+      "description": "Bangladesh and India harmonized on fundamental rights interpretation",
+      "from": "Case{case_id: 'bd_2020_sc_045', jurisdiction: 'BD'}",
+      "to": "Case{case_id: 'in_1978_sc_597', jurisdiction: 'IN'}",
+      "properties": {
+        "jurisdictions": ["BD", "IN"],
+        "principle": "Right to life under Article 32 includes right to livelihood and dignity",
+        "reasoning_similarity": 0.92,
+        "harmonized_by": "Bangladesh SC in Rahman v. State (2020)",
+        "common_statute": "Article 32 (IN) / Article 102 (BD)",
+        "harmonization_date": "2020-06-15",
+        "notes": "Both courts recognized that constitutional right to life must be interpreted broadly to include economic rights"
+      }
+    }
+  ]
+}

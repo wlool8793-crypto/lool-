@@ -1,0 +1,76 @@
+{
+  "relationship_type": "APPLIED_DIFFERENTLY",
+  "description": "A case applies a precedent in a different manner or interprets it differently without rejecting it",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "difference_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type: narrow_interpretation, broad_interpretation, different_context, modified_application"
+    },
+    "difference_description": {
+      "type": "text",
+      "required": true,
+      "description": "How the application differs from original or typical interpretation"
+    },
+    "original_context": {
+      "type": "text",
+      "required": false,
+      "description": "Original context in which precedent was applied"
+    },
+    {
+      "name": "new_context",
+      "type": "text",
+      "required": false,
+      "description": "New context in which precedent is being applied"
+    },
+    "interpretive_approach": {
+      "type": "string",
+      "required": false,
+      "description": "Approach: literal, liberal, purposive, restrictive, expansive"
+    },
+    "consistency": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Whether different application is consistent with precedent: yes, no, partial"
+    },
+    "reasoning": {
+      "type": "text",
+      "required": false,
+      "description": "Court's reasoning for different application"
+    },
+    "legal_principle_affected": {
+      "type": "string[]",
+      "required": false,
+      "description": "Legal principles affected by different application"
+    },
+    "impact": {
+      "type": "string",
+      "required": false,
+      "description": "Impact of different application: clarifying, confusing, limiting, expanding"
+    },
+    "acceptance": {
+      "type": "string",
+      "required": false,
+      "description": "Whether different application was accepted by later cases"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX applied_differently_type IF NOT EXISTS FOR ()-[r:APPLIED_DIFFERENTLY]-() ON (r.difference_type)",
+    "CREATE INDEX applied_differently_consistency IF NOT EXISTS FOR ()-[r:APPLIED_DIFFERENTLY]-() ON (r.consistency)",
+    "CREATE INDEX applied_differently_impact IF NOT EXISTS FOR ()-[r:APPLIED_DIFFERENTLY]-() ON (r.impact)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all different applications of a precedent\nMATCH (precedent:Case {case_id: 'case_bd_sc_2015_456'})<-[a:APPLIED_DIFFERENTLY]-(applying:Case)\nRETURN applying.citation, a.difference_type, a.difference_description, a.consistency\nORDER BY applying.decision_date",
+    "// Find inconsistent applications\nMATCH (precedent:Case)<-[a:APPLIED_DIFFERENTLY]-(applying:Case)\nWHERE a.consistency IN ['no', 'partial']\n  AND precedent.primary_domain = 'Constitutional'\nRETURN precedent.citation, applying.citation, a.difference_description, a.impact"
+  ]
+}

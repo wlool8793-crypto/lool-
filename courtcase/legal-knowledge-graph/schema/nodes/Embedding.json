@@ -1,0 +1,159 @@
+{
+  "label": "Embedding",
+  "description": "Represents a vector embedding for a text chunk, optimized for RAG retrieval",
+  "required_properties": [
+    {
+      "name": "embedding_id",
+      "type": "string",
+      "description": "Unique identifier for the embedding",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "vector",
+      "type": "float[]",
+      "description": "Vector embedding (typically 1536 dimensions for OpenAI)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "description": "The text that was embedded",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "When the embedding was created",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "When the embedding was last updated",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "embedding_model",
+      "type": "string",
+      "description": "Model used for embedding (e.g., 'text-embedding-ada-002')"
+    },
+    {
+      "name": "dimensions",
+      "type": "integer",
+      "description": "Number of dimensions in the vector"
+    },
+    {
+      "name": "chunk_index",
+      "type": "integer",
+      "description": "Index of this chunk within the parent document"
+    },
+    {
+      "name": "chunk_size",
+      "type": "integer",
+      "description": "Size of the text chunk in characters"
+    },
+    {
+      "name": "overlap",
+      "type": "integer",
+      "description": "Overlap with adjacent chunks"
+    },
+    {
+      "name": "metadata",
+      "type": "map",
+      "description": "Additional metadata as key-value pairs"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "vector",
+      "name": "embedding_vector_index",
+      "properties": ["vector"],
+      "dimensions": 1536,
+      "similarity": "cosine"
+    },
+    {
+      "type": "property",
+      "name": "embedding_model_index",
+      "properties": ["embedding_model"]
+    },
+    {
+      "type": "property",
+      "name": "embedding_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "embedding_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "embedding_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "embedding_verification_status_index",
+      "properties": ["verification_status"]
+    }
+  ],
+  "example": {
+    "embedding_id": "emb_bd_sc_2023_123_chunk_001",
+    "vector": "[0.012, -0.034, 0.056, ...]",
+    "text": "The Supreme Court held that the mandatory death penalty for murder violates Article 32 of the Constitution...",
+    "embedding_model": "text-embedding-ada-002",
+    "dimensions": 1536,
+    "chunk_index": 1,
+    "chunk_size": 512,
+    "overlap": 50
+  }
+}

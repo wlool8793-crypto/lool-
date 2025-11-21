@@ -1,0 +1,275 @@
+{
+  "label": "PropertyTransfer",
+  "description": "Represents a property transfer transaction involved in a case for property transaction tracking",
+  "required_properties": [
+    {
+      "name": "transfer_id",
+      "type": "string",
+      "description": "Unique identifier for the property transfer",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "case_id",
+      "type": "string",
+      "description": "Reference to the associated case",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "transfer_type",
+      "type": "string",
+      "description": "Type of transfer (sale, gift, inheritance, lease, exchange, partition, etc.)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "property_right_id",
+      "type": "string",
+      "description": "Reference to PropertyRight being transferred"
+    },
+    {
+      "name": "transferor_id",
+      "type": "string",
+      "description": "Reference to transferor (Party node)"
+    },
+    {
+      "name": "transferor_name",
+      "type": "string",
+      "description": "Name of the transferor"
+    },
+    {
+      "name": "transferee_id",
+      "type": "string",
+      "description": "Reference to transferee (Party node)"
+    },
+    {
+      "name": "transferee_name",
+      "type": "string",
+      "description": "Name of the transferee"
+    },
+    {
+      "name": "transfer_date",
+      "type": "date",
+      "description": "Date of transfer"
+    },
+    {
+      "name": "registration_date",
+      "type": "date",
+      "description": "Date of transfer registration"
+    },
+    {
+      "name": "transfer_deed_number",
+      "type": "string",
+      "description": "Transfer deed/document number"
+    },
+    {
+      "name": "consideration_amount",
+      "type": "float",
+      "description": "Consideration/price paid for transfer"
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "description": "Currency code (BDT, INR, PKR)"
+    },
+    {
+      "name": "stamp_duty",
+      "type": "float",
+      "description": "Stamp duty paid"
+    },
+    {
+      "name": "registration_fee",
+      "type": "float",
+      "description": "Registration fee paid"
+    },
+    {
+      "name": "conditions",
+      "type": "string[]",
+      "description": "Conditions attached to transfer"
+    },
+    {
+      "name": "disputed",
+      "type": "boolean",
+      "description": "Whether the transfer is disputed"
+    },
+    {
+      "name": "dispute_grounds",
+      "type": "string[]",
+      "description": "Grounds of dispute (fraud, undue influence, lack of capacity, etc.)"
+    },
+    {
+      "name": "outcome",
+      "type": "string",
+      "description": "Outcome: upheld, set aside, modified, void"
+    },
+    {
+      "name": "void_reason",
+      "type": "string",
+      "description": "Reason if transfer was voided"
+    },
+    {
+      "name": "witnesses",
+      "type": "string[]",
+      "description": "Witnesses to the transfer"
+    },
+    {
+      "name": "jurisdiction",
+      "type": "string",
+      "description": "Legal jurisdiction"
+    },
+    {
+      "name": "registrar_office",
+      "type": "string",
+      "description": "Sub-registrar office where registered"
+    },
+    {
+      "name": "legal_provisions",
+      "type": "string[]",
+      "description": "Legal provisions governing the transfer"
+    },
+    {
+      "name": "notes",
+      "type": "text",
+      "description": "Additional notes"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "property",
+      "name": "property_transfer_case_id_index",
+      "properties": ["case_id"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_type_index",
+      "properties": ["transfer_type"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_transferor_index",
+      "properties": ["transferor_id"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_transferee_index",
+      "properties": ["transferee_id"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_property_index",
+      "properties": ["property_right_id"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_disputed_index",
+      "properties": ["disputed"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_outcome_index",
+      "properties": ["outcome"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "property_transfer_verification_status_index",
+      "properties": ["verification_status"]
+    },
+    {
+      "type": "composite",
+      "name": "property_transfer_date_index",
+      "properties": ["transfer_date", "registration_date"]
+    }
+  ],
+  "example": {
+    "transfer_id": "transfer_bd_2023_456",
+    "case_id": "case_bd_civil_2023_789",
+    "transfer_type": "sale",
+    "property_right_id": "prop_bd_2023_789",
+    "transferor_name": "Ahmed Brothers",
+    "transferee_name": "Karim Enterprises",
+    "transfer_date": "2022-05-15",
+    "registration_date": "2022-05-20",
+    "consideration_amount": 8000000.00,
+    "currency": "BDT",
+    "stamp_duty": 400000.00,
+    "registration_fee": 50000.00,
+    "disputed": true,
+    "dispute_grounds": ["fraud", "misrepresentation"],
+    "outcome": "set aside",
+    "jurisdiction": "Bangladesh"
+  }
+}

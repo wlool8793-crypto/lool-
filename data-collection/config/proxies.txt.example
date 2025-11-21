@@ -1,0 +1,19 @@
+# Proxy Configuration File
+# =======================
+# Add your proxies here, one per line
+# Supported formats:
+#   - http://host:port
+#   - http://username:password@host:port
+#   - https://host:port
+#   - https://username:password@host:port
+#
+# Example (WebShare proxies):
+# http://username:password@p.webshare.io:80
+# http://username:password@p.webshare.io:80
+#
+# Example (free proxies):
+# http://proxy1.example.com:8080
+# http://proxy2.example.com:3128
+#
+# Add your 10 proxies below:
+

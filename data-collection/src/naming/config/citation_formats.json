@@ -1,0 +1,133 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Citation format patterns for legal document parsing",
+    "last_updated": "2024-01-01"
+  },
+  "reporters": {
+    "BD": {
+      "DLR": {
+        "name": "Dhaka Law Reports",
+        "patterns": [
+          "^(\\d+)\\s*\\((\\d{4})\\)\\s*DLR\\s*\\(?(AD|HCD|HC|SC)?\\)?\\s*(\\d+)$",
+          "^(\\d+)\\s*DLR\\s*\\((\\d{4})\\)\\s*(AD|HCD|HC|SC)?\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}DLR{year2}{court}{page}",
+        "example": "22 (1998) DLR (HCD) 205"
+      },
+      "BLD": {
+        "name": "Bangladesh Legal Decisions",
+        "patterns": [
+          "^(\\d+)\\s*BLD\\s*\\(?(AD|HCD|HC|SC)?\\)?\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}BLD{court}{page}",
+        "example": "8 BLD (AD) 212"
+      },
+      "BLC": {
+        "name": "Bangladesh Law Chronicles",
+        "patterns": [
+          "^(\\d+)\\s*BLC\\s*\\(?(AD|HCD|HC|SC)?\\)?\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}BLC{court}{page}",
+        "example": "15 BLC (HCD) 123"
+      },
+      "BCR": {
+        "name": "Bangladesh Case Reports",
+        "patterns": [
+          "^(\\d+)\\s*BCR\\s*\\(?(AD|HCD)?\\)?\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}BCR{court}{page}",
+        "example": "5 BCR (AD) 100"
+      },
+      "MLR": {
+        "name": "Mainstream Law Reports",
+        "patterns": [
+          "^(\\d+)\\s*MLR\\s*\\((\\d{4})\\)\\s*(AD|HCD)?\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}MLR{year2}{page}",
+        "example": "10 MLR (2020) 45"
+      }
+    },
+    "IN": {
+      "AIR": {
+        "name": "All India Reporter",
+        "patterns": [
+          "^AIR\\s*(\\d{4})\\s*(SC|Del|Bom|Mad|Cal|Kar|All|Guj|P&H|Pat|Raj|Ker|AP|Ori|HP|J&K)\\s*(\\d+)$"
+        ],
+        "encoding": "AIR{year2}{court}{page}",
+        "example": "AIR 1973 SC 1461"
+      },
+      "SCC": {
+        "name": "Supreme Court Cases",
+        "patterns": [
+          "^\\((\\d{4})\\)\\s*(\\d+)\\s*SCC\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}SCC{year2}P{page}",
+        "example": "(1973) 4 SCC 225"
+      },
+      "SCR": {
+        "name": "Supreme Court Reports",
+        "patterns": [
+          "^\\((\\d{4})\\)\\s*(\\d+)\\s*SCR\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}SCR{year2}P{page}",
+        "example": "(2009) 9 SCR 611"
+      },
+      "SCALE": {
+        "name": "Supreme Court Almanac",
+        "patterns": [
+          "^\\((\\d{4})\\)\\s*(\\d+)\\s*SCALE\\s*(\\d+)$"
+        ],
+        "encoding": "{volume}SCL{year2}P{page}",
+        "example": "(2020) 5 SCALE 100"
+      }
+    },
+    "PK": {
+      "PLD": {
+        "name": "Pakistan Legal Decisions",
+        "patterns": [
+          "^(\\d{4})\\s*PLD\\s*(SC|Kar|Lah|Pesh|Quetta|FSC)\\s*(\\d+)$",
+          "^PLD\\s*(\\d{4})\\s*(SC|Kar|Lah|Pesh|Quetta|FSC)\\s*(\\d+)$"
+        ],
+        "encoding": "PLD{year2}{court}{page}",
+        "example": "1989 PLD SC 1"
+      },
+      "SCMR": {
+        "name": "Supreme Court Monthly Review",
+        "patterns": [
+          "^(\\d{4})\\s*SCMR\\s*(\\d+)$"
+        ],
+        "encoding": "SCMR{year2}P{page}",
+        "example": "2005 SCMR 1234"
+      },
+      "CLC": {
+        "name": "Civil Law Cases",
+        "patterns": [
+          "^(\\d{4})\\s*CLC\\s*(\\d+)$"
+        ],
+        "encoding": "CLC{year2}P{page}",
+        "example": "2010 CLC 500"
+      },
+      "PCRLJ": {
+        "name": "Pakistan Criminal Law Journal",
+        "patterns": [
+          "^(\\d{4})\\s*PCRLJ\\s*(\\d+)$"
+        ],
+        "encoding": "PCRLJ{year2}{page}",
+        "example": "2015 PCRLJ 100"
+      }
+    }
+  },
+  "court_abbreviations": {
+    "BD": {
+      "A": "AD", "H": "HCD", "S": "SC"
+    },
+    "IN": {
+      "S": "SC", "D": "Del", "B": "Bom", "M": "Mad", "C": "Cal",
+      "K": "Kar", "A": "All", "G": "Guj", "P": "P&H"
+    },
+    "PK": {
+      "S": "SC", "K": "Kar", "L": "Lah", "P": "Pesh", "Q": "Quetta", "F": "FSC"
+    }
+  }
+}

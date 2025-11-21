@@ -1,0 +1,264 @@
+{
+  "label": "PropertyRight",
+  "description": "Represents a property right or interest involved in a case for property law domain modeling",
+  "required_properties": [
+    {
+      "name": "property_right_id",
+      "type": "string",
+      "description": "Unique identifier for the property right",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "case_id",
+      "type": "string",
+      "description": "Reference to the associated case",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "right_type",
+      "type": "string",
+      "description": "Type of property right (ownership, lease, easement, mortgage, lien, etc.)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "property_type",
+      "type": "string",
+      "description": "Type of property (land, building, movable, intellectual, etc.)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "holder_id",
+      "type": "string",
+      "description": "Reference to right holder (Party node)"
+    },
+    {
+      "name": "holder_name",
+      "type": "string",
+      "description": "Name of the right holder"
+    },
+    {
+      "name": "property_description",
+      "type": "text",
+      "description": "Description of the property"
+    },
+    {
+      "name": "property_location",
+      "type": "string",
+      "description": "Location/address of the property"
+    },
+    {
+      "name": "property_area",
+      "type": "float",
+      "description": "Area of property (in square meters/feet)"
+    },
+    {
+      "name": "area_unit",
+      "type": "string",
+      "description": "Unit of area measurement"
+    },
+    {
+      "name": "property_value",
+      "type": "float",
+      "description": "Estimated/disputed value of property"
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "description": "Currency code (BDT, INR, PKR)"
+    },
+    {
+      "name": "acquisition_date",
+      "type": "date",
+      "description": "Date when right was acquired"
+    },
+    {
+      "name": "registration_number",
+      "type": "string",
+      "description": "Property registration/deed number"
+    },
+    {
+      "name": "registration_date",
+      "type": "date",
+      "description": "Date of property registration"
+    },
+    {
+      "name": "title_deed",
+      "type": "string",
+      "description": "Title deed reference"
+    },
+    {
+      "name": "encumbrances",
+      "type": "string[]",
+      "description": "List of encumbrances (mortgage, lien, etc.)"
+    },
+    {
+      "name": "inheritance_chain",
+      "type": "string[]",
+      "description": "Chain of inheritance/succession"
+    },
+    {
+      "name": "dispute_nature",
+      "type": "string",
+      "description": "Nature of property dispute"
+    },
+    {
+      "name": "disputed_by",
+      "type": "string[]",
+      "description": "List of disputing party IDs"
+    },
+    {
+      "name": "outcome",
+      "type": "string",
+      "description": "Outcome: upheld, transferred, partitioned, nullified"
+    },
+    {
+      "name": "jurisdiction",
+      "type": "string",
+      "description": "Legal jurisdiction"
+    },
+    {
+      "name": "land_survey_number",
+      "type": "string",
+      "description": "Land survey/plot number"
+    },
+    {
+      "name": "notes",
+      "type": "text",
+      "description": "Additional notes"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "property",
+      "name": "property_right_case_id_index",
+      "properties": ["case_id"]
+    },
+    {
+      "type": "property",
+      "name": "property_right_type_index",
+      "properties": ["right_type"]
+    },
+    {
+      "type": "property",
+      "name": "property_type_index",
+      "properties": ["property_type"]
+    },
+    {
+      "type": "composite",
+      "name": "property_right_combined_index",
+      "properties": ["right_type", "property_type"]
+    },
+    {
+      "type": "property",
+      "name": "property_right_holder_index",
+      "properties": ["holder_id"]
+    },
+    {
+      "type": "property",
+      "name": "property_right_outcome_index",
+      "properties": ["outcome"]
+    },
+    {
+      "type": "property",
+      "name": "property_right_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "property_right_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "property_right_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "property_right_verification_status_index",
+      "properties": ["verification_status"]
+    },
+    {
+      "type": "fulltext",
+      "name": "property_right_description_index",
+      "properties": ["property_description", "property_location"]
+    }
+  ],
+  "example": {
+    "property_right_id": "prop_bd_2023_789",
+    "case_id": "case_bd_civil_2023_123",
+    "right_type": "ownership",
+    "property_type": "land",
+    "holder_name": "Rahman Family Trust",
+    "property_description": "Agricultural land with dwelling",
+    "property_location": "Mouza Bahadurpur, District Dhaka",
+    "property_area": 2500.0,
+    "area_unit": "square meters",
+    "property_value": 15000000.00,
+    "currency": "BDT",
+    "dispute_nature": "inheritance dispute",
+    "outcome": "partitioned",
+    "jurisdiction": "Bangladesh"
+  }
+}

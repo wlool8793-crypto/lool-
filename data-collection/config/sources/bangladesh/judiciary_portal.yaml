@@ -1,0 +1,357 @@
+# Bangladesh Judiciary Portal Scraper Configuration
+# Source: judiciary.gov.bd - Official judiciary portal
+
+# Basic Information
+country: bangladesh
+name: "Bangladesh Judiciary Portal"
+source_id: "judiciary_portal"
+tier: tier1
+source_type: case_law
+enabled: true
+priority: 3
+
+# Access Information
+base_url: "https://judiciary.gov.bd"
+requires_auth: false
+auth_method: null
+
+# Expected Content
+expected_content_types:
+  - "judgment"
+  - "order"
+  - "case_status"
+  - "cause_list"
+
+estimated_total_docs: 45000
+
+# Scraping Configuration
+request_delay: 2.5
+use_selenium: true
+headless: true
+timeout: 40
+max_retries: 3
+
+# Court Types and Hierarchies
+court_types:
+  district_courts:
+    name: "District Courts"
+    url_path: "/district-courts"
+    priority: 1
+    estimated_docs: 25000
+    subdivisions:
+      - "sessions_court"
+      - "district_judge_court"
+      - "additional_district_judge_court"
+      - "joint_district_judge_court"
+
+  subordinate_courts:
+    name: "Subordinate Courts"
+    url_path: "/subordinate-courts"
+    priority: 2
+    estimated_docs: 15000
+    subdivisions:
+      - "chief_judicial_magistrate_court"
+      - "first_class_magistrate_court"
+      - "second_class_magistrate_court"
+      - "metropolitan_sessions_court"
+      - "metropolitan_magistrate_court"
+
+  specialized_courts:
+    name: "Specialized Courts"
+    url_path: "/specialized-courts"
+    priority: 3
+    estimated_docs: 5000
+    subdivisions:
+      - "money_loan_court"
+      - "family_court"
+      - "labor_court"
+      - "administrative_tribunal"
+
+# Geographic Distribution
+districts:
+  dhaka_division:
+    name: "Dhaka Division"
+    districts:
+      - "dhaka"
+      - "faridpur"
+      - "gazipur"
+      - "gopalganj"
+      - "kishoreganj"
+      - "madaripur"
+      - "manikganj"
+      - "munshiganj"
+      - "narayanganj"
+      - "narsingdi"
+      - "rajbari"
+      - "shariatpur"
+      - "tangail"
+
+  chattogram_division:
+    name: "Chattogram Division"
+    districts:
+      - "bandarban"
+      - "brahmanbaria"
+      - "chandpur"
+      - "chattogram"
+      - "cumilla"
+      - "coxsbazar"
+      - "feni"
+      - "khagrachhari"
+      - "lakshmipur"
+      - "noakhali"
+      - "rangamati"
+
+  # Add other divisions as needed...
+
+# Index Pages and Navigation
+indexes:
+  case_law_archive:
+    url: "/case-law/archive"
+    method: "pagination"
+    max_pages: 2000
+    page_param: "page"
+    per_page: 25
+
+  judgments_by_court:
+    url: "/judgments/court/{court_type}"
+    method: "court_based"
+    court_types:
+      - "district_sessions"
+      - "additional_sessions"
+      - "joint_sessions"
+      - "chief_metropolitan_sessions"
+      - "metropolitan_sessions"
+
+  judgments_by_district:
+    url: "/judgments/district/{district}"
+    method: "district_based"
+    districts: all_districts
+
+  case_status_search:
+    url: "/case-status/search"
+    method: "search_form"
+    search_fields:
+      - "case_number"
+      - "case_type"
+      - "filing_year"
+      - "court_name"
+      - "petitioner_name"
+      - "respondent_name"
+
+  cause_lists:
+    url: "/cause-lists"
+    method: "daily_lists"
+    date_param: "date"
+    court_param: "court"
+
+# Content Extraction Selectors
+selectors:
+  judgment_list:
+    case_row: "tr.case-row, div.case-item"
+    case_link: "a.case-link, a.judgment-link"
+    case_number: "span.case-number, td.case-no"
+    case_title: "span.case-title, td.case-title"
+    filing_date: "span.filing-date, td.filing-date"
+    court_name: "span.court-name, td.court-name"
+    status: "span.case-status, td.status"
+
+  judgment_detail:
+    title: "h1.case-title, h2.judgment-title"
+    case_number: "div.case-number-header"
+    filing_number: "div.filing-number"
+    court: "div.court-details"
+    judges: "div.judges-panel"
+    parties: "div.parties-section"
+    case_type: "div.case-type"
+    filing_date: "span.filing-date"
+    hearing_date: "span.hearing-date"
+    disposal_date: "span.disposal-date"
+    disposal_nature: "span.disposal-nature"
+    judgment_text: "div.judgment-content"
+    orders: "div.orders-section"
+    pdf_link: "a.pdf-download, a.print-judgment"
+    html_content: "div.main-content, div.judgment-body"
+
+  case_status:
+    basic_info: "div.case-basic-info"
+    current_status: "div.case-current-status"
+    next_hearing: "div.next-hearing"
+    case_history: "div.case-history-table"
+    orders_passed: "div.orders-passed"
+
+  cause_list:
+    court_info: "div.court-information"
+    bench_info: "div.bench-details"
+    case_list: "table.cause-list-items tr"
+    serial_number: "td.serial-no"
+    case_no: "td.case-number"
+    party_name: "td.party-name"
+    purpose: "td.hearing-purpose"
+    lawyer_name: "td.lawyer-name"
+
+# Metadata Fields
+metadata_fields:
+  # Case Identification
+  case_number: true
+  filing_number: true
+  case_type: true
+  case_category: true
+  case_subtype: true
+
+  # Geographic Information
+  division: true
+  district: true
+  upazila: true
+  court_name: true
+  court_type: true
+  bench_number: true
+
+  # Date Information
+  filing_date: true
+  first_hearing_date: true
+  last_hearing_date: true
+  disposal_date: true
+  disposal_nature: true
+
+  # Parties and Counsel
+  petitioner_name: true
+  respondent_name: true
+  petitioner_advocate: true
+  respondent_advocate: true
+  additional_parties: true
+
+  # Judicial Information
+  presiding_judge: true
+  bench_judges: true
+  court_staff: true
+
+  # Case Content
+  case_subject: true
+  prayer: true
+  allegations: true
+  findings: true
+  judgment_summary: true
+  final_order: true
+
+  # Technical Metadata
+  pdf_url: true
+  html_content: true
+  page_count: true
+  case_duration_days: true
+  number_of_hearings: true
+
+# File Organization
+html_dir: "./data/html/bangladesh/judiciary_portal"
+pdf_dir: "./data/pdfs/bangladesh/judiciary_portal"
+organize_by: "court_and_district"
+folder_structure:
+  - "judiciary_portal/"
+  - "{court_type}/"
+  - "{district}/"
+  - "{year}/"
+  - "{month}/"
+
+# Download Settings
+download_pdfs: true
+download_html: true
+extract_full_text: true
+validate_pdfs: true
+pdf_timeout: 90
+
+# Data Validation
+validation_rules:
+  required_fields:
+    - "case_number"
+    - "court_name"
+    - "district"
+    - "case_type"
+  date_formats:
+    - "%d-%m-%Y"
+    - "%d/%m/%Y"
+    - "%Y-%m-%d"
+    - "%d %B %Y"
+  case_number_patterns:
+    - r"[\w\d/\-\.]+/[\d]{4}"
+    - r"CR[\s]*[\d\.]+/[\d]{4}"
+    - r"CRL[\s]*[\d\.]+/[\d]{4}"
+    - r"CR[\s]*A[\s]*[\d\.]+/[\d]{4}"
+
+# Special Configuration for Different Court Types
+special_config:
+  # District Sessions Courts
+  sessions_court:
+    requires_selenium: true
+    wait_time: 3
+    form_submissions: true
+
+  # Metropolitan Courts
+  metropolitan_court:
+    requires_selenium: true
+    wait_time: 2
+    ajax_handling: true
+
+  # Case Status Search
+  case_status:
+    method: "form_post"
+    captcha_handling: false
+    rate_limit: 1  # request per second
+
+  # Cause Lists
+  cause_lists:
+    update_frequency: "daily"
+    time_sensitive: true
+    cache_duration: 24  # hours
+
+# Error Handling
+retry_config:
+  max_retries: 4
+  retry_delay: 3.0
+  retry_on_status:
+    - 429
+    - 500
+    - 502
+    - 503
+    - 504
+  exponential_backoff: true
+  jitter: true
+
+# Anti-Bot and Session Management
+headers:
+  User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+  Accept-Language: "en-US,en;q=0.8,bn;q=0.6"
+  Accept-Encoding: "gzip, deflate"
+  Connection: "keep-alive"
+  Referer: "https://judiciary.gov.bd/"
+
+session_config:
+  preserve_cookies: true
+  rotate_headers: false
+  handle_csrf: true
+  csrf_token_name: "csrf_token"
+
+# Logging and Monitoring
+log_level: "INFO"
+log_file: "./logs/bangladesh_judiciary_portal.log"
+log_rotation: true
+max_log_size: "20MB"
+backup_count: 10
+
+# Testing and Development
+test_mode:
+  enabled: true
+  max_documents: 3
+  test_districts: ["dhaka", "chattogram"]
+  test_courts: ["sessions_court", "chief_metropolitan_magistrate"]
+
+# Database Integration
+database_config:
+  collection_name: "judiciary_portal_cases"
+  batch_size: 150
+  update_existing: true
+  conflict_resolution: "merge_metadata"
+  index_fields:
+    - "case_number"
+    - "court_name"
+    - "district"
+    - "filing_date"

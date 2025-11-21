@@ -1,0 +1,34 @@
+# Bangladesh Laws Scraper Configuration - Fast Mode
+# 10 Concurrent Workers
+
+country: bangladesh
+name: "Bangladesh Laws (Fast Mode)"
+base_url: "http://bdlaws.minlaw.gov.bd"
+
+# Index pages to scrape
+indexes:
+  chronological: "/laws-of-bangladesh-chronological-index.html"
+  alphabetical: "/laws-of-bangladesh-alphabetical-index.html"
+
+# FAST SCRAPING SETTINGS - 10 Workers
+concurrent_workers: 10        # 10 parallel workers
+request_delay: 0.5           # Faster (was 2 seconds)
+use_selenium: false
+headless: true
+download_pdfs: true
+max_retries: 3
+
+# Output directories
+pdf_dir: "./data/pdfs/bangladesh"
+html_dir: "./data/html/bangladesh"
+
+# Document types to expect
+document_types:
+  - Act
+  - Ordinance
+  - Presidential Order
+  - Code
+  - Regulation
+
+# Estimated total documents
+estimated_total: 1500

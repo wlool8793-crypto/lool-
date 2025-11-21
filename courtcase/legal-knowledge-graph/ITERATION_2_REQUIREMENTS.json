@@ -1,0 +1,460 @@
+{
+  "iteration": 2,
+  "based_on_iteration": 1,
+  "overall_goal": "Fix critical data governance gaps and achieve production readiness (target score: 8.5+/10)",
+
+  "critical_requirements": {
+    "priority": "URGENT - Production Blockers",
+    "target_completion": "3-5 days",
+    "requirements": [
+      {
+        "id": "REQ-001",
+        "title": "Extend Provenance Tracking to ALL 19 Nodes",
+        "severity": "CRITICAL",
+        "current_score": "4.3/10",
+        "target_score": "8.5/10",
+        "affected_nodes": [
+          "Party", "Doctrine", "Holding", "Appeal", "Motion", "Part",
+          "Order", "Definition", "Rule", "CaseVersion", "Amendment",
+          "ChangeLog", "Topic"
+        ],
+        "fields_to_add": {
+          "source": {
+            "type": "string",
+            "required": true,
+            "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')"
+          },
+          "extracted_at": {
+            "type": "datetime",
+            "required": true,
+            "description": "Timestamp of data extraction"
+          },
+          "extracted_by": {
+            "type": "string",
+            "required": true,
+            "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')"
+          },
+          "confidence_score": {
+            "type": "float",
+            "required": true,
+            "range": "0.0-1.0",
+            "description": "Extraction confidence (1.0 = high confidence)"
+          }
+        },
+        "impact": "Enables data quality filtering in RAG retrieval, audit trails, source verification",
+        "effort_estimate": "3-4 days"
+      },
+      {
+        "id": "REQ-002",
+        "title": "Extend Versioning to ALL 19 Nodes",
+        "severity": "CRITICAL",
+        "current_score": "4.3/10",
+        "target_score": "8.0/10",
+        "affected_nodes": [
+          "Judge", "Court", "Party", "Doctrine", "Holding", "Appeal",
+          "Motion", "Part", "Order", "Definition", "Rule", "CaseVersion",
+          "Amendment", "ChangeLog"
+        ],
+        "fields_to_add": {
+          "version": {
+            "type": "integer",
+            "required": true,
+            "default": 1,
+            "description": "Version number (increments on updates)"
+          },
+          "created_at": {
+            "type": "datetime",
+            "required": true,
+            "description": "Initial creation timestamp"
+          },
+          "updated_at": {
+            "type": "datetime",
+            "required": true,
+            "description": "Last update timestamp"
+          },
+          "changelog": {
+            "type": "list<json>",
+            "required": false,
+            "description": "Array of change records: [{version, date, changes, updated_by}]"
+          }
+        },
+        "impact": "Complete audit trails, change tracking, temporal queries for all entities",
+        "effort_estimate": "2-3 days"
+      },
+      {
+        "id": "REQ-003",
+        "title": "Implement Trust Scoring Across All Entities",
+        "severity": "CRITICAL",
+        "current_score": "4.3/10",
+        "target_score": "8.5/10",
+        "affected_nodes": "ALL 19 node types",
+        "fields_to_add": {
+          "trust_score": {
+            "type": "float",
+            "required": true,
+            "range": "0.0-1.0",
+            "description": "Composite trust score based on source reliability, citation count, verification status",
+            "calculation": "weighted_average(source_reliability * 0.4, citation_authority * 0.3, verification_status * 0.3)"
+          },
+          "authority_level": {
+            "type": "integer",
+            "required": false,
+            "range": "1-5",
+            "description": "Legal authority level (5=Supreme Court, 4=High Court, 3=District Court, 2=Tribunal, 1=Other)",
+            "applicable_to": ["Case", "Judge", "Court"]
+          },
+          "verification_status": {
+            "type": "enum",
+            "required": true,
+            "values": ["Verified", "Unverified", "Disputed", "Deprecated"],
+            "description": "Data verification status"
+          }
+        },
+        "impact": "Enables quality-based RAG filtering (only retrieve high-trust entities)",
+        "effort_estimate": "2 days"
+      },
+      {
+        "id": "REQ-004",
+        "title": "Remove Citation Node (Schema Cleanup)",
+        "severity": "CRITICAL",
+        "current_issue": "Redundancy between Citation node and CITES relationship causes schema ambiguity",
+        "action": "DELETE schema/nodes/Citation.json",
+        "rationale": "CITES relationship already contains all citation properties (citation_text, treatment, context, weight). Citation node creates confusion and is unused in test data.",
+        "impact": "Eliminates schema confusion, simplifies queries",
+        "effort_estimate": "1 hour"
+      }
+    ]
+  },
+
+  "high_priority_requirements": {
+    "priority": "HIGH - Production Quality",
+    "target_completion": "2-3 days",
+    "requirements": [
+      {
+        "id": "REQ-005",
+        "title": "Add Automated Status Management",
+        "severity": "HIGH",
+        "current_issue": "Cases remain 'Active' even after being overruled, requiring manual status updates",
+        "solution": {
+          "new_node": {
+            "label": "StatusChange",
+            "properties": {
+              "status_change_id": "string (required, unique)",
+              "previous_status": "enum (Active, Overruled, Superseded, Deprecated)",
+              "new_status": "enum (Active, Overruled, Superseded, Deprecated)",
+              "change_date": "datetime (required)",
+              "reason": "string (required)",
+              "triggered_by_case_id": "string (optional - case that caused status change)",
+              "updated_by": "string (required)"
+            }
+          },
+          "new_relationship": {
+            "type": "HAS_STATUS_CHANGE",
+            "from": "Case",
+            "to": "StatusChange",
+            "properties": {
+              "sequence_number": "integer (order of status changes)"
+            }
+          },
+          "computed_property": {
+            "add_to_case": "current_status: string (computed from latest StatusChange)"
+          }
+        },
+        "impact": "Accurate precedent status tracking, automatic status updates",
+        "effort_estimate": "1-2 days"
+      },
+      {
+        "id": "REQ-006",
+        "title": "Change case_type from String to Array",
+        "severity": "HIGH",
+        "current_issue": "Cross-domain cases (e.g., Criminal + Constitutional) forced to choose single type",
+        "solution": {
+          "modify_node": "Case",
+          "change_property": {
+            "from": "case_type: string",
+            "to": "case_type: list<string> (supports multiple values)",
+            "add_property": "primary_domain: string (main classification for sorting)"
+          }
+        },
+        "examples": [
+          "Criminal + Constitutional (Rahman murder case)",
+          "Civil + Commercial (contract dispute)",
+          "Family + Property (inheritance case)"
+        ],
+        "impact": "Domain-specific queries return all relevant cases, no forced classification",
+        "effort_estimate": "1 day"
+      },
+      {
+        "id": "REQ-007",
+        "title": "Add Court Hierarchy Model",
+        "severity": "HIGH",
+        "current_issue": "Cannot determine if citation is binding or persuasive (all treated equally)",
+        "solution": {
+          "new_node": {
+            "label": "Court",
+            "properties": {
+              "court_id": "string (required, unique)",
+              "court_name": "string (required)",
+              "court_level": "integer (required, 5=Supreme, 4=High, 3=District, 2=Tribunal, 1=Other)",
+              "jurisdiction": "string (required, e.g., 'BD', 'IN', 'PK')",
+              "established_date": "date",
+              "court_type": "enum (Supreme, High, District, Tribunal, Appellate, Trial)",
+              "parent_court_id": "string (optional, for hierarchy)"
+            }
+          },
+          "new_relationships": [
+            {
+              "type": "SUPERIOR_TO",
+              "from": "Court",
+              "to": "Court",
+              "description": "Court hierarchy (Supreme Court SUPERIOR_TO High Court)"
+            },
+            {
+              "type": "HEARD_IN",
+              "from": "Case",
+              "to": "Court",
+              "properties": {
+                "hearing_date": "datetime"
+              }
+            }
+          ],
+          "modify_case_node": {
+            "add_property": "court_level: integer (derived from Court node)"
+          },
+          "modify_cites_relationship": {
+            "add_property": "is_binding: boolean (computed - true if citing court is subordinate)"
+          }
+        },
+        "impact": "Algorithmic determination of binding vs persuasive authority, weighted citation analysis",
+        "effort_estimate": "1-2 days"
+      },
+      {
+        "id": "REQ-008",
+        "title": "Add APPLIES_PRINCIPLE RAG Relationship",
+        "severity": "HIGH",
+        "current_issue": "Cannot link document chunks to legal principles for principle-based retrieval",
+        "solution": {
+          "new_node": {
+            "label": "Chunk",
+            "properties": {
+              "chunk_id": "string (required, unique)",
+              "chunk_text": "string (required)",
+              "chunk_type": "enum (facts, holding, reasoning, dissent, procedural_history)",
+              "start_char": "integer (position in document)",
+              "end_char": "integer",
+              "token_count": "integer",
+              "embedding": "list<float> (1536-dim vector)"
+            }
+          },
+          "new_relationships": [
+            {
+              "type": "CHUNK_OF",
+              "from": "Chunk",
+              "to": "Case",
+              "properties": {
+                "sequence_number": "integer (order in document)"
+              }
+            },
+            {
+              "type": "APPLIES_PRINCIPLE",
+              "from": "Chunk",
+              "to": "LegalPrinciple",
+              "properties": {
+                "context": "string (how principle is applied)",
+                "confidence": "float (0-1)",
+                "principle_text": "string (extracted text mentioning principle)"
+              }
+            }
+          ]
+        },
+        "impact": "Principle-based legal reasoning in RAG, granular context retrieval",
+        "effort_estimate": "1 day"
+      },
+      {
+        "id": "REQ-009",
+        "title": "Add Cross-Jurisdiction Comparative Relationships",
+        "severity": "HIGH",
+        "current_issue": "Cannot track aligned vs conflicting interpretations across BD/IN/PK",
+        "solution": {
+          "new_relationships": [
+            {
+              "type": "HARMONIZED_WITH",
+              "from": "Case",
+              "to": "Case",
+              "properties": {
+                "jurisdictions": "list<string> (e.g., ['BD', 'IN'])",
+                "principle": "string (shared legal principle)",
+                "reasoning_similarity": "float (0-1)",
+                "harmonized_by": "string (case that aligned interpretations)"
+              },
+              "description": "Cases with aligned interpretations across jurisdictions"
+            },
+            {
+              "type": "DIVERGES_FROM",
+              "from": "Case",
+              "to": "Case",
+              "properties": {
+                "jurisdictions": "list<string>",
+                "reason": "string (why interpretations differ)",
+                "point_of_divergence": "string (specific legal issue)",
+                "severity": "enum (Minor, Moderate, Significant)"
+              },
+              "description": "Cases with conflicting interpretations"
+            },
+            {
+              "type": "CONFLICTS_WITH",
+              "from": "Case",
+              "to": "Case",
+              "properties": {
+                "issue": "string (conflicting legal issue)",
+                "resolution": "string (optional - how conflict was resolved)",
+                "resolution_case_id": "string (optional - case that resolved conflict)"
+              },
+              "description": "Direct conflicts between holdings"
+            }
+          ]
+        },
+        "impact": "Comparative legal analysis, conflict detection, harmonization tracking",
+        "effort_estimate": "1 day"
+      }
+    ]
+  },
+
+  "medium_priority_requirements": {
+    "priority": "MEDIUM - Enhancements",
+    "target_completion": "1-2 days",
+    "requirements": [
+      {
+        "id": "REQ-010",
+        "title": "Add Sub-Section Granularity",
+        "severity": "MEDIUM",
+        "current_issue": "Cannot model sub-section level amendments or partial repeals",
+        "solution": {
+          "new_nodes": [
+            {
+              "label": "SubSection",
+              "properties": {
+                "subsection_id": "string (unique)",
+                "subsection_number": "string (e.g., '(1)', '(a)')",
+                "text": "string",
+                "section_id": "string (parent section)"
+              }
+            },
+            {
+              "label": "Clause",
+              "properties": {
+                "clause_id": "string (unique)",
+                "clause_number": "string (e.g., '(i)', '(ii)')",
+                "text": "string",
+                "subsection_id": "string (parent subsection)"
+              }
+            }
+          ],
+          "new_relationships": [
+            "Section -[CONTAINS]-> SubSection",
+            "SubSection -[CONTAINS]-> Clause",
+            "Amendment -[AMENDS]-> SubSection",
+            "Amendment -[AMENDS]-> Clause"
+          ]
+        },
+        "impact": "Granular amendment tracking, precise citation linking",
+        "effort_estimate": "1 day"
+      },
+      {
+        "id": "REQ-011",
+        "title": "Add Opinion Separation",
+        "severity": "MEDIUM",
+        "current_issue": "Dissenting opinions merged with majority, not separately queryable",
+        "solution": {
+          "new_node": {
+            "label": "Opinion",
+            "properties": {
+              "opinion_id": "string (unique)",
+              "opinion_type": "enum (Majority, Concurring, Dissenting)",
+              "author_judge_id": "string",
+              "text": "string",
+              "summary": "string",
+              "vote_count": "integer (judges agreeing)"
+            }
+          },
+          "new_relationships": [
+            {
+              "type": "HAS_OPINION",
+              "from": "Case",
+              "to": "Opinion"
+            },
+            {
+              "type": "AUTHORED",
+              "from": "Judge",
+              "to": "Opinion"
+            }
+          ]
+        },
+        "impact": "Dissenting opinion analysis, judicial philosophy tracking",
+        "effort_estimate": "1 day"
+      }
+    ]
+  },
+
+  "validation_criteria": {
+    "required_for_production": [
+      "Data quality score ≥ 8.0/10",
+      "RAG optimization score ≥ 8.0/10",
+      "All node types have provenance tracking",
+      "All node types have versioning",
+      "All node types have trust scoring",
+      "Citation node removed",
+      "Query pass rate ≥ 95%"
+    ],
+    "recommended_for_production": [
+      "Court hierarchy implemented",
+      "Automated status management",
+      "Cross-jurisdiction relationships",
+      "APPLIES_PRINCIPLE relationship",
+      "case_type as array"
+    ]
+  },
+
+  "iteration_2_success_metrics": {
+    "target_scores": {
+      "overall_score": "≥ 8.5/10",
+      "data_quality": "≥ 8.5/10",
+      "rag_optimization": "≥ 8.5/10",
+      "legal_completeness": "≥ 9.5/10",
+      "query_pass_rate": "≥ 95%"
+    },
+    "production_readiness": "READY FOR DEPLOYMENT"
+  },
+
+  "agent_instructions": {
+    "schema_builder": {
+      "focus": "Implement ALL critical requirements (REQ-001 to REQ-004), all high priority requirements (REQ-005 to REQ-009)",
+      "preserve": "Do NOT change existing nodes/relationships that scored well (Case, Statute, Section structure, CITES, INTERPRETS, temporal design)",
+      "priority": "Data governance > RAG enhancements > Schema cleanup",
+      "validation": "Ensure all 19 nodes have provenance, versioning, trust scoring before moving to enhancements"
+    },
+    "evaluator": {
+      "focus": "Verify data quality score reaches ≥ 8.5/10, validate all requirements implemented",
+      "checks": [
+        "Count nodes with provenance (must be 19/19)",
+        "Count nodes with versioning (must be 19/19)",
+        "Count nodes with trust scoring (must be 19/19)",
+        "Verify Citation node deleted",
+        "Validate new relationships (StatusChange, Court hierarchy, APPLIES_PRINCIPLE, HARMONIZED_WITH, DIVERGES_FROM, CONFLICTS_WITH)"
+      ]
+    },
+    "tester": {
+      "focus": "Test new features (status management, court hierarchy, cross-jurisdiction), validate data governance fields work",
+      "new_test_scenarios": [
+        "Query high-trust cases only (trust_score > 0.8)",
+        "Filter by verification_status = 'Verified'",
+        "Query binding citations using court hierarchy",
+        "Find harmonized interpretations across BD/IN",
+        "Detect conflicting precedents",
+        "Track status change history",
+        "Query cross-domain cases (case_type array)"
+      ],
+      "target_pass_rate": "≥ 95%"
+    }
+  }
+}

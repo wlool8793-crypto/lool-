@@ -1,0 +1,41 @@
+{
+  "relationship_type": "OVERRULES",
+  "description": "A case overrules a previous case, making it no longer binding",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "overrule_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type of overruling",
+      "examples": ["Complete", "Partial", "Implicit", "Explicit"]
+    },
+    "overrule_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date when overruling occurred"
+    },
+    "reasoning": {
+      "type": "text",
+      "required": false,
+      "description": "Reasoning for overruling"
+    },
+    "scope": {
+      "type": "string",
+      "required": false,
+      "description": "Scope of overruling (full, limited, specific points)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX overrules_date IF NOT EXISTS FOR ()-[r:OVERRULES]-() ON (r.overrule_date)",
+    "CREATE INDEX overrules_type IF NOT EXISTS FOR ()-[r:OVERRULES]-() ON (r.overrule_type)"
+  ],
+  "constraints": []
+}

@@ -1,0 +1,15 @@
+{
+  "total_documents": 74,
+  "court_distribution": {
+    "Unknown Court": 72,
+    "Tej Prakash Pathak v. Rajasthan High Court16": 1,
+    "The High Court Judges (Salaries and Conditions of Service) Act": 1
+  },
+  "year_distribution": {},
+  "content_stats": {
+    "average_length": 71690,
+    "min_length": 13399,
+    "max_length": 465275,
+    "total_chars": 5305095
+  }
+}

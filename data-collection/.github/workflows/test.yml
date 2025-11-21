@@ -1,0 +1,17 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-dev.txt
+      - run: pytest --cov=src
+      - run: black --check src/
+      - run: isort --check src/
+      - run: flake8 src/
+      - run: mypy src/
+      - run: bandit -r src/

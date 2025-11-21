@@ -1,0 +1,45 @@
+
+
+
+{
+  "relationship_type": "VERSION_OF",
+  "description": "A version node represents a specific version of a statute or section",
+  "from_node": "Version",
+  "to_node": ["Statute", "Section"],
+  "properties": {
+    "version_number": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number"
+    },
+    "is_current": {
+      "type": "boolean",
+      "required": true,
+      "indexed": true,
+      "description": "Whether this is the current version"
+    },
+    "valid_from": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date from which version is valid"
+    },
+    "valid_to": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date until which version is valid"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX version_of_dates IF NOT EXISTS FOR ()-[r:VERSION_OF]-() ON (r.valid_from, r.valid_to)",
+    "CREATE INDEX version_of_current IF NOT EXISTS FOR ()-[r:VERSION_OF]-() ON (r.is_current)"
+  ],
+  "constraints": []
+}

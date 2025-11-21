@@ -1,0 +1,5 @@
+# GLM-4.6 Model Integration
+zhipuai>=2.0.0
+openai>=1.0.0  # For OpenAI-compatible API calls
+anthropic>=0.18.0  # For Claude API
+python-dotenv>=1.0.0

@@ -1,0 +1,151 @@
+{
+  "node_type": "Judge",
+  "description": "Judge or judicial officer",
+  "properties": {
+    "judge_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the judge",
+      "examples": ["JUDGE-BD-001", "JUDGE-IN-SC-045"]
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Full name of the judge",
+      "examples": ["Justice S.K. Sinha", "Justice D.Y. Chandrachud"]
+    },
+    "honorific": {
+      "type": "string",
+      "required": false,
+      "description": "Title or honorific",
+      "examples": ["Hon'ble", "Justice", "Chief Justice"]
+    },
+    "designation": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Current designation",
+      "examples": ["Chief Justice", "Judge", "Additional Judge"]
+    },
+    "court": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Current court",
+      "examples": ["Supreme Court of Bangladesh", "Delhi High Court"]
+    },
+    "jurisdiction": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Jurisdiction",
+      "examples": ["BD", "IN", "PK"]
+    },
+    "appointment_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date of appointment"
+    },
+    "retirement_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date of retirement"
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Current status",
+      "examples": ["Active", "Retired", "Transferred", "Elevated"]
+    },
+    "biography": {
+      "type": "text",
+      "required": false,
+      "description": "Brief biography"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (increments on updates)",
+      "default": 1
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    },
+    "authority_level": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Authority level (1-5, where 5=Supreme Court, 4=High Court, etc.)"
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_judge_id IF NOT EXISTS FOR (j:Judge) REQUIRE j.judge_id IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX judge_name IF NOT EXISTS FOR (j:Judge) ON (j.name)",
+    "CREATE INDEX judge_jurisdiction IF NOT EXISTS FOR (j:Judge) ON (j.jurisdiction)",
+    "CREATE INDEX judge_status IF NOT EXISTS FOR (j:Judge) ON (j.status)",
+    "CREATE INDEX judge_source IF NOT EXISTS FOR (j:Judge) ON (j.source)",
+    "CREATE INDEX judge_extracted_by IF NOT EXISTS FOR (j:Judge) ON (j.extracted_by)",
+    "CREATE INDEX judge_trust_score IF NOT EXISTS FOR (j:Judge) ON (j.trust_score)",
+    "CREATE INDEX judge_verification_status IF NOT EXISTS FOR (j:Judge) ON (j.verification_status)",
+    "CREATE INDEX judge_authority_level IF NOT EXISTS FOR (j:Judge) ON (j.authority_level)"
+  ]
+}

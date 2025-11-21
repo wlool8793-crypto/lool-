@@ -1,0 +1,150 @@
+{
+  "node_type": "Section",
+  "description": "Section, article, or provision of a statute",
+  "properties": {
+    "section_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the section",
+      "examples": ["SEC-BD-PC-302", "SEC-IN-CONST-32"]
+    },
+    "section_number": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Section/article number",
+      "examples": ["302", "32", "498A", "Schedule II"]
+    },
+    "title": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Section title or heading",
+      "examples": ["Punishment for murder", "Right to Constitutional Remedies"]
+    },
+    "section_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type of provision",
+      "examples": ["Section", "Article", "Rule", "Schedule", "Clause", "Sub-section"]
+    },
+    "text": {
+      "type": "text",
+      "required": true,
+      "description": "Full text of the section"
+    },
+    "summary": {
+      "type": "text",
+      "required": false,
+      "description": "Brief summary"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number"
+    },
+    "effective_from": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date this version became effective"
+    },
+    "effective_to": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date this version was superseded"
+    },
+    "is_current_version": {
+      "type": "boolean",
+      "required": true,
+      "indexed": true,
+      "description": "Whether this is the current version"
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Current status",
+      "examples": ["Active", "Repealed", "Amended", "Suspended"]
+    },
+    "embedding": {
+      "type": "vector",
+      "required": false,
+      "vector_dimension": 1536,
+      "description": "Vector embedding for semantic search"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_section_id IF NOT EXISTS FOR (s:Section) REQUIRE s.section_id IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX section_number IF NOT EXISTS FOR (s:Section) ON (s.section_number)",
+    "CREATE INDEX section_version IF NOT EXISTS FOR (s:Section) ON (s.version)",
+    "CREATE INDEX section_current IF NOT EXISTS FOR (s:Section) ON (s.is_current_version)",
+    "CREATE INDEX section_effective_from IF NOT EXISTS FOR (s:Section) ON (s.effective_from)",
+    "CREATE INDEX section_source IF NOT EXISTS FOR (s:Section) ON (s.source)",
+    "CREATE INDEX section_extracted_by IF NOT EXISTS FOR (s:Section) ON (s.extracted_by)",
+    "CREATE INDEX section_trust_score IF NOT EXISTS FOR (s:Section) ON (s.trust_score)",
+    "CREATE INDEX section_verification_status IF NOT EXISTS FOR (s:Section) ON (s.verification_status)",
+    "CREATE TEXT INDEX section_text IF NOT EXISTS FOR (s:Section) ON (s.text)",
+    "CREATE VECTOR INDEX section_embedding IF NOT EXISTS FOR (s:Section) ON (s.embedding) OPTIONS {indexConfig: {`vector.dimensions`: 1536, `vector.similarity_function`: 'cosine'}}"
+  ]
+}

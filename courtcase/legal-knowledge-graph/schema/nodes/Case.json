@@ -1,0 +1,236 @@
+{
+  "node_type": "Case",
+  "description": "Legal case or judgment from any court",
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the case",
+      "examples": ["CASE-BD-SC-2023-001", "CASE-IN-SC-2020-045"]
+    },
+    "citation": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Official citation of the case",
+      "examples": ["2023 BLD 1", "AIR 2020 SC 1234", "(2023) 1 SCC 100"]
+    },
+    "neutral_citation": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Medium-neutral citation",
+      "examples": ["[2023] BDSC 001", "[2020] INSC 456"]
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Full case title",
+      "examples": ["State v. Rahman", "Kesavananda Bharati v. State of Kerala"]
+    },
+    "short_title": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Abbreviated case name",
+      "examples": ["Rahman", "Kesavananda Bharati"]
+    },
+    "court": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Name of the court",
+      "examples": ["Supreme Court of Bangladesh", "Delhi High Court"]
+    },
+    "bench_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type of bench hearing the case",
+      "examples": ["Constitution Bench", "Division Bench", "Single Judge", "Full Bench"]
+    },
+    "bench_strength": {
+      "type": "integer",
+      "required": false,
+      "description": "Number of judges on the bench"
+    },
+    "decision_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date of judgment in ISO 8601 format"
+    },
+    "filing_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date case was filed"
+    },
+    "jurisdiction": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Legal jurisdiction",
+      "examples": ["BD", "IN", "PK", "UK", "US"]
+    },
+    "case_type": {
+      "type": "string[]",
+      "required": true,
+      "indexed": true,
+      "description": "Type(s) of case - supports multiple classifications",
+      "examples": [["Criminal"], ["Civil", "Constitutional"], ["Tax", "Corporate"]]
+    },
+    "primary_domain": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Main classification of the case",
+      "examples": ["Criminal", "Civil", "Constitutional", "Tax", "Corporate", "Family"]
+    },
+    "case_number": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Court docket number"
+    },
+    "outcome": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Judgment outcome",
+      "examples": ["Allowed", "Dismissed", "Partially Allowed", "Remanded"]
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Current status of the case",
+      "examples": ["Active", "Overruled", "Upheld", "Distinguished", "Superseded"]
+    },
+    "precedent_value": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Precedential weight",
+      "examples": ["Binding", "Persuasive", "Per Incuriam", "Obiter Dictum"]
+    },
+    "summary": {
+      "type": "text",
+      "required": false,
+      "description": "Brief summary of the case"
+    },
+    "headnotes": {
+      "type": "text",
+      "required": false,
+      "description": "Official headnotes"
+    },
+    "full_text": {
+      "type": "text",
+      "required": false,
+      "description": "Full judgment text"
+    },
+    "catchwords": {
+      "type": "string[]",
+      "required": false,
+      "description": "Index terms for the case"
+    },
+    "embedding": {
+      "type": "vector",
+      "required": false,
+      "vector_dimension": 1536,
+      "description": "Vector embedding for semantic search"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source_url": {
+      "type": "string",
+      "required": false,
+      "description": "URL to original source"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (increments on updates)",
+      "default": 1
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    },
+    "authority_level": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Authority level (1-5, where 5=Supreme Court, 4=High Court, etc.)"
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_case_id IF NOT EXISTS FOR (c:Case) REQUIRE c.case_id IS UNIQUE",
+    "CONSTRAINT unique_citation IF NOT EXISTS FOR (c:Case) REQUIRE c.citation IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX case_decision_date IF NOT EXISTS FOR (c:Case) ON (c.decision_date)",
+    "CREATE INDEX case_jurisdiction IF NOT EXISTS FOR (c:Case) ON (c.jurisdiction)",
+    "CREATE INDEX case_type IF NOT EXISTS FOR (c:Case) ON (c.case_type)",
+    "CREATE INDEX case_status IF NOT EXISTS FOR (c:Case) ON (c.status)",
+    "CREATE INDEX case_source IF NOT EXISTS FOR (c:Case) ON (c.source)",
+    "CREATE INDEX case_extracted_by IF NOT EXISTS FOR (c:Case) ON (c.extracted_by)",
+    "CREATE INDEX case_trust_score IF NOT EXISTS FOR (c:Case) ON (c.trust_score)",
+    "CREATE INDEX case_verification_status IF NOT EXISTS FOR (c:Case) ON (c.verification_status)",
+    "CREATE INDEX case_authority_level IF NOT EXISTS FOR (c:Case) ON (c.authority_level)",
+    "CREATE TEXT INDEX case_title_text IF NOT EXISTS FOR (c:Case) ON (c.title)",
+    "CREATE TEXT INDEX case_summary_text IF NOT EXISTS FOR (c:Case) ON (c.summary)",
+    "CREATE VECTOR INDEX case_embedding IF NOT EXISTS FOR (c:Case) ON (c.embedding) OPTIONS {indexConfig: {`vector.dimensions`: 1536, `vector.similarity_function`: 'cosine'}}"
+  ]
+}

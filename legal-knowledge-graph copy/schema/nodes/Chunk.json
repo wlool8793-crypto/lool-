@@ -1,0 +1,177 @@
+{
+  "label": "Chunk",
+  "description": "Document chunk for RAG (Retrieval Augmented Generation) retrieval, representing a semantically meaningful segment of a legal case or document",
+  "required_properties": [
+    {
+      "name": "chunk_id",
+      "type": "string",
+      "description": "Unique identifier for the chunk",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "chunk_text",
+      "type": "text",
+      "description": "The actual text content of the chunk",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "chunk_type",
+      "type": "string",
+      "description": "Type/category of the chunk for semantic organization",
+      "constraints": ["NOT NULL", "INDEXED"],
+      "examples": ["facts", "holding", "reasoning", "dissent", "procedural_history", "legal_analysis", "precedent_discussion", "statute_interpretation"]
+    },
+    {
+      "name": "start_char",
+      "type": "integer",
+      "description": "Starting character position in the source document",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "end_char",
+      "type": "integer",
+      "description": "Ending character position in the source document",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual', 'Chunking-Algorithm-v1')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence (1.0 = high confidence)",
+      "constraints": ["NOT NULL"],
+      "range": "0.0-1.0"
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score based on source reliability and verification status",
+      "constraints": ["NOT NULL"],
+      "range": "0.0-1.0"
+    },
+    {
+      "name": "verification_status",
+      "type": "enum",
+      "description": "Data verification status",
+      "constraints": ["NOT NULL"],
+      "values": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates)",
+      "constraints": ["NOT NULL"],
+      "default": 1
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Initial creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "token_count",
+      "type": "integer",
+      "description": "Number of tokens in the chunk (for LLM context management)"
+    },
+    {
+      "name": "embedding",
+      "type": "vector",
+      "description": "Vector embedding for semantic search",
+      "vector_dimension": 1536,
+      "vector_index": "chunk_embedding_index"
+    },
+    {
+      "name": "summary",
+      "type": "text",
+      "description": "AI-generated summary of the chunk"
+    },
+    {
+      "name": "keywords",
+      "type": "list<string>",
+      "description": "Extracted keywords from the chunk"
+    },
+    {
+      "name": "entities",
+      "type": "list<json>",
+      "description": "Extracted named entities (judges, statutes, cases, etc.)"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    {
+      "name": "metadata",
+      "type": "json",
+      "description": "Additional metadata (page number, paragraph number, etc.)"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "property",
+      "name": "chunk_type_index",
+      "properties": ["chunk_type"]
+    },
+    {
+      "type": "composite",
+      "name": "chunk_quality_index",
+      "properties": ["trust_score", "confidence_score", "verification_status"]
+    },
+    {
+      "type": "composite",
+      "name": "chunk_temporal_index",
+      "properties": ["created_at", "updated_at"]
+    },
+    {
+      "type": "vector",
+      "name": "chunk_embedding_index",
+      "properties": ["embedding"],
+      "description": "Vector index for semantic similarity search"
+    }
+  ],
+  "example": {
+    "chunk_id": "bd_2023_sc_001_chunk_003",
+    "chunk_text": "The Supreme Court held that Article 32 of the Constitution provides the right to constitutional remedies, which is a fundamental right that cannot be suspended even during an emergency unless explicitly stated.",
+    "chunk_type": "holding",
+    "start_char": 1250,
+    "end_char": 1450,
+    "token_count": 42,
+    "source": "IndianKanoon",
+    "extracted_at": "2024-01-15T10:30:00Z",
+    "extracted_by": "GPT-4-Chunking-v2",
+    "confidence_score": 0.95,
+    "trust_score": 0.92,
+    "verification_status": "Verified",
+    "version": 1,
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z",
+    "summary": "Supreme Court ruling on Article 32 constitutional remedies",
+    "keywords": ["Article 32", "constitutional remedies", "fundamental rights", "emergency"],
+    "embedding": null
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Subject area codes and classification keywords",
+    "total_subjects": 16
+  },
+  "subjects": {
+    "CRM": {
+      "name": "Criminal Law",
+      "description": "Criminal offenses, penal law, criminal procedure",
+      "keywords": [
+        "murder", "theft", "robbery", "criminal", "penal", "offense", "crime",
+        "punishment", "bail", "fir", "police", "arrest", "section 302", "section 304",
+        "crpc", "ipc", "evidence act", "narcotics", "arms act", "dacoity",
+        "kidnapping", "extortion", "forgery", "cheating", "culpable homicide"
+      ],
+      "related_acts": ["Penal Code", "CrPC", "Evidence Act", "NDPS Act", "Arms Act"]
+    },
+    "CIV": {
+      "name": "Civil Law",
+      "description": "Civil procedure, contracts, torts, damages",
+      "keywords": [
+        "contract", "tort", "negligence", "damages", "civil", "suit", "decree",
+        "injunction", "specific performance", "breach", "cpc", "limitation",
+        "civil procedure", "plaint", "written statement", "res judicata"
+      ],
+      "related_acts": ["CPC", "Limitation Act", "Contract Act", "Specific Relief Act"]
+    },
+    "CON": {
+      "name": "Constitutional Law",
+      "description": "Constitutional matters, fundamental rights, writs",
+      "keywords": [
+        "constitution", "fundamental", "writ", "article", "amendment", "parliament",
+        "legislative", "executive", "judicial review", "habeas corpus", "mandamus",
+        "certiorari", "prohibition", "quo warranto", "pil", "public interest"
+      ],
+      "related_acts": ["Constitution", "PIL Guidelines"]
+    },
+    "PRO": {
+      "name": "Property Law",
+      "description": "Real property, land law, tenancy",
+      "keywords": [
+        "property", "land", "transfer", "sale deed", "mutation", "partition",
+        "possession", "title", "easement", "mortgage", "lease", "tenancy",
+        "registration", "stamp duty", "adverse possession"
+      ],
+      "related_acts": ["Transfer of Property Act", "Registration Act", "Stamp Act"]
+    },
+    "FAM": {
+      "name": "Family Law",
+      "description": "Marriage, divorce, custody, inheritance",
+      "keywords": [
+        "marriage", "divorce", "custody", "maintenance", "adoption", "guardianship",
+        "succession", "inheritance", "family", "matrimonial", "dowry", "domestic violence",
+        "restitution", "conjugal rights", "alimony", "child support"
+      ],
+      "related_acts": ["Hindu Marriage Act", "Muslim Personal Law", "Guardianship Act"]
+    },
+    "COM": {
+      "name": "Commercial Law",
+      "description": "Corporate law, banking, securities",
+      "keywords": [
+        "company", "partnership", "commercial", "banking", "insurance",
+        "securities", "arbitration", "negotiable", "corporate", "shareholder", "director",
+        "merger", "acquisition", "insolvency", "bankruptcy", "liquidation"
+      ],
+      "related_acts": ["Companies Act", "Partnership Act", "Insolvency Code", "SEBI Act"]
+    },
+    "TAX": {
+      "name": "Tax & Revenue",
+      "description": "Income tax, customs, GST, revenue matters",
+      "keywords": [
+        "income tax", "tax", "revenue", "assessment", "refund", "penalty", "gst",
+        "customs", "excise", "vat", "tribunal", "commissioner", "wealth tax",
+        "capital gains", "deduction", "exemption", "fiscal"
+      ],
+      "related_acts": ["Income Tax Act", "GST Act", "Customs Act", "Central Excise Act"]
+    },
+    "LAB": {
+      "name": "Labor & Employment",
+      "description": "Industrial disputes, wages, employment",
+      "keywords": [
+        "labor", "labour", "employment", "industrial", "wages", "termination", "dismissal",
+        "workman", "factory", "trade union", "strike", "lockout", "compensation",
+        "retrenchment", "gratuity", "provident fund", "esic"
+      ],
+      "related_acts": ["Industrial Disputes Act", "Factories Act", "Payment of Wages Act"]
+    },
+    "ENV": {
+      "name": "Environmental Law",
+      "description": "Pollution, conservation, wildlife",
+      "keywords": [
+        "environment", "pollution", "forest", "wildlife", "conservation", "climate",
+        "water", "air", "waste", "biodiversity", "green tribunal", "environmental clearance",
+        "sustainable", "ecology", "emission"
+      ],
+      "related_acts": ["Environment Protection Act", "Forest Act", "Wildlife Protection Act"]
+    },
+    "IPR": {
+      "name": "Intellectual Property",
+      "description": "Patents, copyrights, trademarks",
+      "keywords": [
+        "patent", "copyright", "trademark", "design", "intellectual property",
+        "infringement", "passing off", "trade secret", "geographical indication",
+        "invention", "author", "royalty", "licensing"
+      ],
+      "related_acts": ["Patents Act", "Copyright Act", "Trademarks Act", "Designs Act"]
+    },
+    "ADM": {
+      "name": "Administrative Law",
+      "description": "Government services, tenders, disciplinary",
+      "keywords": [
+        "administrative", "government", "tender", "service", "pension",
+        "promotion", "transfer", "disciplinary", "public servant", "corruption",
+        "vigilance", "suspension", "departmental inquiry"
+      ],
+      "related_acts": ["Service Rules", "Prevention of Corruption Act", "RTI Act"]
+    },
+    "CSM": {
+      "name": "Consumer Protection",
+      "description": "Consumer rights, deficiency of service",
+      "keywords": [
+        "consumer", "deficiency", "service", "goods", "complaint", "compensation",
+        "unfair trade", "misleading advertisement", "product liability", "warranty"
+      ],
+      "related_acts": ["Consumer Protection Act"]
+    },
+    "IT": {
+      "name": "Information Technology",
+      "description": "Cyber law, data protection, digital",
+      "keywords": [
+        "cyber", "digital", "electronic", "computer", "data", "privacy", "internet",
+        "information technology", "hacking", "phishing", "online", "e-commerce"
+      ],
+      "related_acts": ["IT Act", "Data Protection Act"]
+    },
+    "INT": {
+      "name": "International Law",
+      "description": "Treaties, extradition, diplomatic",
+      "keywords": [
+        "international", "treaty", "convention", "extradition", "refugee", "asylum",
+        "diplomatic", "foreign", "bilateral", "multilateral", "sovereignty"
+      ],
+      "related_acts": ["Extradition Act", "Passport Act", "Foreigners Act"]
+    },
+    "HUM": {
+      "name": "Human Rights",
+      "description": "Human rights, discrimination, dignity",
+      "keywords": [
+        "human rights", "discrimination", "equality", "dignity", "freedom", "liberty",
+        "right to life", "torture", "detention", "minorities", "vulnerable"
+      ],
+      "related_acts": ["Human Rights Act", "SC/ST Act", "Rights of Persons with Disabilities Act"]
+    },
+    "GEN": {
+      "name": "General",
+      "description": "Documents not fitting other categories",
+      "keywords": [],
+      "related_acts": []
+    }
+  }
+}

@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Environment
+.env
+
+# Data
+data/
+!data/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+
+# PDFs
+pdfs/
+
+# Logs
+logs/*.log
+!logs/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Selenium
+geckodriver.log
+chromedriver.log
+
+# Security - Sensitive credentials (DO NOT COMMIT)
+config/credentials.json
+config/token.pickle
+*.pickle
+token.pickle

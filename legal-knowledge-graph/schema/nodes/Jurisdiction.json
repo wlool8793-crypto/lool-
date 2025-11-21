@@ -1,0 +1,126 @@
+{
+  "node_type": "Jurisdiction",
+  "description": "Represents a legal jurisdiction (country, state, region)",
+  "properties": {
+    "jurisdiction_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier",
+      "examples": ["JUR-BD", "JUR-IN", "JUR-PK", "JUR-IN-DELHI"]
+    },
+    "code": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "indexed": true,
+      "description": "Short code",
+      "examples": ["BD", "IN", "PK"]
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Full name",
+      "examples": ["Bangladesh", "India", "Pakistan", "Delhi"]
+    },
+    "jurisdiction_type": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Type of jurisdiction",
+      "examples": ["Country", "State", "Province", "Union Territory", "District"]
+    },
+    "parent_jurisdiction": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Parent jurisdiction for hierarchical structure"
+    },
+    "legal_system": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type of legal system",
+      "examples": ["Common Law", "Civil Law", "Mixed", "Islamic Law"]
+    },
+    "independence_date": {
+      "type": "date",
+      "required": false,
+      "description": "Date of independence or establishment"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (increments on updates)",
+      "default": 1
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_jurisdiction_id IF NOT EXISTS FOR (j:Jurisdiction) REQUIRE j.jurisdiction_id IS UNIQUE",
+    "CONSTRAINT unique_jurisdiction_code IF NOT EXISTS FOR (j:Jurisdiction) REQUIRE j.code IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX jurisdiction_code IF NOT EXISTS FOR (j:Jurisdiction) ON (j.code)",
+    "CREATE INDEX jurisdiction_type IF NOT EXISTS FOR (j:Jurisdiction) ON (j.jurisdiction_type)",
+    "CREATE INDEX jurisdiction_source IF NOT EXISTS FOR (j:Jurisdiction) ON (j.source)",
+    "CREATE INDEX jurisdiction_extracted_by IF NOT EXISTS FOR (j:Jurisdiction) ON (j.extracted_by)",
+    "CREATE INDEX jurisdiction_trust_score IF NOT EXISTS FOR (j:Jurisdiction) ON (j.trust_score)",
+    "CREATE INDEX jurisdiction_verification_status IF NOT EXISTS FOR (j:Jurisdiction) ON (j.verification_status)"
+  ]
+}

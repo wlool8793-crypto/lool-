@@ -1,0 +1,33 @@
+{
+  "relationship_type": "RAISES_ISSUE",
+  "description": "A case raises a specific legal issue",
+  "from_node": "Case",
+  "to_node": "LegalIssue",
+  "properties": {
+    "issue_number": {
+      "type": "integer",
+      "required": false,
+      "description": "Order of issue in case"
+    },
+    "resolution": {
+      "type": "string",
+      "required": false,
+      "description": "How the issue was resolved",
+      "examples": ["Resolved in favor of petitioner", "Resolved in favor of respondent", "Left open", "Remanded"]
+    },
+    "is_main_issue": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether this is the main issue in the case"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX raises_issue_main IF NOT EXISTS FOR ()-[r:RAISES_ISSUE]-() ON (r.is_main_issue)"
+  ],
+  "constraints": []
+}

@@ -1,0 +1,234 @@
+{
+  "label": "Opinion",
+  "description": "Represents a judicial opinion (majority, concurring, dissenting) within a case for judicial philosophy tracking",
+  "required_properties": [
+    {
+      "name": "opinion_id",
+      "type": "string",
+      "description": "Unique identifier for the opinion",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "opinion_type",
+      "type": "enum",
+      "description": "Type of opinion",
+      "constraints": ["NOT NULL"],
+      "values": ["Majority", "Concurring", "Dissenting", "Plurality", "Per Curiam"]
+    },
+    {
+      "name": "case_id",
+      "type": "string",
+      "description": "Reference to parent case",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "author_judge_id",
+      "type": "string",
+      "description": "Primary author of the opinion (links to Judge)"
+    },
+    {
+      "name": "text",
+      "type": "text",
+      "description": "Full text of the opinion"
+    },
+    {
+      "name": "summary",
+      "type": "text",
+      "description": "Summary of the opinion"
+    },
+    {
+      "name": "reasoning",
+      "type": "text",
+      "description": "Key reasoning in the opinion"
+    },
+    {
+      "name": "vote_count",
+      "type": "integer",
+      "description": "Number of judges agreeing with this opinion"
+    },
+    {
+      "name": "joined_by",
+      "type": "string[]",
+      "description": "List of judge IDs who joined this opinion"
+    },
+    {
+      "name": "key_points",
+      "type": "string[]",
+      "description": "Key legal points made in the opinion"
+    },
+    {
+      "name": "cited_cases",
+      "type": "string[]",
+      "description": "Case IDs cited in this opinion"
+    },
+    {
+      "name": "cited_statutes",
+      "type": "string[]",
+      "description": "Statute IDs cited in this opinion"
+    },
+    {
+      "name": "embedding",
+      "type": "vector",
+      "description": "Vector embedding for semantic search (1536 dimensions)",
+      "vector_dimension": 1536
+    },
+    {
+      "name": "keywords",
+      "type": "string[]",
+      "description": "Extracted keywords from opinion"
+    },
+    {
+      "name": "legal_principles",
+      "type": "string[]",
+      "description": "Legal principles discussed in opinion"
+    },
+    {
+      "name": "page_start",
+      "type": "integer",
+      "description": "Starting page in the judgment document"
+    },
+    {
+      "name": "page_end",
+      "type": "integer",
+      "description": "Ending page in the judgment document"
+    },
+    {
+      "name": "word_count",
+      "type": "integer",
+      "description": "Total word count"
+    },
+    {
+      "name": "published",
+      "type": "boolean",
+      "description": "Whether this opinion is published"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "property",
+      "name": "opinion_case_id_index",
+      "properties": ["case_id"]
+    },
+    {
+      "type": "property",
+      "name": "opinion_type_index",
+      "properties": ["opinion_type"]
+    },
+    {
+      "type": "property",
+      "name": "opinion_author_index",
+      "properties": ["author_judge_id"]
+    },
+    {
+      "type": "composite",
+      "name": "opinion_case_type_index",
+      "properties": ["case_id", "opinion_type"]
+    },
+    {
+      "type": "property",
+      "name": "opinion_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "opinion_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "opinion_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "opinion_verification_status_index",
+      "properties": ["verification_status"]
+    },
+    {
+      "type": "fulltext",
+      "name": "opinion_text_index",
+      "properties": ["text", "summary", "reasoning"]
+    },
+    {
+      "type": "vector",
+      "name": "opinion_embedding_index",
+      "properties": ["embedding"],
+      "dimensions": 1536,
+      "similarity": "cosine"
+    }
+  ],
+  "example": {
+    "opinion_id": "opinion_bd_sc_2023_123_majority",
+    "opinion_type": "Majority",
+    "case_id": "case_bd_sc_2023_123",
+    "author_judge_id": "judge_bd_001",
+    "summary": "The majority opinion held that the mandatory death penalty violates Article 32 of the Constitution.",
+    "vote_count": 4,
+    "joined_by": ["judge_bd_002", "judge_bd_003", "judge_bd_004"],
+    "page_start": 5,
+    "page_end": 42,
+    "word_count": 8500,
+    "published": true
+  }
+}

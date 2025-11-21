@@ -1,0 +1,173 @@
+{
+  "node_type": "Statute",
+  "description": "Legislative act or law",
+  "properties": {
+    "statute_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the statute",
+      "examples": ["STAT-BD-PENAL-CODE-1860", "STAT-IN-CONSTITUTION-1950"]
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Official name of the statute",
+      "examples": ["Penal Code, 1860", "Constitution of India, 1950"]
+    },
+    "short_name": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Abbreviated name",
+      "examples": ["Penal Code", "Constitution"]
+    },
+    "jurisdiction": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Legal jurisdiction",
+      "examples": ["BD", "IN", "PK"]
+    },
+    "statute_type": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Type of legislation",
+      "examples": ["Act", "Constitution", "Code", "Ordinance", "Regulation"]
+    },
+    "enactment_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date of enactment"
+    },
+    "effective_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date when statute became effective"
+    },
+    "expiry_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date when statute expired or was repealed"
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Current status",
+      "examples": ["Active", "Repealed", "Superseded", "Suspended", "Partially Repealed"]
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (for tracking amendments)"
+    },
+    "is_current_version": {
+      "type": "boolean",
+      "required": true,
+      "indexed": true,
+      "description": "Whether this is the current version"
+    },
+    "summary": {
+      "type": "text",
+      "required": false,
+      "description": "Brief description of the statute"
+    },
+    "preamble": {
+      "type": "text",
+      "required": false,
+      "description": "Preamble text"
+    },
+    "full_text": {
+      "type": "text",
+      "required": false,
+      "description": "Complete statute text"
+    },
+    "embedding": {
+      "type": "vector",
+      "required": false,
+      "vector_dimension": 1536,
+      "description": "Vector embedding for semantic search"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source_url": {
+      "type": "string",
+      "required": false,
+      "description": "URL to official text"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_statute_id IF NOT EXISTS FOR (s:Statute) REQUIRE s.statute_id IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX statute_jurisdiction IF NOT EXISTS FOR (s:Statute) ON (s.jurisdiction)",
+    "CREATE INDEX statute_status IF NOT EXISTS FOR (s:Statute) ON (s.status)",
+    "CREATE INDEX statute_version IF NOT EXISTS FOR (s:Statute) ON (s.version)",
+    "CREATE INDEX statute_current IF NOT EXISTS FOR (s:Statute) ON (s.is_current_version)",
+    "CREATE INDEX statute_source IF NOT EXISTS FOR (s:Statute) ON (s.source)",
+    "CREATE INDEX statute_extracted_by IF NOT EXISTS FOR (s:Statute) ON (s.extracted_by)",
+    "CREATE INDEX statute_trust_score IF NOT EXISTS FOR (s:Statute) ON (s.trust_score)",
+    "CREATE INDEX statute_verification_status IF NOT EXISTS FOR (s:Statute) ON (s.verification_status)",
+    "CREATE TEXT INDEX statute_name_text IF NOT EXISTS FOR (s:Statute) ON (s.name)",
+    "CREATE VECTOR INDEX statute_embedding IF NOT EXISTS FOR (s:Statute) ON (s.embedding) OPTIONS {indexConfig: {`vector.dimensions`: 1536, `vector.similarity_function`: 'cosine'}}"
+  ]
+}

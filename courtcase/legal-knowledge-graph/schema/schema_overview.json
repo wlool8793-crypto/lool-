@@ -1,0 +1,369 @@
+{
+  "schema_name": "Legal Knowledge Graph Schema",
+  "version": "1.0.0",
+  "description": "Comprehensive Neo4j graph schema for legal knowledge representation optimized for RAG, multi-jurisdiction support, and temporal correctness",
+  "created_date": "2025-11-11",
+  "features": [
+    "Hybrid search (vector + keyword + graph traversal)",
+    "Multi-jurisdiction support (Bangladesh, India, Pakistan)",
+    "Temporal versioning and amendments tracking",
+    "All legal domains (civil, criminal, constitutional, property, family, commercial, tax, administrative)",
+    "Precedent chain analysis",
+    "Citation network mapping",
+    "RAG-optimized embeddings"
+  ],
+  "node_types": {
+    "Case": {
+      "description": "Legal case or judgment from any court",
+      "count_properties": 30,
+      "has_embedding": true,
+      "has_fulltext": true,
+      "key_properties": ["case_id", "citation", "title", "jurisdiction", "decision_date", "case_type"]
+    },
+    "Statute": {
+      "description": "Legislative act or law",
+      "count_properties": 20,
+      "has_embedding": true,
+      "has_fulltext": true,
+      "key_properties": ["statute_id", "name", "jurisdiction", "enactment_date", "status", "version"]
+    },
+    "Section": {
+      "description": "Section, article, or provision of a statute",
+      "count_properties": 18,
+      "has_embedding": true,
+      "has_fulltext": true,
+      "key_properties": ["section_id", "section_number", "text", "version", "effective_from", "effective_to"]
+    },
+    "Amendment": {
+      "description": "Amendment to a statute or section",
+      "count_properties": 14,
+      "has_embedding": false,
+      "has_fulltext": false,
+      "key_properties": ["amendment_id", "amendment_type", "effective_date", "amendment_act"]
+    },
+    "Judge": {
+      "description": "Judge or judicial officer",
+      "count_properties": 12,
+      "has_embedding": false,
+      "has_fulltext": true,
+      "key_properties": ["judge_id", "name", "court", "jurisdiction", "designation", "status"]
+    },
+    "Court": {
+      "description": "Court in the judicial hierarchy",
+      "count_properties": 13,
+      "has_embedding": false,
+      "has_fulltext": false,
+      "key_properties": ["court_id", "name", "jurisdiction", "court_level", "court_type"]
+    },
+    "Party": {
+      "description": "Party in a legal case (petitioner, respondent, etc.)",
+      "count_properties": 10,
+      "has_embedding": false,
+      "has_fulltext": true,
+      "key_properties": ["party_id", "name", "party_type", "jurisdiction"]
+    },
+    "Lawyer": {
+      "description": "Lawyer or advocate",
+      "count_properties": 11,
+      "has_embedding": false,
+      "has_fulltext": true,
+      "key_properties": ["lawyer_id", "name", "jurisdiction", "designation", "status"]
+    },
+    "LegalPrinciple": {
+      "description": "Legal principle, doctrine, or maxim",
+      "count_properties": 11,
+      "has_embedding": true,
+      "has_fulltext": true,
+      "key_properties": ["principle_id", "name", "latin_name", "description", "principle_type"]
+    },
+    "Topic": {
+      "description": "Legal topic or subject matter",
+      "count_properties": 8,
+      "has_embedding": false,
+      "has_fulltext": true,
+      "key_properties": ["topic_id", "name", "legal_domain", "hierarchy_level"]
+    },
+    "LegalIssue": {
+      "description": "Specific legal issue or question",
+      "count_properties": 9,
+      "has_embedding": true,
+      "has_fulltext": true,
+      "key_properties": ["issue_id", "description", "issue_type", "legal_domain"]
+    },
+    "Citation": {
+      "description": "Citation context and reference",
+      "count_properties": 11,
+      "has_embedding": false,
+      "has_fulltext": true,
+      "key_properties": ["citation_id", "citation_text", "citation_type", "reporter", "year"]
+    },
+    "Version": {
+      "description": "Version of a statute or section for temporal tracking",
+      "count_properties": 10,
+      "has_embedding": false,
+      "has_fulltext": false,
+      "key_properties": ["version_id", "version_number", "valid_from", "valid_to", "current"]
+    },
+    "Document": {
+      "description": "Source document containing legal content",
+      "count_properties": 16,
+      "has_embedding": false,
+      "has_fulltext": false,
+      "key_properties": ["document_id", "document_type", "file_path", "url", "jurisdiction"]
+    },
+    "Embedding": {
+      "description": "Vector embedding for RAG retrieval",
+      "count_properties": 10,
+      "has_embedding": true,
+      "has_fulltext": true,
+      "key_properties": ["embedding_id", "vector", "text", "embedding_model", "dimensions"]
+    },
+    "LegalDomain": {
+      "description": "Legal domain or area of law",
+      "count_properties": 7,
+      "has_embedding": false,
+      "has_fulltext": true,
+      "key_properties": ["domain_id", "name", "parent_domain"]
+    },
+    "Jurisdiction": {
+      "description": "Legal jurisdiction (country, state, region)",
+      "count_properties": 9,
+      "has_embedding": false,
+      "has_fulltext": false,
+      "key_properties": ["jurisdiction_id", "code", "name", "jurisdiction_type", "legal_system"]
+    },
+    "Keyword": {
+      "description": "Legal keyword or term for search",
+      "count_properties": 8,
+      "has_embedding": true,
+      "has_fulltext": true,
+      "key_properties": ["keyword_id", "term", "normalized_term", "category", "frequency"]
+    }
+  },
+  "relationship_types": {
+    "CITES": {
+      "description": "A case cites another case as precedent",
+      "from": "Case",
+      "to": "Case",
+      "properties": ["citation_type", "treatment", "weight", "context", "page_number"]
+    },
+    "OVERRULES": {
+      "description": "A case overrules a previous case",
+      "from": "Case",
+      "to": "Case",
+      "properties": ["overrule_type", "overrule_date", "reasoning", "scope"]
+    },
+    "FOLLOWS": {
+      "description": "A case follows the precedent set by another case",
+      "from": "Case",
+      "to": "Case",
+      "properties": ["precedent_strength", "ratio_decidendi", "context"]
+    },
+    "DISTINGUISHES": {
+      "description": "A case distinguishes itself from another case",
+      "from": "Case",
+      "to": "Case",
+      "properties": ["distinction_basis", "reasoning", "significance"]
+    },
+    "APPLIES_SECTION": {
+      "description": "A case applies a specific section of a statute",
+      "from": "Case",
+      "to": "Section",
+      "properties": ["application_type", "interpretation", "context"]
+    },
+    "INTERPRETS": {
+      "description": "A case interprets a statute or section",
+      "from": "Case",
+      "to": ["Statute", "Section"],
+      "properties": ["interpretation_type", "context"]
+    },
+    "AMENDS": {
+      "description": "One statute/section version amends another",
+      "from": ["Statute", "Section"],
+      "to": ["Statute", "Section"],
+      "properties": ["amendment_type", "amendment_date", "description"]
+    },
+    "DECIDED_BY": {
+      "description": "A case was decided by a judge",
+      "from": "Case",
+      "to": "Judge",
+      "properties": ["role", "authoring_judge"]
+    },
+    "BEFORE_COURT": {
+      "description": "A case was heard before a specific court",
+      "from": "Case",
+      "to": "Court",
+      "properties": ["hearing_date", "decision_date", "court_level"]
+    },
+    "PETITIONER": {
+      "description": "A party is the petitioner/plaintiff/appellant in a case",
+      "from": "Party",
+      "to": "Case",
+      "properties": ["party_role", "party_number"]
+    },
+    "RESPONDENT": {
+      "description": "A party is the respondent/defendant in a case",
+      "from": "Party",
+      "to": "Case",
+      "properties": ["party_role", "party_number"]
+    },
+    "REPRESENTED_BY": {
+      "description": "A party is represented by a lawyer",
+      "from": "Party",
+      "to": "Lawyer",
+      "properties": ["case_id", "representation_type"]
+    },
+    "BELONGS_TO_DOMAIN": {
+      "description": "A case/statute/section belongs to a legal domain",
+      "from": ["Case", "Statute", "Section", "LegalIssue"],
+      "to": "LegalDomain",
+      "properties": ["relevance", "confidence"]
+    },
+    "IN_JURISDICTION": {
+      "description": "A case/statute/court is in a specific jurisdiction",
+      "from": ["Case", "Statute", "Court", "Judge", "Lawyer"],
+      "to": "Jurisdiction",
+      "properties": ["from_date", "to_date"]
+    },
+    "VERSION_OF": {
+      "description": "A version represents a specific version of a statute/section",
+      "from": "Version",
+      "to": ["Statute", "Section"],
+      "properties": ["version_number", "is_current", "valid_from", "valid_to"]
+    },
+    "SUPERSEDES": {
+      "description": "One version supersedes another",
+      "from": "Version",
+      "to": "Version",
+      "properties": ["supersede_date"]
+    },
+    "HAS_EMBEDDING": {
+      "description": "A document/node has an embedding for RAG",
+      "from": ["Case", "Statute", "Section", "LegalPrinciple", "LegalIssue", "Document"],
+      "to": "Embedding",
+      "properties": ["chunk_index", "embedding_model"]
+    },
+    "ESTABLISHES_PRINCIPLE": {
+      "description": "A case establishes or recognizes a legal principle",
+      "from": "Case",
+      "to": "LegalPrinciple",
+      "properties": ["principle_role", "binding_nature"]
+    },
+    "RAISES_ISSUE": {
+      "description": "A case raises a specific legal issue",
+      "from": "Case",
+      "to": "LegalIssue",
+      "properties": ["issue_number", "resolution", "is_main_issue"]
+    },
+    "HAS_KEYWORD": {
+      "description": "A document has an associated keyword",
+      "from": ["Case", "Statute", "Section", "LegalPrinciple", "LegalIssue"],
+      "to": "Keyword",
+      "properties": ["relevance_score", "frequency", "extraction_method"]
+    },
+    "RELATED_TO": {
+      "description": "Generic relationship indicating cases are related",
+      "from": "Case",
+      "to": "Case",
+      "properties": ["relationship_nature", "strength"]
+    },
+    "SOURCE_DOCUMENT": {
+      "description": "Links a node to its source document",
+      "from": ["Case", "Statute", "Section"],
+      "to": "Document",
+      "properties": ["extraction_method", "confidence"]
+    },
+    "CONTAINS": {
+      "description": "A statute contains a section",
+      "from": "Statute",
+      "to": "Section",
+      "properties": ["order"]
+    },
+    "ADDRESSES": {
+      "description": "A legal principle addresses a topic",
+      "from": "LegalPrinciple",
+      "to": "Topic",
+      "properties": []
+    },
+    "APPLIES": {
+      "description": "A case applies a statute",
+      "from": "Case",
+      "to": "Statute",
+      "properties": ["application_context"]
+    }
+  },
+  "legal_domains": [
+    "Civil Law",
+    "Criminal Law",
+    "Constitutional Law",
+    "Property Law",
+    "Family Law",
+    "Commercial Law",
+    "Tax Law",
+    "Administrative Law",
+    "Labor Law",
+    "Environmental Law",
+    "Intellectual Property Law",
+    "Maritime Law"
+  ],
+  "jurisdictions": [
+    {
+      "code": "BD",
+      "name": "Bangladesh",
+      "legal_system": "Common Law"
+    },
+    {
+      "code": "IN",
+      "name": "India",
+      "legal_system": "Common Law"
+    },
+    {
+      "code": "PK",
+      "name": "Pakistan",
+      "legal_system": "Common Law"
+    }
+  ],
+  "rag_features": {
+    "vector_search": {
+      "enabled": true,
+      "embedding_model": "text-embedding-ada-002",
+      "dimensions": 1536,
+      "similarity_function": "cosine",
+      "nodes_with_embeddings": ["Case", "Statute", "Section", "LegalPrinciple", "LegalIssue", "Embedding", "Keyword"]
+    },
+    "keyword_search": {
+      "enabled": true,
+      "fulltext_indexes": ["Case", "Statute", "Section", "Judge", "Party", "Lawyer", "LegalPrinciple", "Topic", "LegalIssue", "Embedding", "LegalDomain", "Keyword"],
+      "analyzer": "english"
+    },
+    "graph_traversal": {
+      "enabled": true,
+      "precedent_chains": true,
+      "citation_networks": true,
+      "temporal_queries": true
+    }
+  },
+  "temporal_features": {
+    "versioning": {
+      "enabled": true,
+      "version_nodes": ["Version"],
+      "versioned_entities": ["Statute", "Section"]
+    },
+    "amendments": {
+      "enabled": true,
+      "amendment_tracking": true,
+      "retrospective_amendments": true
+    },
+    "point_in_time_queries": {
+      "enabled": true,
+      "temporal_properties": ["effective_from", "effective_to", "valid_from", "valid_to", "enactment_date", "repeal_date"]
+    }
+  },
+  "statistics": {
+    "total_node_types": 18,
+    "total_relationship_types": 25,
+    "nodes_with_vector_embeddings": 7,
+    "nodes_with_fulltext_search": 12,
+    "temporal_node_types": 3
+  }
+}

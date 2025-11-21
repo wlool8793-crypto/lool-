@@ -1,0 +1,84 @@
+Invalid IndianKanoon URL format: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+======================================================================
+IndianKanoon PDF Download Test
+======================================================================
+
+Testing PDF download for 5 cases...
+
+
+[1/5] Testing Case ID: 1
+Title: The Director (Admn. And Hr) Kptcl vs C.P. Mundinamani on 11 April, 202...
+URL: https://indiankanoon.org/docfragment/187189892/?formInput=doctypes%3A%20supremecourt%20fromdate%3A%201-1-2023%20todate%3A%2031-12-2023
+  → Downloading PDF to: data/pdfs/case_1.pdf
+  ✗ PDF download failed
+
+[2/5] Testing Case ID: 2
+Title: M/S. South Indian Bank Ltd. vs Naveen Mathew Philip on 17 April, 2023...
+URL: https://indiankanoon.org/docfragment/85623214/?formInput=doctypes%3A%20supremecourt%20fromdate%3A%201-1-2023%20todate%3A%2031-12-2023
+  → Fetching case details to get PDF link...
+  ✓ PDF link found: https://indiankanoon.org/docfragment/85623214/?formInput=doc...
+  → Downloading PDF to: data/pdfs/case_2.pdf
+  ✓ PDF downloaded successfully!
+    File size: 286,102 bytes (279.40 KB)
+  ✓ Database updated
+  ✓ Valid PDF file confirmed
+
+[3/5] Testing Case ID: 3
+Title: State Bank Of India vs Rajesh Agarwal on 27 March, 2023...
+URL: https://indiankanoon.org/docfragment/105925409/?formInput=doctypes%3A%20supremecourt%20fromdate%3A%201-1-2023%20todate%3A%2031-12-2023
+  → Fetching case details to get PDF link...
+  ✓ PDF link found: https://indiankanoon.org/docfragment/105925409/?formInput=do...
+  → Downloading PDF to: data/pdfs/case_3.pdf
+  ✓ PDF downloaded successfully!
+    File size: 339,966 bytes (332.00 KB)
+  ✓ Database updated
+  ✓ Valid PDF file confirmed
+
+[4/5] Testing Case ID: 4
+Title: Mathura Vrindavan Development ... vs Rajesh Sharma on 28 April, 2023...
+URL: https://indiankanoon.org/docfragment/52903000/?formInput=doctypes%3A%20supremecourt%20fromdate%3A%201-1-2023%20todate%3A%2031-12-2023
+  → Fetching case details to get PDF link...
+  ✓ PDF link found: https://indiankanoon.org/docfragment/52903000/?formInput=doc...
+  → Downloading PDF to: data/pdfs/case_4.pdf
+  ✓ PDF downloaded successfully!
+    File size: 271,615 bytes (265.25 KB)
+  ✓ Database updated
+  ✓ Valid PDF file confirmed
+
+[5/5] Testing Case ID: 5
+Title: Naim Ahamed vs State (Nct Of Delhi) on 30 January, 2023...
+URL: https://indiankanoon.org/docfragment/78114393/?formInput=doctypes%3A%20supremecourt%20fromdate%3A%201-1-2023%20todate%3A%2031-12-2023
+  → Fetching case details to get PDF link...
+  ✓ PDF link found: https://indiankanoon.org/docfragment/78114393/?formInput=doc...
+  → Downloading PDF to: data/pdfs/case_5.pdf
+  ✓ PDF downloaded successfully!
+    File size: 275,592 bytes (269.13 KB)
+  ✓ Database updated
+  ✓ Valid PDF file confirmed
+
+======================================================================
+TEST SUMMARY
+======================================================================
+Total cases tested: 5
+Successful downloads: 4
+Failed downloads: 1
+Success rate: 80.0%
+
+======================================================================
+DATABASE STATISTICS
+======================================================================
+Total cases in database: 600
+Cases with PDFs downloaded: 5
+Cases without PDFs: 595
+
+======================================================================
+DOWNLOADED PDF FILES
+======================================================================
+case_2.pdf                        286,102 bytes (279.40 KB)
+case_3.pdf                        339,966 bytes (332.00 KB)
+case_4.pdf                        271,615 bytes (265.25 KB)
+case_5.pdf                        275,592 bytes (269.13 KB)
+test_case_1.pdf                    13,264 bytes (12.95 KB)
+test_real_case.pdf                342,238 bytes (334.22 KB)
+
+======================================================================

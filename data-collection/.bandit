@@ -1,0 +1,17 @@
+[bandit]
+# Exclude common non-production directories
+exclude_dirs = /venv,/.venv,/tests,/migrations,/build,/dist
+
+# Skip specific test IDs if needed
+# B101: assert_used
+# B601: paramiko_calls
+# B602: subprocess_popen_with_shell_equals_true
+# B603: subprocess_without_shell_equals_true
+# B607: start_process_with_partial_path
+
+# Security checks to skip (customize based on your needs)
+skips = B101
+
+# Confidence level (LOW, MEDIUM, HIGH)
+# Only show issues with at least MEDIUM confidence
+confidence = MEDIUM

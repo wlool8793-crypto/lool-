@@ -1,0 +1,60 @@
+{
+  "relationship_type": "CHUNK_OF",
+  "description": "Links a document chunk to its parent case/document",
+  "from_node": "Chunk",
+  "to_node": "Case",
+  "properties": {
+    "sequence_number": {
+      "type": "integer",
+      "required": true,
+      "description": "Order of chunk in the document (1-indexed)",
+      "indexed": true
+    },
+    "section_name": {
+      "type": "string",
+      "required": false,
+      "description": "Name of the document section this chunk belongs to",
+      "examples": ["Facts", "Arguments", "Judgment", "Ratio Decidendi", "Obiter Dicta"]
+    },
+    "page_number": {
+      "type": "integer",
+      "required": false,
+      "description": "Page number in the original document"
+    },
+    "paragraph_number": {
+      "type": "string",
+      "required": false,
+      "description": "Paragraph number or identifier"
+    },
+    "importance_score": {
+      "type": "float",
+      "required": false,
+      "description": "Relative importance of chunk within the case (0-1)",
+      "range": "0.0-1.0"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX chunk_of_sequence IF NOT EXISTS FOR ()-[r:CHUNK_OF]-() ON (r.sequence_number)",
+    "CREATE INDEX chunk_of_section IF NOT EXISTS FOR ()-[r:CHUNK_OF]-() ON (r.section_name)"
+  ],
+  "constraints": [],
+  "examples": [
+    {
+      "description": "Chunk belonging to a Supreme Court case",
+      "from": "Chunk{chunk_id: 'bd_2023_sc_001_chunk_003', chunk_type: 'holding'}",
+      "to": "Case{case_id: 'bd_2023_sc_001'}",
+      "properties": {
+        "sequence_number": 3,
+        "section_name": "Ratio Decidendi",
+        "page_number": 12,
+        "paragraph_number": "15",
+        "importance_score": 0.95
+      }
+    }
+  ]
+}

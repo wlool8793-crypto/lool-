@@ -1,0 +1,241 @@
+# Supreme Court of Bangladesh Scraper Configuration
+# Source: Supreme Court judgments database
+
+# Basic Information
+country: bangladesh
+name: "Supreme Court of Bangladesh"
+source_id: "supreme_court"
+tier: tier1
+source_type: case_law
+enabled: true
+priority: 2
+
+# Access Information
+base_url: "https://supremecourt.gov.bd"
+requires_auth: false
+auth_method: null
+
+# Expected Content
+expected_content_types:
+  - "judgment"
+  - "order"
+  - "decree"
+  - "citation"
+
+estimated_total_docs: 25000
+
+# Scraping Configuration
+request_delay: 3.0
+use_selenium: true
+headless: true
+timeout: 45
+max_retries: 3
+
+# Court Divisions
+divisions:
+  appellate_division:
+    name: "Appellate Division"
+    url_path: "/appellate-division"
+    priority: 1
+    estimated_docs: 8000
+    selectors:
+      judgment_list: "table.judgments-table tr"
+      judgment_link: "a.judgment-link"
+      title: "h3.judgment-title"
+      date: "span.judgment-date"
+      judges: "div.judges-panel"
+      citation: "span.citation"
+
+  high_court_division:
+    name: "High Court Division"
+    url_path: "/high-court-division"
+    priority: 2
+    estimated_docs: 17000
+    selectors:
+      judgment_list: "table.high-court-judgments tr"
+      judgment_link: "a.case-link"
+      title: "h2.case-title"
+      date: "span.hearing-date"
+      judges: "div.bench-judges"
+      citation: "span.case-citation"
+
+# Index Pages and Search
+indexes:
+  judgments_archive:
+    url: "/judgments/archive"
+    method: "pagination"
+    max_pages: 1000
+    page_param: "page"
+    per_page: 20
+
+  judgments_by_year:
+    url: "/judgments/year/{year}"
+    method: "year_based"
+    years_range: [1972, 2025]
+    year_param: "year"
+
+  judgments_search:
+    url: "/judgments/search"
+    method: "search"
+    search_params:
+      - "case_number"
+      - "case_type"
+      - "judges"
+      - "date_from"
+      - "date_to"
+    form_action: "/search/results"
+
+# Content Extraction Selectors
+selectors:
+  judgment_page:
+    title: "h1.judgment-title, h1.case-title"
+    citation: "div.case-citation, span.citation-number"
+    date: "div.judgment-date, span.decision-date"
+    bench: "div.judges-panel, div.bench-composition"
+    case_number: "div.case-number, span.case-ref"
+    parties: "div.case-parties, div.parties-section"
+    advocates: "div.advocates, div.counsel-section"
+    judgment_text: "div.judgment-content, div.opinion-text"
+    concurring: "div.concurring-opinion"
+    dissenting: "div.dissenting-opinion"
+    references: "div.references, div.precedents"
+    pdf_link: "a.pdf-download, a[onclick*='pdf']"
+    html_content: "div.main-content, article.judgment"
+
+# Metadata Extraction
+metadata_fields:
+  # Basic Case Information
+  case_number: true
+  case_type: true
+  filing_date: true
+  hearing_date: true
+  decision_date: true
+  citation: true
+
+  # Court Information
+  division: true
+  bench_judges: true
+  coram: true
+
+  # Parties and Counsel
+  petitioners: true
+  respondents: true
+  petitioners_counsel: true
+  respondents_counsel: true
+  amicus_curiae: true
+
+  # Judgment Content
+  judgment_type: true
+  judgment_summary: true
+  headnotes: true
+  legal_issues: true
+  decision: true
+  precedent_value: true
+
+  # References and Citations
+  cited_cases: true
+  cited_statutes: true
+  subsequent_citations: true
+
+  # Technical Metadata
+  pdf_url: true
+  html_content: true
+  page_count: true
+  word_count: true
+
+# File Organization
+html_dir: "./data/html/bangladesh/supreme_court"
+pdf_dir: "./data/pdfs/bangladesh/supreme_court"
+organize_by: "division_and_year"
+folder_structure:
+  - "supreme_court/"
+  - "{division}/"
+  - "{year}/"
+  - "{month}/"
+
+# Download Settings
+download_pdfs: true
+download_html: true
+extract_full_text: true
+validate_pdfs: true
+pdf_timeout: 120
+
+# Data Validation
+validation_rules:
+  required_fields:
+    - "title"
+    - "citation"
+    - "decision_date"
+    - "division"
+  date_formats:
+    - "%d-%m-%Y"
+    - "%d/%m/%Y"
+    - "%Y-%m-%d"
+    - "%B %d, %Y"
+  citation_patterns:
+    - r"\d+ WLR \d+"
+    - r"\d+ BLD \d+"
+    - r"\d+ DLR \d+"
+    - r"[\d\w]+ \(\d+\) \d+"
+
+# Rate Limiting and Headers
+headers:
+  User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+  Accept-Language: "en-US,en;q=0.5"
+  Accept-Encoding: "gzip, deflate, br"
+  Connection: "keep-alive"
+  Upgrade-Insecure-Requests: "1"
+
+# Special Handling
+special_config:
+  # Handle JavaScript-heavy judgment listings
+  wait_for_javascript: true
+  js_wait_time: 5
+
+  # Handle anti-bot measures
+  rotate_user_agents: false  # Government site, shouldn't need rotation
+
+  # Handle large PDF downloads
+  chunk_size: 8192
+  max_pdf_size: 50  # MB
+
+  # Handle date ranges for bulk downloads
+  max_days_per_request: 365
+
+  # Handle session management
+  session_cookies: true
+  preserve_session: true
+
+# Error Handling
+retry_config:
+  max_retries: 3
+  retry_delay: 5.0
+  retry_on_status:
+    - 429
+    - 500
+    - 502
+    - 503
+    - 504
+  exponential_backoff: true
+
+# Logging Configuration
+log_level: "INFO"
+log_file: "./logs/bangladesh_supreme_court.log"
+log_rotation: true
+max_log_size: "10MB"
+backup_count: 5
+
+# Testing Configuration
+test_mode:
+  enabled: true
+  max_documents: 5
+  random_sample: true
+  validate_extraction: true
+
+# Database Integration
+database_config:
+  collection_name: "supreme_court_judgments"
+  batch_size: 100
+  update_existing: true
+  conflict_resolution: "update_metadata"

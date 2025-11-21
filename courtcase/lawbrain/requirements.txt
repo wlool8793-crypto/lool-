@@ -1,0 +1,5 @@
+langgraph>=0.2.0
+langchain-google-vertexai>=1.0.0
+langchain-core>=0.3.0
+langgraph-supervisor>=0.0.1
+python-dotenv>=1.0.0

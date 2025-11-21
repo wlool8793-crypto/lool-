@@ -1,0 +1,179 @@
+{
+  "label": "Amendment",
+  "description": "Represents an amendment to a statute or section",
+  "required_properties": [
+    {
+      "name": "amendment_id",
+      "type": "string",
+      "description": "Unique identifier for the amendment",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "amendment_type",
+      "type": "string",
+      "description": "Type of amendment (addition, deletion, substitution, modification)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "effective_date",
+      "type": "date",
+      "description": "Date when the amendment became effective",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "amendment_act",
+      "type": "string",
+      "description": "Name/number of the amending act"
+    },
+    {
+      "name": "amendment_text",
+      "type": "string",
+      "description": "Text of the amendment"
+    },
+    {
+      "name": "original_text",
+      "type": "string",
+      "description": "Original text before amendment"
+    },
+    {
+      "name": "amended_text",
+      "type": "string",
+      "description": "Text after amendment"
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "description": "Reason for amendment"
+    },
+    {
+      "name": "jurisdiction",
+      "type": "string",
+      "description": "Jurisdiction where amendment applies"
+    },
+    {
+      "name": "retrospective",
+      "type": "boolean",
+      "description": "Whether amendment has retrospective effect"
+    },
+    {
+      "name": "retrospective_date",
+      "type": "date",
+      "description": "Date from which retrospective effect applies"
+    },
+    {
+      "name": "valid_from",
+      "type": "date",
+      "description": "Valid from date"
+    },
+    {
+      "name": "valid_to",
+      "type": "date",
+      "description": "Valid to date (if superseded)"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "property",
+      "name": "amendment_date_index",
+      "properties": ["effective_date"]
+    },
+    {
+      "type": "composite",
+      "name": "amendment_temporal_index",
+      "properties": ["valid_from", "valid_to"]
+    },
+    {
+      "type": "property",
+      "name": "amendment_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "amendment_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "amendment_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "amendment_verification_status_index",
+      "properties": ["verification_status"]
+    }
+  ],
+  "example": {
+    "amendment_id": "bd_pc_302_amend_2023",
+    "amendment_type": "modification",
+    "amendment_act": "Penal Code (Amendment) Act, 2023",
+    "effective_date": "2023-07-01",
+    "original_text": "Whoever commits murder shall be punished with death.",
+    "amended_text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+    "reason": "To provide alternative sentencing options",
+    "jurisdiction": "Bangladesh",
+    "retrospective": false,
+    "valid_from": "2023-07-01"
+  }
+}

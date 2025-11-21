@@ -1,0 +1,30 @@
+{
+  "relationship_type": "ESTABLISHES_PRINCIPLE",
+  "description": "A case establishes or recognizes a legal principle",
+  "from_node": "Case",
+  "to_node": "LegalPrinciple",
+  "properties": {
+    "principle_role": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Role in establishing principle",
+      "examples": ["First Recognition", "Reaffirmed", "Expanded", "Limited", "Modified"]
+    },
+    "binding_nature": {
+      "type": "string",
+      "required": false,
+      "description": "Binding nature of principle",
+      "examples": ["Ratio Decidendi", "Obiter Dictum"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX establishes_principle_role IF NOT EXISTS FOR ()-[r:ESTABLISHES_PRINCIPLE]-() ON (r.principle_role)"
+  ],
+  "constraints": []
+}

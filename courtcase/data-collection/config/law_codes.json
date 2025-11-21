@@ -1,0 +1,498 @@
+{
+  "_comment": "Standard Law Codes for Universal Legal Document System",
+  "_version": "1.0",
+  "_last_updated": "2025-10-22",
+
+  "INDIA": {
+    "IPC_1860": {
+      "full_name": "Indian Penal Code",
+      "year": 1860,
+      "country": "IN",
+      "subject": "CRIMINAL",
+      "subject_sub": "PEN",
+      "status": "ACTIVE",
+      "replaced_by": "BNS_2023",
+      "description": "Primary criminal law code of India"
+    },
+    "BNS_2023": {
+      "full_name": "Bharatiya Nyaya Sanhita",
+      "year": 2023,
+      "country": "IN",
+      "subject": "CRIMINAL",
+      "subject_sub": "PEN",
+      "status": "ACTIVE",
+      "replaces": "IPC_1860",
+      "description": "New criminal law replacing IPC"
+    },
+    "CRPC_1973": {
+      "full_name": "Code of Criminal Procedure",
+      "year": 1973,
+      "country": "IN",
+      "subject": "CRIMINAL",
+      "subject_sub": "PROC",
+      "status": "ACTIVE",
+      "replaced_by": "BNSS_2023"
+    },
+    "BNSS_2023": {
+      "full_name": "Bharatiya Nagarik Suraksha Sanhita",
+      "year": 2023,
+      "country": "IN",
+      "subject": "CRIMINAL",
+      "subject_sub": "PROC",
+      "status": "ACTIVE",
+      "replaces": "CRPC_1973"
+    },
+    "CPC_1908": {
+      "full_name": "Code of Civil Procedure",
+      "year": 1908,
+      "country": "IN",
+      "subject": "CIVIL",
+      "subject_sub": "PROC",
+      "status": "ACTIVE"
+    },
+    "IEA_1872": {
+      "full_name": "Indian Evidence Act",
+      "year": 1872,
+      "country": "IN",
+      "subject": "PROCEDURAL",
+      "subject_sub": "EVD",
+      "status": "ACTIVE",
+      "replaced_by": "BSE_2023"
+    },
+    "BSE_2023": {
+      "full_name": "Bharatiya Sakshya Adhiniyam",
+      "year": 2023,
+      "country": "IN",
+      "subject": "PROCEDURAL",
+      "subject_sub": "EVD",
+      "status": "ACTIVE",
+      "replaces": "IEA_1872"
+    },
+    "ITA_1961": {
+      "full_name": "Income Tax Act",
+      "year": 1961,
+      "country": "IN",
+      "subject": "TAX",
+      "subject_sub": "INCOME",
+      "status": "ACTIVE"
+    },
+    "CGST_2017": {
+      "full_name": "Central Goods and Services Tax Act",
+      "year": 2017,
+      "country": "IN",
+      "subject": "TAX",
+      "subject_sub": "GST",
+      "status": "ACTIVE"
+    },
+    "IGST_2017": {
+      "full_name": "Integrated Goods and Services Tax Act",
+      "year": 2017,
+      "country": "IN",
+      "subject": "TAX",
+      "subject_sub": "GST",
+      "status": "ACTIVE"
+    },
+    "CA_2013": {
+      "full_name": "Companies Act",
+      "year": 2013,
+      "country": "IN",
+      "subject": "CORPORATE",
+      "subject_sub": "COM",
+      "status": "ACTIVE",
+      "replaces": "CA_1956"
+    },
+    "CA_1956": {
+      "full_name": "Companies Act",
+      "year": 1956,
+      "country": "IN",
+      "subject": "CORPORATE",
+      "subject_sub": "COM",
+      "status": "REPEALED",
+      "replaced_by": "CA_2013"
+    },
+    "ICA_1872": {
+      "full_name": "Indian Contract Act",
+      "year": 1872,
+      "country": "IN",
+      "subject": "CIVIL",
+      "subject_sub": "CON",
+      "status": "ACTIVE"
+    },
+    "NIA_1881": {
+      "full_name": "Negotiable Instruments Act",
+      "year": 1881,
+      "country": "IN",
+      "subject": "COMMERCIAL",
+      "subject_sub": "NEG",
+      "status": "ACTIVE"
+    },
+    "TPA_1882": {
+      "full_name": "Transfer of Property Act",
+      "year": 1882,
+      "country": "IN",
+      "subject": "PROPERTY",
+      "subject_sub": "TRA",
+      "status": "ACTIVE"
+    },
+    "SRA_1963": {
+      "full_name": "Specific Relief Act",
+      "year": 1963,
+      "country": "IN",
+      "subject": "CIVIL",
+      "subject_sub": "REM",
+      "status": "ACTIVE"
+    },
+    "ACA_1996": {
+      "full_name": "Arbitration and Conciliation Act",
+      "year": 1996,
+      "country": "IN",
+      "subject": "PROCEDURAL",
+      "subject_sub": "ARB",
+      "status": "ACTIVE"
+    },
+    "LIMI_1963": {
+      "full_name": "Limitation Act",
+      "year": 1963,
+      "country": "IN",
+      "subject": "PROCEDURAL",
+      "subject_sub": "LIM",
+      "status": "ACTIVE"
+    },
+    "CONST_1950": {
+      "full_name": "Constitution of India",
+      "year": 1950,
+      "country": "IN",
+      "subject": "CONSTITUTIONAL",
+      "subject_sub": "FUN",
+      "status": "ACTIVE"
+    },
+    "FEMA_1999": {
+      "full_name": "Foreign Exchange Management Act",
+      "year": 1999,
+      "country": "IN",
+      "subject": "FINANCIAL",
+      "subject_sub": "FEX",
+      "status": "ACTIVE",
+      "replaces": "FERA_1973"
+    },
+    "CUSTA_1962": {
+      "full_name": "Customs Act",
+      "year": 1962,
+      "country": "IN",
+      "subject": "TAX",
+      "subject_sub": "CUST",
+      "status": "ACTIVE"
+    },
+    "IBC_2016": {
+      "full_name": "Insolvency and Bankruptcy Code",
+      "year": 2016,
+      "country": "IN",
+      "subject": "CORPORATE",
+      "subject_sub": "INS",
+      "status": "ACTIVE"
+    },
+    "SEBI_1992": {
+      "full_name": "Securities and Exchange Board of India Act",
+      "year": 1992,
+      "country": "IN",
+      "subject": "FINANCIAL",
+      "subject_sub": "SEC",
+      "status": "ACTIVE"
+    }
+  },
+
+  "BANGLADESH": {
+    "PEN_1860": {
+      "full_name": "Penal Code",
+      "year": 1860,
+      "country": "BD",
+      "subject": "CRIMINAL",
+      "subject_sub": "PEN",
+      "status": "ACTIVE",
+      "note": "Act No. XLV of 1860"
+    },
+    "CRPC_1898": {
+      "full_name": "Code of Criminal Procedure",
+      "year": 1898,
+      "country": "BD",
+      "subject": "CRIMINAL",
+      "subject_sub": "PROC",
+      "status": "ACTIVE",
+      "note": "Act No. V of 1898"
+    },
+    "CPC_1908": {
+      "full_name": "Code of Civil Procedure",
+      "year": 1908,
+      "country": "BD",
+      "subject": "CIVIL",
+      "subject_sub": "PROC",
+      "status": "ACTIVE",
+      "note": "Act No. V of 1908"
+    },
+    "EVD_1872": {
+      "full_name": "Evidence Act",
+      "year": 1872,
+      "country": "BD",
+      "subject": "PROCEDURAL",
+      "subject_sub": "EVD",
+      "status": "ACTIVE",
+      "note": "Act No. I of 1872"
+    },
+    "CON_1972": {
+      "full_name": "Constitution of Bangladesh",
+      "year": 1972,
+      "country": "BD",
+      "subject": "CONSTITUTIONAL",
+      "subject_sub": "FUN",
+      "status": "ACTIVE"
+    },
+    "ITO_2023": {
+      "full_name": "Income Tax Ordinance",
+      "year": 2023,
+      "country": "BD",
+      "subject": "TAX",
+      "subject_sub": "INCOME",
+      "status": "ACTIVE",
+      "replaces": "ITO_1984"
+    },
+    "ITO_1984": {
+      "full_name": "Income Tax Ordinance",
+      "year": 1984,
+      "country": "BD",
+      "subject": "TAX",
+      "subject_sub": "INCOME",
+      "status": "REPEALED",
+      "replaced_by": "ITO_2023"
+    },
+    "CA_1994": {
+      "full_name": "Companies Act",
+      "year": 1994,
+      "country": "BD",
+      "subject": "CORPORATE",
+      "subject_sub": "COM",
+      "status": "ACTIVE"
+    },
+    "CON_1872": {
+      "full_name": "Contract Act",
+      "year": 1872,
+      "country": "BD",
+      "subject": "CIVIL",
+      "subject_sub": "CON",
+      "status": "ACTIVE",
+      "note": "Act No. IX of 1872"
+    },
+    "NI_1881": {
+      "full_name": "Negotiable Instruments Act",
+      "year": 1881,
+      "country": "BD",
+      "subject": "COMMERCIAL",
+      "subject_sub": "NEG",
+      "status": "ACTIVE",
+      "note": "Act No. XXVI of 1881"
+    },
+    "TPA_1882": {
+      "full_name": "Transfer of Property Act",
+      "year": 1882,
+      "country": "BD",
+      "subject": "PROPERTY",
+      "subject_sub": "TRA",
+      "status": "ACTIVE",
+      "note": "Act No. IV of 1882"
+    },
+    "LA_1908": {
+      "full_name": "Land Acquisition Act",
+      "year": 1908,
+      "country": "BD",
+      "subject": "PROPERTY",
+      "subject_sub": "LAND",
+      "status": "ACTIVE"
+    },
+    "CUSTA_1969": {
+      "full_name": "Customs Act",
+      "year": 1969,
+      "country": "BD",
+      "subject": "TAX",
+      "subject_sub": "CUST",
+      "status": "ACTIVE"
+    },
+    "VAT_1991": {
+      "full_name": "Value Added Tax Act",
+      "year": 1991,
+      "country": "BD",
+      "subject": "TAX",
+      "subject_sub": "VAT",
+      "status": "ACTIVE"
+    },
+    "LAB_2006": {
+      "full_name": "Labour Act",
+      "year": 2006,
+      "country": "BD",
+      "subject": "LABOUR",
+      "subject_sub": "EMP",
+      "status": "ACTIVE"
+    }
+  },
+
+  "PAKISTAN": {
+    "PPC_1860": {
+      "full_name": "Pakistan Penal Code",
+      "year": 1860,
+      "country": "PK",
+      "subject": "CRIMINAL",
+      "subject_sub": "PEN",
+      "status": "ACTIVE"
+    },
+    "CRPC_1898": {
+      "full_name": "Code of Criminal Procedure",
+      "year": 1898,
+      "country": "PK",
+      "subject": "CRIMINAL",
+      "subject_sub": "PROC",
+      "status": "ACTIVE"
+    },
+    "CPC_1908": {
+      "full_name": "Code of Civil Procedure",
+      "year": 1908,
+      "country": "PK",
+      "subject": "CIVIL",
+      "subject_sub": "PROC",
+      "status": "ACTIVE"
+    },
+    "QSO_1984": {
+      "full_name": "Qanun-e-Shahadat Order",
+      "year": 1984,
+      "country": "PK",
+      "subject": "PROCEDURAL",
+      "subject_sub": "EVD",
+      "status": "ACTIVE",
+      "note": "Evidence law"
+    },
+    "CONST_1973": {
+      "full_name": "Constitution of Pakistan",
+      "year": 1973,
+      "country": "PK",
+      "subject": "CONSTITUTIONAL",
+      "subject_sub": "FUN",
+      "status": "ACTIVE"
+    },
+    "ITO_2001": {
+      "full_name": "Income Tax Ordinance",
+      "year": 2001,
+      "country": "PK",
+      "subject": "TAX",
+      "subject_sub": "INCOME",
+      "status": "ACTIVE"
+    },
+    "CO_2017": {
+      "full_name": "Companies Act",
+      "year": 2017,
+      "country": "PK",
+      "subject": "CORPORATE",
+      "subject_sub": "COM",
+      "status": "ACTIVE"
+    }
+  },
+
+  "_subject_codes": {
+    "CRIMINAL": {
+      "code": "CRM",
+      "subcategories": {
+        "PEN": "Penal/Substantive",
+        "PROC": "Procedure",
+        "EVD": "Evidence",
+        "JUV": "Juvenile",
+        "ORG": "Organized Crime"
+      }
+    },
+    "CIVIL": {
+      "code": "CIV",
+      "subcategories": {
+        "PROC": "Procedure",
+        "CON": "Contract",
+        "TORT": "Tort",
+        "REM": "Remedies",
+        "LIT": "Litigation"
+      }
+    },
+    "CONSTITUTIONAL": {
+      "code": "CON",
+      "subcategories": {
+        "FUN": "Fundamental Rights",
+        "DIR": "Directive Principles",
+        "GOV": "Governance",
+        "AME": "Amendments",
+        "FED": "Federal Structure"
+      }
+    },
+    "TAX": {
+      "code": "TAX",
+      "subcategories": {
+        "INCOME": "Income Tax",
+        "GST": "Goods & Services Tax",
+        "VAT": "Value Added Tax",
+        "CUST": "Customs",
+        "CORP": "Corporate Tax"
+      }
+    },
+    "CORPORATE": {
+      "code": "CORP",
+      "subcategories": {
+        "COM": "Companies",
+        "SEC": "Securities",
+        "INS": "Insolvency",
+        "MER": "Mergers & Acquisitions",
+        "GOV": "Governance"
+      }
+    },
+    "PROPERTY": {
+      "code": "PROP",
+      "subcategories": {
+        "TRA": "Transfer",
+        "LAND": "Land",
+        "INT": "Intellectual Property",
+        "REAL": "Real Estate",
+        "MORT": "Mortgage"
+      }
+    },
+    "LABOUR": {
+      "code": "LAB",
+      "subcategories": {
+        "EMP": "Employment",
+        "SAFE": "Safety",
+        "WAGE": "Wages",
+        "DISP": "Disputes",
+        "SOC": "Social Security"
+      }
+    },
+    "COMMERCIAL": {
+      "code": "COM",
+      "subcategories": {
+        "NEG": "Negotiable Instruments",
+        "BANK": "Banking",
+        "INS": "Insurance",
+        "SHIP": "Shipping",
+        "SALE": "Sale of Goods"
+      }
+    },
+    "PROCEDURAL": {
+      "code": "PROC",
+      "subcategories": {
+        "EVD": "Evidence",
+        "ARB": "Arbitration",
+        "LIM": "Limitation",
+        "EXEC": "Execution",
+        "APP": "Appeals"
+      }
+    },
+    "FINANCIAL": {
+      "code": "FIN",
+      "subcategories": {
+        "BANK": "Banking",
+        "SEC": "Securities",
+        "FEX": "Foreign Exchange",
+        "PAY": "Payments",
+        "FINT": "Fintech"
+      }
+    }
+  }
+}

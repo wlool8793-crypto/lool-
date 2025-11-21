@@ -1,0 +1,30 @@
+{
+  "relationship_type": "HAS_EMBEDDING",
+  "description": "A document or node has an embedding for RAG retrieval",
+  "from_node": ["Case", "Statute", "Section", "LegalPrinciple", "LegalIssue", "Document"],
+  "to_node": "Embedding",
+  "properties": {
+    "chunk_index": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Index of chunk within document"
+    },
+    "embedding_model": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Model used for embedding"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX has_embedding_chunk IF NOT EXISTS FOR ()-[r:HAS_EMBEDDING]-() ON (r.chunk_index)",
+    "CREATE INDEX has_embedding_model IF NOT EXISTS FOR ()-[r:HAS_EMBEDDING]-() ON (r.embedding_model)"
+  ],
+  "constraints": []
+}

@@ -1,0 +1,155 @@
+{
+  "label": "Party",
+  "description": "Represents a party (petitioner, respondent, appellant, etc.) in a case",
+  "required_properties": [
+    {
+      "name": "party_id",
+      "type": "string",
+      "description": "Unique identifier for the party",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Name of the party",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "party_type",
+      "type": "string",
+      "description": "Type of party (individual, organization, government, etc.)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "organization_type",
+      "type": "string",
+      "description": "If organization: company, NGO, government agency, etc."
+    },
+    {
+      "name": "registration_number",
+      "type": "string",
+      "description": "Business/organization registration number"
+    },
+    {
+      "name": "jurisdiction",
+      "type": "string",
+      "description": "Primary jurisdiction"
+    },
+    {
+      "name": "address",
+      "type": "string",
+      "description": "Address of the party"
+    },
+    {
+      "name": "contact_info",
+      "type": "string",
+      "description": "Contact information"
+    },
+    {
+      "name": "anonymized",
+      "type": "boolean",
+      "description": "Whether party name is anonymized (e.g., 'X' vs 'Y')"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "fulltext",
+      "name": "party_name_index",
+      "properties": ["name"]
+    },
+    {
+      "type": "property",
+      "name": "party_type_index",
+      "properties": ["party_type"]
+    },
+    {
+      "type": "property",
+      "name": "party_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "party_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "party_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "party_verification_status_index",
+      "properties": ["verification_status"]
+    }
+  ],
+  "example": {
+    "party_id": "party_bd_001",
+    "name": "State of Bangladesh",
+    "party_type": "government",
+    "organization_type": "government_entity",
+    "jurisdiction": "Bangladesh",
+    "anonymized": false
+  }
+}

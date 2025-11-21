@@ -1,0 +1,32 @@
+# Bangladesh Laws Scraper Configuration
+# Source: bdlaws.minlaw.gov.bd
+
+country: bangladesh
+name: "Bangladesh Laws"
+base_url: "http://bdlaws.minlaw.gov.bd"
+
+# Index pages to scrape
+indexes:
+  chronological: "/laws-of-bangladesh-chronological-index.html"
+  alphabetical: "/laws-of-bangladesh-alphabetical-index.html"
+
+# Scraping settings
+request_delay: 2
+use_selenium: false  # Bangladesh site works with simple requests
+headless: true
+download_pdfs: true
+
+# Output directories
+pdf_dir: "./data/pdfs/bangladesh"
+html_dir: "./data/html/bangladesh"
+
+# Document types to expect
+document_types:
+  - Act
+  - Ordinance
+  - Presidential Order
+  - Code
+  - Regulation
+
+# Estimated total documents
+estimated_total: 1500

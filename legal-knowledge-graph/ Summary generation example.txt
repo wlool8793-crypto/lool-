@@ -1,0 +1,129 @@
+<example>
+
+Case Summary: Begum Monowara vs Kazi Tanvir Shahid & Ors. 67 DLR (2015) 534
+27.05.2025
+─
+MD TAREK HOSSAIN
+223100010
+Department of Law
+
+<Abstract>
+
+This case, Begum Monowara vs Kazi Tanvir Shahid & Ors., decided by the High Court Division (Civil Appellate Jurisdiction) on March 1, 2015, addresses the validity of a registered Heba Bil Ewaz (deed of gift) challenged on grounds of the executant's alleged mental incapacity, forgery, fraud, and undue influence. The respondents (plaintiffs), heirs of the donor Kazi Shahidul Islam, sued to cancel the deed executed in favour of the appellant (defendant No. 1), the donor's sister. The Court overturned the trial court's decision, finding the plaintiffs failed to prove mental incapacity. It held a medical certificate (Exhibit 3) inadmissible under the Lunacy Act, 1912, as the issuing doctor (PW2) was not a qualified "Medical Officer." The Court strongly affirmed the presumption of correctness for registered documents under Section 22A of the Registration Act, 1908 (as amended in 2004), dismissing the forgery claim due to the presence of photographs and thumb impressions. Finding the deed genuine and voluntarily executed, the appeal was allowed, and the plaintiffs' suit was dismissed. 
+</Abstract>
+
+<1. Court and Judges>
+
+Court: HIGH COURT DIVISION (Civil Appellate Jurisdiction).
+Judges: Nozrul Islam Chowdhury J., Amir Hossain J.
+Judgment Date: March 1st, 2015.
+</1. Court and Judges>
+
+<2. Parties>
+
+Appellant: Begum Monowara (Defendant No. 1).
+Respondents: Kazi Tanvir Shahid and others (Plaintiffs - legal heirs of late Kazi Shahidul Islam, specifically four sons and the widow).
+3. Key Legal Provisions
+Registration Act (XVI of 1908):
+Section 22A: Requirements for instruments of transfer, including photographs and thumb impressions, leading to a strong presumption of correctness against forgery.
+Section 16 (Referenced in argument): Presumption of regularity for registered documents.
+
+Lunacy Act (IX of 1912):
+Section 3(7): Definition of "Medical Officer".
+Section 18: Requirement for medical certificates under the Act to be made by a medical practitioner or medical officer.
+
+Evidence Act, 1872:
+Section 91: Exclusion of oral evidence against documentary evidence.
+Section 92: Presumption of correctness for registered documents.
+Code of Civil Procedure, 1908:
+Order VI, Rule 7: Departure from pleadings not generally allowed in evidence.
+
+Mohammadan Law:
+Principles governing Heba Bil Ewaz (Gift), including the requirement of delivery of possession (referenced in arguments, e.g., Mulla's Section 152).
+</2. Parties>
+
+
+<4. Facts of the Case>
+
+The dispute concerns land and building (suit property) originally owned by Kazi Shahidul Islam (KSI), a businessman and industrialist, described in Schedule Kha of the plaint.
+KSI passed away on August 24, 2011, while residing at the suit property (his village home).
+The respondents (plaintiffs) are the four sons and widow of KSI. The appellant (defendant No. 1) is the sister of KSI.
+On June 29, 2011, a registered Heba Bil Ewaz (Deed of Gift, Reg No. 2128) was executed, purportedly by KSI, transferring the suit property to the appellant. The deed contained the name Kazi Nurul Amin Shahidul Islam, which the appellant claimed was a known variation, while KSI's name was Kazi Shahidul Islam.
+The respondents filed Title Suit No. 5 of 2012 seeking cancellation of the Heba deed, alleging:
+KSI was mentally imbalanced/derailed and incapable of executing the deed.
+The deed was obtained through undue influence, fraud, and collusion.
+The deed was forged.
+Possession was never delivered to the appellant.
+
+The respondents claimed KSI received treatment from Dr. Mahadeb Chandra Mondal (PW2) and employed caretakers. They alleged learning about the deed from a caretaker in late 2011.
+The appellant denied the allegations, asserting:
+KSI was mentally sound but faced family feuds and mistreatment from the respondents, leading him to live separately at the village home from 2009.
+KSI voluntarily executed the Heba deed in her favour in good health and conscience for peace, and delivered possession.
+She and other relatives cared for KSI until his death.
+
+The trial court (Joint District Judge, 1st Court, Faridpur) decreed the suit in favour of the respondents on November 12, 2012.
+The appellant filed First Appeal No. 464 of 2012 against the trial court's judgment and decree.
+</4. Facts of the Case>
+
+<5. Issues>
+
+Whether the registered Heba Bil Ewaz dated 29-06-2011 (Exhibit 1 / Exhibit Ka) was forged, fraudulent, collusive, and not binding on the plaintiffs?
+Whether Kazi Shahidul Islam was of unsound mind and mentally incapable of executing the Heba deed at the relevant time?
+Whether the medical certificate (Exhibit 3) issued by PW2 (Dr. Mahadeb Chandra Mondal) was admissible and sufficient proof of mental incapacity under the Lunacy Act, 1912?
+Whether PW2 was competent under the Lunacy Act, 1912 to issue such a certificate?
+Whether the allegation of forgery could be sustained in view of Section 22A of the Registration Act, 1908?
+Whether possession of the suit property was delivered to the appellant (defendant No. 1)?
+Whether the trial court's judgment and decree were sustainable in law and fact?
+</5. Issues>
+
+<6. Arguments>
+
+Appellant’s Arguments (Begum Monowara):
+The Heba deed (Exh 1/Ka) is a registered document carrying a strong presumption of correctness and genuineness (Registration Act Sec 16, Sec 22A; Evidence Act Sec 92).
+The allegation of forgery is untenable under Section 22A of the Registration Act due to the mandatory pasting of photographs and taking of thumb impressions, which were present and not disputed as belonging to KSI.
+The medical certificate (Exh 3) is inadmissible as PW2 (Dr. Mondal) was not a "Medical Officer" as defined under Sec 3(7) of the Lunacy Act, 1912, and thus incompetent to issue it under the Act.
+The trial court wrongly relied on inadmissible evidence (Exh 3) to find mental incapacity.
+Oral evidence cannot contradict the terms of the registered deed (Evidence Act Sec 91).
+KSI executed the deed voluntarily while sound of mind, seeking peace due to family issues with the plaintiffs.
+Possession was delivered, and she cared for KSI until his death.
+
+Respondents’ Arguments (Kazi Tanvir Shahid & Ors.):
+KSI was mentally derailed/suffering from dementia, as evidenced by medical prescriptions (Exh 2 series) and the certificate (Exh 3) from PW2.
+The appellant failed to disprove the medical evidence through cross-examination.
+The gift was void as possession was never delivered to the appellant, which is essential under Mohammadan Law.
+Appellant's evidence regarding possession (DW1) was beyond the pleadings and inadmissible (Order VI Rule 7 CPC).
+The execution and registration were vitiated by undue influence, fraud, and KSI's incapacity.
+No reliable witness proved the gift transaction; an adverse presumption should be drawn.
+</6. Arguments>
+
+<7. Court’s Findings>
+Forgery: The Court firmly rejected the allegation of forgery. It emphasized that the insertion of Section 22A into the Registration Act, 1908 (by Amendment Act XXV of 2004) significantly strengthens the presumption of genuineness for registered documents containing photographs and thumb impressions of the parties. Since it wasn't disputed that the photos/impressions on Exhibit Ka/1 were KSI's, the Court found "hardly any scope left" to question the deed's authenticity on grounds of forgery. The plaintiffs' own witness (PW1) had implicitly admitted execution by focusing on mental state rather than forgery.
+Mental Incapacity: The Court found the plaintiffs failed to prove KSI was mentally incapable at the time of executing the deed.
+The primary evidence relied upon by the plaintiffs was the testimony of PW2 (Dr. Mahadeb Chandra Mondal) and his certificate (Exhibit 3).
+The Court held that PW2 did not qualify as a "Medical Officer" under the definition in Section 3(7) of the Lunacy Act, 1912 (requiring a gazetted medical officer or one specifically declared by the Government).
+Therefore, PW2 was incompetent to issue a certificate under the Lunacy Act, rendering Exhibit 3 inadmissible for proving mental derailment under that Act.
+The Court also noted with suspicion that the words "behavioral problem" appeared to have been inserted into Exhibit 3 subsequently, beyond the margin, suggesting collusion to exaggerate KSI's condition.
+Consequently, Exhibit 3 could not form the basis for a finding of mental incapacity.
+
+
+Validity of Heba Deed: Based on the rejection of forgery and mental incapacity claims, and considering the evidence of the deed writer (DW2) who testified to KSI's voluntary execution after reading the draft, the Court found the Heba deed (Exhibit Ka/1) to be a genuine instrument of transfer executed voluntarily by Kazi Nurul Amin Shahidul Islam (as named in the deed). The photograph on the deed showed a person of sound health and strong physique.
+Fraud/Collusion: The Court found the allegations of fraud and collusion against the appellant unfounded. It viewed the subsequent insertion in Exhibit 3 and the plaintiffs' amendment to the plaint imputing bad moral character to their deceased father/husband negatively.
+Possession: While the judgment focuses primarily on forgery and capacity, the finding that the deed was genuine and voluntarily executed implies the Court accepted the transfer as valid, implicitly rejecting the claim that lack of possession invalidated it in these circumstances, or accepting the defendant's evidence of possession.
+</7. Court’s Findings>
+
+<8. Decision>
+The appeal was allowed.
+The judgment and decree dated November 12, 2012, passed by the Joint District Judge, 1st Court, Faridpur in Title Suit No. 5 of 2012 were set aside.
+Title Suit No. 5 of 2012 was dismissed.
+No order as to costs.
+</8. Decision>
+
+<9. Significance>
+This case strongly reaffirms the high presumptive value of registered documents under Bangladesh law, particularly after the 2004 amendment adding Section 22A to the Registration Act, making challenges based on forgery extremely difficult when photographs and thumb impressions are present.
+It clarifies the strict requirements under the Lunacy Act, 1912, regarding the specific qualifications ("Medical Officer") needed for a medical professional to issue a certificate admissible under that Act to prove mental incapacity relevant to legal transactions.
+The judgment underscores the burden of proof on the plaintiff; mere allegations of incapacity or fraud are insufficient, especially when challenging a registered deed, and must be supported by credible and legally admissible evidence.
+It demonstrates judicial scrutiny of evidence, including medical certificates, for potential manipulation or inadmissibility based on statutory requirements.
+</9. Significance>
+</example>
+
+

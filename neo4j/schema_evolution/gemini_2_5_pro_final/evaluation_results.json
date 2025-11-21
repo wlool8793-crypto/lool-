@@ -1,0 +1,179 @@
+{
+  "evaluation_id": "0eff1fc9-1d6d-4ef4-8d0e-33a4342fcd84",
+  "schema_version": "v7.0",
+  "timestamp": "2025-11-10T19:00:53.404187",
+  "overall_score": 8.31,
+  "dimension_scores": {
+    "legal_completeness": {
+      "score": 9.6,
+      "max_score": 10.0,
+      "details": {
+        "entity_coverage": "100.0%",
+        "relationship_coverage": "88.9%",
+        "present_entities": 19,
+        "present_relationships": 21
+      },
+      "missing_components": [
+        "REL:DEFINES",
+        "REL:APPLIES_CONCEPT"
+      ],
+      "strengths": [
+        "Good entity coverage: 100%",
+        "Good relationship coverage: 89%"
+      ]
+    },
+    "rag_effectiveness": {
+      "score": 7.0,
+      "max_score": 10.0,
+      "details": {
+        "has_chunk_entity": true,
+        "vector_indexes": 6,
+        "rag_relationships": 2,
+        "multi_granularity": false,
+        "rag_config": true
+      },
+      "missing_components": [
+        "RAG relationships (2/3)",
+        "Metadata properties (relevance_score, context)",
+        "Multi-granularity embeddings (case/section/chunk)"
+      ],
+      "strengths": [
+        "All 6 vector indexes present"
+      ]
+    },
+    "performance": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "total_indexes": 15,
+        "composite": 3,
+        "single": 4,
+        "fulltext": 2,
+        "vector": 6
+      },
+      "missing_components": [],
+      "strengths": [
+        "3 composite indexes for common queries",
+        "2 full-text indexes"
+      ]
+    },
+    "data_quality": {
+      "score": 4.3,
+      "max_score": 10.0,
+      "details": {
+        "provenance_coverage": "6/19",
+        "versioning_coverage": "5/19",
+        "trust_coverage": "5/19",
+        "constraints": 8
+      },
+      "missing_components": [
+        "Provenance tracking (only 6/19 nodes)",
+        "Versioning (only 5/19 nodes)",
+        "Trust scoring (only 5/19 nodes)"
+      ],
+      "strengths": [
+        "8 constraints for data integrity"
+      ]
+    },
+    "cross_jurisdictional": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "has_jurisdiction": true,
+        "has_court": true,
+        "has_cross_ref": false
+      },
+      "missing_components": [
+        "Cross-reference relationships between jurisdictions"
+      ],
+      "strengths": [
+        "Jurisdiction tracking present"
+      ]
+    },
+    "user_experience": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "clear_names": "19/19",
+        "has_descriptions": "19/19"
+      },
+      "missing_components": [],
+      "strengths": [
+        "Clear, concise entity naming",
+        "Good documentation coverage"
+      ]
+    },
+    "scalability": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "indexes": 15,
+        "has_partitioning_hints": true
+      },
+      "missing_components": [],
+      "strengths": [
+        "Comprehensive indexing (15 indexes)"
+      ]
+    },
+    "extensibility": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "has_versioning": true,
+        "has_metadata": true
+      },
+      "missing_components": [],
+      "strengths": [
+        "Versioning support for schema evolution"
+      ]
+    }
+  },
+  "critical_improvements": [
+    {
+      "priority": "HIGH",
+      "dimension": "data_quality",
+      "issue": "Missing: Provenance tracking (only 6/19 nodes)",
+      "impact": "Current score: 4.3/10, blocking production readiness",
+      "suggestion": "Add Provenance tracking (only 6/19 nodes) to improve data_quality"
+    },
+    {
+      "priority": "HIGH",
+      "dimension": "data_quality",
+      "issue": "Missing: Versioning (only 5/19 nodes)",
+      "impact": "Current score: 4.3/10, blocking production readiness",
+      "suggestion": "Add Versioning (only 5/19 nodes) to improve data_quality"
+    },
+    {
+      "priority": "MEDIUM",
+      "dimension": "rag_effectiveness",
+      "issue": "Missing: RAG relationships (2/3)",
+      "impact": "Current score: 7.0/10, blocking production readiness",
+      "suggestion": "Add RAG relationships (2/3) to improve rag_effectiveness"
+    },
+    {
+      "priority": "MEDIUM",
+      "dimension": "rag_effectiveness",
+      "issue": "Missing: Metadata properties (relevance_score, context)",
+      "impact": "Current score: 7.0/10, blocking production readiness",
+      "suggestion": "Add Metadata properties (relevance_score, context) to improve rag_effectiveness"
+    }
+  ],
+  "strengths": [
+    "legal_completeness: 9.6/10 - Excellent",
+    "Good entity coverage: 100%",
+    "Good relationship coverage: 89%",
+    "All 6 vector indexes present",
+    "performance: 10.0/10 - Excellent",
+    "3 composite indexes for common queries",
+    "2 full-text indexes",
+    "8 constraints for data integrity",
+    "cross_jurisdictional: 10.0/10 - Excellent",
+    "Jurisdiction tracking present"
+  ],
+  "ready_for_production": false,
+  "production_blockers": [
+    "Overall score 8.3 is below 9.0 threshold",
+    "rag_effectiveness score 7.0 is below 8.0 threshold",
+    "data_quality score 4.3 is below 8.0 threshold"
+  ]
+}

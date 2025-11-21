@@ -1,0 +1,98 @@
+{
+  "relationship_type": "STAYED",
+  "description": "A court order staying proceedings or execution in a case, often pending appeal or other proceedings",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "stay_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type: stay_of_proceedings, stay_of_execution, interim_stay, automatic_stay, conditional_stay"
+    },
+    "stay_order_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date when stay was ordered"
+    },
+    "stay_reason": {
+      "type": "text",
+      "required": true,
+      "description": "Reason for granting stay"
+    },
+    "stay_duration": {
+      "type": "string",
+      "required": false,
+      "description": "Duration of stay (e.g., 'until appeal disposed', '6 months', 'indefinite')"
+    },
+    "stay_conditions": {
+      "type": "string[]",
+      "required": false,
+      "description": "Conditions attached to stay order"
+    },
+    "staying_court": {
+      "type": "string",
+      "required": false,
+      "description": "Court that granted the stay"
+    },
+    "stayed_proceedings": {
+      "type": "string",
+      "required": false,
+      "description": "What proceedings/execution was stayed"
+    },
+    "applicant": {
+      "type": "string",
+      "required": false,
+      "description": "Party who applied for stay"
+    },
+    "stay_status": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Status: active, vacated, expired, modified"
+    },
+    "vacation_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date when stay was vacated"
+    },
+    "vacation_reason": {
+      "type": "text",
+      "required": false,
+      "description": "Reason for vacating stay"
+    },
+    "stay_order_reference": {
+      "type": "string",
+      "required": false,
+      "description": "Reference to stay order in records"
+    },
+    "security_amount": {
+      "type": "float",
+      "required": false,
+      "description": "Security/deposit amount required for stay"
+    },
+    "currency": {
+      "type": "string",
+      "required": false,
+      "description": "Currency for security amount"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX stayed_type IF NOT EXISTS FOR ()-[r:STAYED]-() ON (r.stay_type)",
+    "CREATE INDEX stayed_order_date IF NOT EXISTS FOR ()-[r:STAYED]-() ON (r.stay_order_date)",
+    "CREATE INDEX stayed_status IF NOT EXISTS FOR ()-[r:STAYED]-() ON (r.stay_status)",
+    "CREATE INDEX stayed_vacation IF NOT EXISTS FOR ()-[r:STAYED]-() ON (r.vacation_date)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all active stays\nMATCH (staying:Case)-[s:STAYED]->(stayed:Case)\nWHERE s.stay_status = 'active'\nRETURN staying.citation, stayed.citation, s.stay_reason, s.stay_order_date, s.stay_duration\nORDER BY s.stay_order_date DESC",
+    "// Find cases with stay pending appeal\nMATCH (appellate:Case)-[s:STAYED]->(lower:Case)\nWHERE s.stay_type = 'stay_of_execution'\n  AND s.stay_status = 'active'\n  AND s.stay_duration CONTAINS 'appeal'\nRETURN appellate.citation, lower.citation, s.stay_conditions"
+  ]
+}

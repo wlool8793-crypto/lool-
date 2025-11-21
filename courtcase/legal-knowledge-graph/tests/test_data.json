@@ -1,0 +1,1437 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_at": "2025-11-11T00:00:00Z",
+    "description": "Comprehensive test data for legal knowledge graph schema testing",
+    "total_nodes": 87,
+    "total_relationships": 95,
+    "test_scenarios": [
+      "Multi-jurisdiction cases (BD citing IN precedents)",
+      "Temporal versioning (3 amendments over time)",
+      "4-level precedent chains",
+      "Cross-domain cases (Criminal + Constitutional)",
+      "Complex relationships (single case with multiple connections)",
+      "Edge cases (overruled then reinstated, conflicting precedents, superseded statutes)"
+    ]
+  },
+  "nodes": {
+    "cases": [
+      {
+        "case_id": "CASE-IN-SC-1973-027",
+        "citation": "AIR 1973 SC 1461",
+        "neutral_citation": "[1973] INSC 027",
+        "title": "Kesavananda Bharati v. State of Kerala",
+        "short_title": "Kesavananda Bharati",
+        "court": "Supreme Court of India",
+        "bench_type": "Constitution Bench",
+        "bench_strength": 13,
+        "decision_date": "1973-04-24",
+        "filing_date": "1970-08-15",
+        "jurisdiction": "IN",
+        "case_type": "Constitutional",
+        "case_number": "Writ Petition (Civil) No. 135 of 1970",
+        "outcome": "Partially Allowed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Established the Basic Structure Doctrine - Parliament cannot amend the Constitution so as to alter its basic structure.",
+        "headnotes": "Constitutional Law - Amendment - Limits - Basic Structure Doctrine established",
+        "catchwords": ["Constitution", "Amendment", "Basic Structure", "Judicial Review"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-SC-1989-001",
+        "citation": "41 DLR (AD) 165",
+        "neutral_citation": "[1989] BDSC 001",
+        "title": "Anwar Hossain Chowdhury v. Bangladesh",
+        "short_title": "Eighth Amendment Case",
+        "court": "Supreme Court of Bangladesh",
+        "bench_type": "Full Bench",
+        "bench_strength": 7,
+        "decision_date": "1989-07-03",
+        "filing_date": "1988-10-20",
+        "jurisdiction": "BD",
+        "case_type": "Constitutional",
+        "case_number": "Civil Appeal No. 34 of 1988",
+        "outcome": "Allowed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Adopted the Basic Structure Doctrine from India. Eighth Amendment unconstitutional as it violates basic structure.",
+        "headnotes": "Constitutional Law - Basic Structure Doctrine applied in Bangladesh",
+        "catchwords": ["Constitution", "Basic Structure", "Amendment", "Eighth Amendment"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-SC-2011-002",
+        "citation": "63 DLR (AD) 4",
+        "neutral_citation": "[2011] BDSC 002",
+        "title": "Government of Bangladesh v. Professor Nurul Islam",
+        "short_title": "Fifth Amendment Case",
+        "court": "Supreme Court of Bangladesh",
+        "bench_type": "Constitution Bench",
+        "bench_strength": 5,
+        "decision_date": "2011-08-28",
+        "filing_date": "2010-03-15",
+        "jurisdiction": "BD",
+        "case_type": "Constitutional",
+        "case_number": "Civil Appeal No. 48 of 2010",
+        "outcome": "Dismissed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Reaffirmed Basic Structure Doctrine. Fifth Amendment unconstitutional.",
+        "headnotes": "Constitutional Law - Basic Structure - Validation of Martial Law orders",
+        "catchwords": ["Constitution", "Basic Structure", "Fifth Amendment", "Martial Law"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-SC-2023-001",
+        "citation": "2023 BLD (AD) 1",
+        "neutral_citation": "[2023] BDSC 001",
+        "title": "State v. Abdul Rahman",
+        "short_title": "Rahman Murder Case",
+        "court": "Supreme Court of Bangladesh",
+        "bench_type": "Division Bench",
+        "bench_strength": 2,
+        "decision_date": "2023-03-15",
+        "filing_date": "2021-06-10",
+        "jurisdiction": "BD",
+        "case_type": "Criminal",
+        "case_number": "Criminal Appeal No. 123 of 2021",
+        "outcome": "Allowed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Conviction under Section 302 Penal Code upheld. Right to fair trial under Article 32 Constitution analyzed.",
+        "headnotes": "Criminal Law - Murder - Section 302 Penal Code - Constitutional right to fair trial",
+        "catchwords": ["Murder", "Section 302", "Fair Trial", "Article 32", "Due Process"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-IN-SC-1950-001",
+        "citation": "AIR 1950 SC 27",
+        "neutral_citation": "[1950] INSC 001",
+        "title": "AK Gopalan v. State of Madras",
+        "short_title": "Gopalan",
+        "court": "Supreme Court of India",
+        "bench_type": "Constitution Bench",
+        "bench_strength": 6,
+        "decision_date": "1950-05-19",
+        "filing_date": "1950-01-10",
+        "jurisdiction": "IN",
+        "case_type": "Constitutional",
+        "case_number": "Writ Petition No. 27 of 1950",
+        "outcome": "Dismissed",
+        "status": "Overruled",
+        "precedent_value": "Per Incuriam",
+        "summary": "Narrow interpretation of Article 21. Later overruled by Maneka Gandhi.",
+        "headnotes": "Constitutional Law - Article 21 - Right to Life and Personal Liberty - Narrow interpretation",
+        "catchwords": ["Article 21", "Personal Liberty", "Preventive Detention"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-IN-SC-1978-012",
+        "citation": "AIR 1978 SC 597",
+        "neutral_citation": "[1978] INSC 012",
+        "title": "Maneka Gandhi v. Union of India",
+        "short_title": "Maneka Gandhi",
+        "court": "Supreme Court of India",
+        "bench_type": "Constitution Bench",
+        "bench_strength": 7,
+        "decision_date": "1978-01-25",
+        "filing_date": "1977-06-10",
+        "jurisdiction": "IN",
+        "case_type": "Constitutional",
+        "case_number": "Writ Petition (Civil) No. 320 of 1977",
+        "outcome": "Allowed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Expanded interpretation of Article 21. Overruled AK Gopalan. Procedure must be fair, just and reasonable.",
+        "headnotes": "Constitutional Law - Article 21 - Right to Life includes right to live with dignity - Procedural safeguards",
+        "catchwords": ["Article 21", "Personal Liberty", "Natural Justice", "Fair Procedure"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-HC-2022-045",
+        "citation": "2022 BLD (HC) 567",
+        "neutral_citation": "[2022] BDHC 045",
+        "title": "Karim v. State",
+        "short_title": "Karim",
+        "court": "High Court Division, Bangladesh",
+        "bench_type": "Single Judge",
+        "bench_strength": 1,
+        "decision_date": "2022-11-20",
+        "filing_date": "2022-08-05",
+        "jurisdiction": "BD",
+        "case_type": "Criminal",
+        "case_number": "Criminal Revision No. 456 of 2022",
+        "outcome": "Dismissed",
+        "status": "Active",
+        "precedent_value": "Persuasive",
+        "summary": "Applied procedural safeguards from Maneka Gandhi in bail hearing. Cited Indian precedent.",
+        "headnotes": "Criminal Procedure - Bail - Fair procedure requirements",
+        "catchwords": ["Bail", "Personal Liberty", "Fair Procedure", "Article 32"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-SC-2019-007",
+        "citation": "2019 BLD (AD) 234",
+        "neutral_citation": "[2019] BDSC 007",
+        "title": "State v. Hossain",
+        "short_title": "Hossain Rape Case",
+        "court": "Supreme Court of Bangladesh",
+        "bench_type": "Division Bench",
+        "bench_strength": 2,
+        "decision_date": "2019-09-12",
+        "filing_date": "2018-05-20",
+        "jurisdiction": "BD",
+        "case_type": "Criminal",
+        "case_number": "Criminal Appeal No. 89 of 2018",
+        "outcome": "Allowed",
+        "status": "Overruled",
+        "precedent_value": "Per Incuriam",
+        "summary": "Conviction under Section 376 Penal Code. Later overruled by 2024 case on evidence standards.",
+        "headnotes": "Criminal Law - Rape - Section 376 - Evidence standards",
+        "catchwords": ["Rape", "Section 376", "Evidence", "Conviction"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-SC-2024-003",
+        "citation": "2024 BLD (AD) 89",
+        "neutral_citation": "[2024] BDSC 003",
+        "title": "State v. Alam",
+        "short_title": "Alam Rape Case",
+        "court": "Supreme Court of Bangladesh",
+        "bench_type": "Constitution Bench",
+        "bench_strength": 5,
+        "decision_date": "2024-02-15",
+        "filing_date": "2023-07-10",
+        "jurisdiction": "BD",
+        "case_type": "Criminal",
+        "case_number": "Criminal Appeal No. 234 of 2023",
+        "outcome": "Dismissed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Overruled Hossain. Stricter evidence standards required for rape convictions under Section 376.",
+        "headnotes": "Criminal Law - Rape - Section 376 - Enhanced evidence standards - Overruling precedent",
+        "catchwords": ["Rape", "Section 376", "Evidence Standards", "Overruling", "Precedent"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-SC-2025-001",
+        "citation": "2025 BLD (AD) 12",
+        "neutral_citation": "[2025] BDSC 001",
+        "title": "State v. Khan",
+        "short_title": "Khan Rape Appeal",
+        "court": "Supreme Court of Bangladesh",
+        "bench_type": "Full Bench",
+        "bench_strength": 7,
+        "decision_date": "2025-08-20",
+        "filing_date": "2024-11-05",
+        "jurisdiction": "BD",
+        "case_type": "Criminal",
+        "case_number": "Criminal Appeal No. 456 of 2024",
+        "outcome": "Allowed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Reinstated Hossain standards. Alam overruled. Balanced approach to evidence in rape cases.",
+        "headnotes": "Criminal Law - Rape - Evidence standards - Reinstating earlier precedent",
+        "catchwords": ["Rape", "Section 376", "Evidence", "Precedent Reinstatement"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-IN-SC-2020-045",
+        "citation": "AIR 2020 SC 1234",
+        "neutral_citation": "[2020] INSC 045",
+        "title": "State of Karnataka v. Ravi",
+        "short_title": "Ravi Murder Case",
+        "court": "Supreme Court of India",
+        "bench_type": "Division Bench",
+        "bench_strength": 2,
+        "decision_date": "2020-06-10",
+        "filing_date": "2019-03-15",
+        "jurisdiction": "IN",
+        "case_type": "Criminal",
+        "case_number": "Criminal Appeal No. 789 of 2019",
+        "outcome": "Dismissed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Murder conviction under Section 302 IPC. Death penalty commuted to life imprisonment.",
+        "headnotes": "Criminal Law - Murder - Section 302 IPC - Death penalty - Mitigating circumstances",
+        "catchwords": ["Murder", "Section 302", "Death Penalty", "Sentencing"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-PK-SC-2015-023",
+        "citation": "PLD 2015 SC 401",
+        "neutral_citation": "[2015] PKSC 023",
+        "title": "Federation of Pakistan v. Ahmad",
+        "short_title": "Ahmad Case",
+        "court": "Supreme Court of Pakistan",
+        "bench_type": "Constitution Bench",
+        "bench_strength": 9,
+        "decision_date": "2015-11-18",
+        "filing_date": "2014-07-22",
+        "jurisdiction": "PK",
+        "case_type": "Constitutional",
+        "case_number": "Constitution Petition No. 45 of 2014",
+        "outcome": "Allowed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "Applied Basic Structure Doctrine from Indian jurisprudence to Pakistani Constitution.",
+        "headnotes": "Constitutional Law - Basic Structure - Cross-jurisdiction application",
+        "catchwords": ["Constitution", "Basic Structure", "Indian Precedent"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-HC-2024-089",
+        "citation": "2024 BLD (HC) 345",
+        "neutral_citation": "[2024] BDHC 089",
+        "title": "Begum v. City Corporation",
+        "short_title": "Begum Property Case",
+        "court": "High Court Division, Bangladesh",
+        "bench_type": "Division Bench",
+        "bench_strength": 2,
+        "decision_date": "2024-05-30",
+        "filing_date": "2023-09-12",
+        "jurisdiction": "BD",
+        "case_type": "Civil",
+        "case_number": "Civil Revision No. 234 of 2023",
+        "outcome": "Partially Allowed",
+        "status": "Active",
+        "precedent_value": "Persuasive",
+        "summary": "Property dispute. Applied ejusdem generis principle of statutory interpretation.",
+        "headnotes": "Property Law - Statutory Interpretation - Ejusdem Generis",
+        "catchwords": ["Property", "Interpretation", "Ejusdem Generis", "Title"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-IN-SC-2018-067",
+        "citation": "AIR 2018 SC 2889",
+        "neutral_citation": "[2018] INSC 067",
+        "title": "Union of India v. Sharma Industries",
+        "short_title": "Sharma Tax Case",
+        "court": "Supreme Court of India",
+        "bench_type": "Division Bench",
+        "bench_strength": 2,
+        "decision_date": "2018-09-25",
+        "filing_date": "2017-11-08",
+        "jurisdiction": "IN",
+        "case_type": "Tax",
+        "case_number": "Civil Appeal No. 5678 of 2017",
+        "outcome": "Dismissed",
+        "status": "Active",
+        "precedent_value": "Binding",
+        "summary": "GST Act interpretation. Section 15 analyzed. Liberal interpretation favoring taxpayer.",
+        "headnotes": "Tax Law - GST - Section 15 - Interpretation",
+        "catchwords": ["GST", "Section 15", "Tax", "Interpretation"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "case_id": "CASE-BD-HC-2023-156",
+        "citation": "2023 BLD (HC) 789",
+        "neutral_citation": "[2023] BDHC 156",
+        "title": "Rahman Traders v. NBR",
+        "short_title": "Rahman VAT Case",
+        "court": "High Court Division, Bangladesh",
+        "bench_type": "Single Judge",
+        "bench_strength": 1,
+        "decision_date": "2023-12-10",
+        "filing_date": "2023-06-15",
+        "jurisdiction": "BD",
+        "case_type": "Tax",
+        "case_number": "Tax Reference No. 67 of 2023",
+        "outcome": "Allowed",
+        "status": "Active",
+        "precedent_value": "Persuasive",
+        "summary": "VAT Act 1991, Section 25 interpretation. Followed liberal interpretation from Indian GST cases.",
+        "headnotes": "Tax Law - VAT - Section 25 - Liberal interpretation",
+        "catchwords": ["VAT", "Section 25", "Tax Deduction", "Interpretation"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "statutes": [
+      {
+        "statute_id": "STAT-BD-PC-1860-V1",
+        "name": "Penal Code, 1860",
+        "short_name": "Penal Code",
+        "jurisdiction": "BD",
+        "statute_type": "Code",
+        "enactment_date": "1860-10-06",
+        "effective_date": "1862-01-01",
+        "status": "Active",
+        "version": 1,
+        "is_current_version": false,
+        "summary": "Original version of the Penal Code applicable in Bangladesh (inherited from British India)",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-BD-PC-1860-V2",
+        "name": "Penal Code, 1860 (as amended 2000)",
+        "short_name": "Penal Code",
+        "jurisdiction": "BD",
+        "statute_type": "Code",
+        "enactment_date": "1860-10-06",
+        "effective_date": "2000-07-01",
+        "status": "Active",
+        "version": 2,
+        "is_current_version": false,
+        "summary": "First amendment - Enhanced penalties for violence against women",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-BD-PC-1860-V3",
+        "name": "Penal Code, 1860 (as amended 2013)",
+        "short_name": "Penal Code",
+        "jurisdiction": "BD",
+        "statute_type": "Code",
+        "enactment_date": "1860-10-06",
+        "effective_date": "2013-04-15",
+        "status": "Active",
+        "version": 3,
+        "is_current_version": false,
+        "summary": "Second amendment - Changes to rape provisions (Section 376)",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-BD-PC-1860-V4",
+        "name": "Penal Code, 1860 (as amended 2020)",
+        "short_name": "Penal Code",
+        "jurisdiction": "BD",
+        "statute_type": "Code",
+        "enactment_date": "1860-10-06",
+        "effective_date": "2020-10-13",
+        "status": "Active",
+        "version": 4,
+        "is_current_version": true,
+        "summary": "Current version - Death penalty for rape, cybercrime provisions added",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-BD-CONST-1972-V1",
+        "name": "Constitution of the People's Republic of Bangladesh, 1972",
+        "short_name": "Constitution",
+        "jurisdiction": "BD",
+        "statute_type": "Constitution",
+        "enactment_date": "1972-11-04",
+        "effective_date": "1972-12-16",
+        "status": "Active",
+        "version": 1,
+        "is_current_version": true,
+        "summary": "Supreme law of Bangladesh",
+        "preamble": "We, the people of Bangladesh... do hereby adopt, enact and give to ourselves this Constitution.",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-IN-CONST-1950-V1",
+        "name": "Constitution of India, 1950",
+        "short_name": "Constitution of India",
+        "jurisdiction": "IN",
+        "statute_type": "Constitution",
+        "enactment_date": "1949-11-26",
+        "effective_date": "1950-01-26",
+        "status": "Active",
+        "version": 1,
+        "is_current_version": true,
+        "summary": "Supreme law of India",
+        "preamble": "We, the people of India... do hereby adopt, enact and give to ourselves this Constitution.",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-IN-IPC-1860-V1",
+        "name": "Indian Penal Code, 1860",
+        "short_name": "IPC",
+        "jurisdiction": "IN",
+        "statute_type": "Code",
+        "enactment_date": "1860-10-06",
+        "effective_date": "1862-01-01",
+        "status": "Active",
+        "version": 1,
+        "is_current_version": true,
+        "summary": "Criminal law code of India",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-IN-GST-2017-V1",
+        "name": "Central Goods and Services Tax Act, 2017",
+        "short_name": "GST Act",
+        "jurisdiction": "IN",
+        "statute_type": "Act",
+        "enactment_date": "2017-04-12",
+        "effective_date": "2017-07-01",
+        "status": "Active",
+        "version": 1,
+        "is_current_version": true,
+        "summary": "Goods and Services Tax legislation",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "statute_id": "STAT-BD-VAT-1991-V1",
+        "name": "Value Added Tax Act, 1991",
+        "short_name": "VAT Act",
+        "jurisdiction": "BD",
+        "statute_type": "Act",
+        "enactment_date": "1991-06-30",
+        "effective_date": "1991-07-01",
+        "status": "Active",
+        "version": 1,
+        "is_current_version": true,
+        "summary": "Value Added Tax legislation for Bangladesh",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "sections": [
+      {
+        "section_id": "SEC-BD-PC-302-V1",
+        "section_number": "302",
+        "title": "Punishment for murder",
+        "section_type": "Section",
+        "text": "Whoever commits murder shall be punished with death or transportation for life, and shall also be liable to fine.",
+        "summary": "Prescribes punishment for murder",
+        "version": 1,
+        "effective_from": "1862-01-01",
+        "effective_to": "2020-10-12",
+        "is_current_version": false,
+        "status": "Superseded",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-BD-PC-302-V2",
+        "section_number": "302",
+        "title": "Punishment for murder",
+        "section_type": "Section",
+        "text": "Whoever commits murder shall be punished with death or imprisonment for life, and shall also be liable to fine.",
+        "summary": "Current version - 'transportation' replaced with 'imprisonment'",
+        "version": 2,
+        "effective_from": "2020-10-13",
+        "effective_to": null,
+        "is_current_version": true,
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-BD-PC-376-V1",
+        "section_number": "376",
+        "title": "Punishment for rape",
+        "section_type": "Section",
+        "text": "Whoever commits rape shall be punished with imprisonment for life or for a term which may extend to ten years, and shall also be liable to fine.",
+        "summary": "Original rape provision",
+        "version": 1,
+        "effective_from": "1862-01-01",
+        "effective_to": "1999-06-30",
+        "is_current_version": false,
+        "status": "Superseded",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-BD-PC-376-V2",
+        "section_number": "376",
+        "title": "Punishment for rape",
+        "section_type": "Section",
+        "text": "Whoever commits rape shall be punished with imprisonment for life or rigorous imprisonment for a term which shall not be less than ten years, and shall also be liable to fine.",
+        "summary": "2000 Amendment - Minimum 10 years imprisonment",
+        "version": 2,
+        "effective_from": "2000-07-01",
+        "effective_to": "2013-04-14",
+        "is_current_version": false,
+        "status": "Superseded",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-BD-PC-376-V3",
+        "section_number": "376",
+        "title": "Punishment for rape",
+        "section_type": "Section",
+        "text": "Whoever commits rape shall be punished with imprisonment for life or rigorous imprisonment for a term which shall not be less than ten years and may extend to twenty years, and shall also be liable to fine.",
+        "summary": "2013 Amendment - Maximum increased to 20 years",
+        "version": 3,
+        "effective_from": "2013-04-15",
+        "effective_to": "2020-10-12",
+        "is_current_version": false,
+        "status": "Superseded",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-BD-PC-376-V4",
+        "section_number": "376",
+        "title": "Punishment for rape",
+        "section_type": "Section",
+        "text": "Whoever commits rape shall be punished with death or imprisonment for life, and shall also be liable to fine.",
+        "summary": "2020 Amendment - Death penalty introduced",
+        "version": 4,
+        "effective_from": "2020-10-13",
+        "effective_to": null,
+        "is_current_version": true,
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-BD-CONST-32-V1",
+        "section_number": "32",
+        "title": "Right to Life and Personal Liberty",
+        "section_type": "Article",
+        "text": "No person shall be deprived of life or personal liberty save in accordance with law.",
+        "summary": "Fundamental right to life and liberty",
+        "version": 1,
+        "effective_from": "1972-12-16",
+        "effective_to": null,
+        "is_current_version": true,
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-IN-CONST-21-V1",
+        "section_number": "21",
+        "title": "Protection of life and personal liberty",
+        "section_type": "Article",
+        "text": "No person shall be deprived of his life or personal liberty except according to procedure established by law.",
+        "summary": "Fundamental right to life and personal liberty in India",
+        "version": 1,
+        "effective_from": "1950-01-26",
+        "effective_to": null,
+        "is_current_version": true,
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-IN-IPC-302-V1",
+        "section_number": "302",
+        "title": "Punishment for murder",
+        "section_type": "Section",
+        "text": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+        "summary": "Punishment for murder in IPC",
+        "version": 1,
+        "effective_from": "1862-01-01",
+        "effective_to": null,
+        "is_current_version": true,
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-IN-GST-15-V1",
+        "section_number": "15",
+        "title": "Value of taxable supply",
+        "section_type": "Section",
+        "text": "The value of a supply of goods or services or both shall be the transaction value, which is the price actually paid or payable for the said supply of goods or services or both...",
+        "summary": "Determination of taxable value under GST",
+        "version": 1,
+        "effective_from": "2017-07-01",
+        "effective_to": null,
+        "is_current_version": true,
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "section_id": "SEC-BD-VAT-25-V1",
+        "section_number": "25",
+        "title": "Tax deduction at source",
+        "section_type": "Section",
+        "text": "The Government may, by notification in the official Gazette, direct any person making payment to any registered person to deduct tax at such rate as may be specified...",
+        "summary": "Provisions for tax deduction at source under VAT",
+        "version": 1,
+        "effective_from": "1991-07-01",
+        "effective_to": null,
+        "is_current_version": true,
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "judges": [
+      {
+        "judge_id": "JUDGE-BD-SC-001",
+        "name": "Justice Syed Mahmud Hossain",
+        "honorific": "Hon'ble",
+        "designation": "Chief Justice",
+        "court": "Supreme Court of Bangladesh",
+        "jurisdiction": "BD",
+        "appointment_date": "2015-01-01",
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "judge_id": "JUDGE-BD-SC-002",
+        "name": "Justice Md. Nuruzzaman",
+        "honorific": "Hon'ble",
+        "designation": "Judge",
+        "court": "Supreme Court of Bangladesh",
+        "jurisdiction": "BD",
+        "appointment_date": "2014-06-15",
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "judge_id": "JUDGE-BD-SC-003",
+        "name": "Justice ABM Khairul Haque",
+        "honorific": "Hon'ble",
+        "designation": "Judge",
+        "court": "Supreme Court of Bangladesh",
+        "jurisdiction": "BD",
+        "appointment_date": "1989-01-01",
+        "retirement_date": "2000-12-31",
+        "status": "Retired",
+        "biography": "Presided over the Eighth Amendment Case (1989)",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "judge_id": "JUDGE-IN-SC-001",
+        "name": "Justice S.M. Sikri",
+        "honorific": "Hon'ble",
+        "designation": "Chief Justice",
+        "court": "Supreme Court of India",
+        "jurisdiction": "IN",
+        "appointment_date": "1964-01-01",
+        "retirement_date": "1973-12-31",
+        "status": "Retired",
+        "biography": "Chief Justice during Kesavananda Bharati case",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "judge_id": "JUDGE-IN-SC-002",
+        "name": "Justice Y.V. Chandrachud",
+        "honorific": "Hon'ble",
+        "designation": "Chief Justice",
+        "court": "Supreme Court of India",
+        "jurisdiction": "IN",
+        "appointment_date": "1972-08-28",
+        "retirement_date": "1985-07-11",
+        "status": "Retired",
+        "biography": "Presided over Maneka Gandhi case",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "judge_id": "JUDGE-BD-HC-001",
+        "name": "Justice Farah Mahbub",
+        "honorific": "Hon'ble",
+        "designation": "Judge",
+        "court": "High Court Division, Bangladesh",
+        "jurisdiction": "BD",
+        "appointment_date": "2018-03-15",
+        "status": "Active",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "legal_principles": [
+      {
+        "principle_id": "PRIN-BASIC-STRUCTURE",
+        "name": "Basic Structure Doctrine",
+        "principle_type": "Doctrine",
+        "definition": "Parliament cannot amend the Constitution so as to alter its basic structure. Certain features of the Constitution are beyond the amending power of Parliament.",
+        "description": "The Basic Structure Doctrine holds that the Constitution has certain basic features that cannot be altered or destroyed through amendments. These include supremacy of the Constitution, rule of law, independence of judiciary, secularism, federalism, and separation of powers.",
+        "domain": ["Constitutional"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "principle_id": "PRIN-EJUSDEM-GENERIS",
+        "name": "Ejusdem Generis",
+        "latin_maxim": "Ejusdem generis",
+        "principle_type": "Rule of Interpretation",
+        "definition": "Where general words follow specific words in a statute, the general words must be confined to things of the same kind as those specified.",
+        "description": "Rule of statutory interpretation: when a list of specific items is followed by general words, the general words are interpreted to be limited to items of the same type as the specific items.",
+        "domain": ["Statutory Interpretation", "All Domains"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "principle_id": "PRIN-NEMO-JUDEX",
+        "name": "No one can be a judge in their own cause",
+        "latin_maxim": "Nemo judex in causa sua",
+        "principle_type": "Maxim",
+        "definition": "No person can judge a case in which they have an interest.",
+        "description": "Fundamental principle of natural justice - a decision-maker must be impartial and unbiased. Anyone with a personal interest in the outcome must recuse themselves.",
+        "domain": ["Constitutional", "Administrative", "All Domains"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "principle_id": "PRIN-AUDI-ALTERAM",
+        "name": "Right to be heard",
+        "latin_maxim": "Audi alteram partem",
+        "principle_type": "Maxim",
+        "definition": "No one should be condemned unheard. Every person has the right to be heard before an adverse decision is made.",
+        "description": "Fundamental principle of natural justice - before making a decision affecting someone's rights, they must be given notice and an opportunity to present their case.",
+        "domain": ["Constitutional", "Administrative", "Criminal", "Civil"],
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "legal_issues": [
+      {
+        "issue_id": "ISSUE-CONST-001",
+        "description": "Whether the Constitution has a basic structure that cannot be amended by Parliament",
+        "issue_type": "Constitutional",
+        "domain": "Constitutional",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "issue_id": "ISSUE-CONST-002",
+        "description": "What is the scope and meaning of 'personal liberty' under Article 21/32",
+        "issue_type": "Constitutional",
+        "domain": "Constitutional",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "issue_id": "ISSUE-CRIM-001",
+        "description": "What are the essential elements of murder under Section 302",
+        "issue_type": "Substantive",
+        "domain": "Criminal",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "issue_id": "ISSUE-CRIM-002",
+        "description": "What standard of evidence is required for conviction in rape cases",
+        "issue_type": "Evidentiary",
+        "domain": "Criminal",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "issue_id": "ISSUE-CRIM-003",
+        "description": "Whether fair trial guarantees under Article 32 apply to bail hearings",
+        "issue_type": "Constitutional",
+        "domain": "Criminal",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "issue_id": "ISSUE-TAX-001",
+        "description": "How should 'transaction value' be determined under Section 15 GST Act",
+        "issue_type": "Substantive",
+        "domain": "Tax",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "issue_id": "ISSUE-PROP-001",
+        "description": "Application of ejusdem generis in property title disputes",
+        "issue_type": "Substantive",
+        "domain": "Civil",
+        "created_at": "2025-11-11T00:00:00Z",
+        "updated_at": "2025-11-11T00:00:00Z"
+      }
+    ]
+  },
+  "relationships": {
+    "CITES": [
+      {
+        "from": "CASE-BD-SC-1989-001",
+        "to": "CASE-IN-SC-1973-027",
+        "citation_type": "Followed",
+        "treatment": "Positive",
+        "weight": 1.0,
+        "context": "Adopted the Basic Structure Doctrine from Kesavananda Bharati",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2011-002",
+        "to": "CASE-BD-SC-1989-001",
+        "citation_type": "Followed",
+        "treatment": "Positive",
+        "weight": 1.0,
+        "context": "Reaffirmed Basic Structure Doctrine established in Eighth Amendment Case",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2011-002",
+        "to": "CASE-IN-SC-1973-027",
+        "citation_type": "Followed",
+        "treatment": "Positive",
+        "weight": 1.0,
+        "context": "Applied Basic Structure principles from Kesavananda Bharati",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1978-012",
+        "to": "CASE-IN-SC-1950-001",
+        "citation_type": "Overruled",
+        "treatment": "Negative",
+        "weight": 0.0,
+        "context": "Expressly overruled the narrow interpretation of Article 21 in AK Gopalan",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-HC-2022-045",
+        "to": "CASE-IN-SC-1978-012",
+        "citation_type": "Followed",
+        "treatment": "Positive",
+        "weight": 0.8,
+        "context": "Applied procedural safeguards from Maneka Gandhi to bail proceedings",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "CASE-BD-SC-2011-002",
+        "citation_type": "Referred",
+        "treatment": "Neutral",
+        "weight": 0.5,
+        "context": "Discussed constitutional right to fair trial",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "CASE-IN-SC-1978-012",
+        "citation_type": "Considered",
+        "treatment": "Positive",
+        "weight": 0.7,
+        "context": "Analyzed procedural fairness requirements in criminal trials",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2024-003",
+        "to": "CASE-BD-SC-2019-007",
+        "citation_type": "Overruled",
+        "treatment": "Negative",
+        "weight": 0.0,
+        "context": "Expressly overruled Hossain - stricter evidence standards required",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2025-001",
+        "to": "CASE-BD-SC-2024-003",
+        "citation_type": "Overruled",
+        "treatment": "Negative",
+        "weight": 0.0,
+        "context": "Overruled Alam - reinstated Hossain standards",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2025-001",
+        "to": "CASE-BD-SC-2019-007",
+        "citation_type": "Approved",
+        "treatment": "Positive",
+        "weight": 1.0,
+        "context": "Reinstated the balanced evidence standards from Hossain",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "CASE-IN-SC-2020-045",
+        "citation_type": "Considered",
+        "treatment": "Positive",
+        "weight": 0.6,
+        "context": "Considered Indian precedent on Section 302 sentencing principles",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-PK-SC-2015-023",
+        "to": "CASE-IN-SC-1973-027",
+        "citation_type": "Followed",
+        "treatment": "Positive",
+        "weight": 1.0,
+        "context": "Applied Basic Structure Doctrine to Pakistani Constitution",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-PK-SC-2015-023",
+        "to": "CASE-BD-SC-1989-001",
+        "citation_type": "Referred",
+        "treatment": "Positive",
+        "weight": 0.5,
+        "context": "Noted Bangladesh's adoption of Basic Structure Doctrine",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-HC-2023-156",
+        "to": "CASE-IN-SC-2018-067",
+        "citation_type": "Followed",
+        "treatment": "Positive",
+        "weight": 0.8,
+        "context": "Applied liberal interpretation principles from Indian GST case to VAT provisions",
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "INTERPRETS": [
+      {
+        "from": "CASE-IN-SC-1973-027",
+        "to": "STAT-IN-CONST-1950-V1",
+        "interpretation_type": "Purposive",
+        "holding": "Constitution has a basic structure that cannot be amended",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-1989-001",
+        "to": "STAT-BD-CONST-1972-V1",
+        "interpretation_type": "Purposive",
+        "holding": "Bangladesh Constitution has a basic structure following Indian precedent",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "SEC-BD-PC-302-V2",
+        "interpretation_type": "Strict",
+        "holding": "All elements of murder must be proved beyond reasonable doubt",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "SEC-BD-CONST-32-V1",
+        "interpretation_type": "Liberal",
+        "holding": "Article 32 includes right to fair trial with procedural safeguards",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1950-001",
+        "to": "SEC-IN-CONST-21-V1",
+        "interpretation_type": "Literal",
+        "holding": "Article 21 only requires procedure established by law, not fairness",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1978-012",
+        "to": "SEC-IN-CONST-21-V1",
+        "interpretation_type": "Liberal",
+        "holding": "Article 21 requires procedure to be fair, just and reasonable, not merely lawful",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2019-007",
+        "to": "SEC-BD-PC-376-V3",
+        "interpretation_type": "Liberal",
+        "holding": "Victim's testimony alone sufficient for conviction if credible",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2024-003",
+        "to": "SEC-BD-PC-376-V4",
+        "interpretation_type": "Strict",
+        "holding": "Corroboration required; victim's testimony alone insufficient",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2025-001",
+        "to": "SEC-BD-PC-376-V4",
+        "interpretation_type": "Harmonious",
+        "holding": "Victim's testimony primary evidence but must be scrutinized carefully; corroboration preferred but not mandatory",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-2018-067",
+        "to": "SEC-IN-GST-15-V1",
+        "interpretation_type": "Liberal",
+        "holding": "Transaction value should be interpreted broadly in favor of taxpayer",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-HC-2023-156",
+        "to": "SEC-BD-VAT-25-V1",
+        "interpretation_type": "Liberal",
+        "holding": "Tax deduction provisions should be construed liberally favoring taxpayer",
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "CONTAINS": [
+      {
+        "from": "STAT-BD-PC-1860-V1",
+        "to": "SEC-BD-PC-302-V1",
+        "order": 302,
+        "part": "Chapter XVI",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V4",
+        "to": "SEC-BD-PC-302-V2",
+        "order": 302,
+        "part": "Chapter XVI",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V1",
+        "to": "SEC-BD-PC-376-V1",
+        "order": 376,
+        "part": "Chapter XVI",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V2",
+        "to": "SEC-BD-PC-376-V2",
+        "order": 376,
+        "part": "Chapter XVI",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V3",
+        "to": "SEC-BD-PC-376-V3",
+        "order": 376,
+        "part": "Chapter XVI",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V4",
+        "to": "SEC-BD-PC-376-V4",
+        "order": 376,
+        "part": "Chapter XVI",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-CONST-1972-V1",
+        "to": "SEC-BD-CONST-32-V1",
+        "order": 32,
+        "part": "Part III",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-IN-CONST-1950-V1",
+        "to": "SEC-IN-CONST-21-V1",
+        "order": 21,
+        "part": "Part III",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-IN-IPC-1860-V1",
+        "to": "SEC-IN-IPC-302-V1",
+        "order": 302,
+        "part": "Chapter XVI",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-IN-GST-2017-V1",
+        "to": "SEC-IN-GST-15-V1",
+        "order": 15,
+        "part": "Chapter III",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-VAT-1991-V1",
+        "to": "SEC-BD-VAT-25-V1",
+        "order": 25,
+        "part": "Chapter VI",
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "AMENDS": [
+      {
+        "from": "STAT-BD-PC-1860-V2",
+        "to": "STAT-BD-PC-1860-V1",
+        "amendment_type": "Modification",
+        "amendment_date": "2000-07-01",
+        "description": "Enhanced penalties for violence against women",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V3",
+        "to": "STAT-BD-PC-1860-V2",
+        "amendment_type": "Substitution",
+        "amendment_date": "2013-04-15",
+        "description": "Modified rape provisions in Section 376",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V4",
+        "to": "STAT-BD-PC-1860-V3",
+        "amendment_type": "Substitution",
+        "amendment_date": "2020-10-13",
+        "description": "Introduced death penalty for rape, added cybercrime provisions",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-376-V2",
+        "to": "SEC-BD-PC-376-V1",
+        "amendment_type": "Modification",
+        "amendment_date": "2000-07-01",
+        "description": "Increased minimum sentence to 10 years",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-376-V3",
+        "to": "SEC-BD-PC-376-V2",
+        "amendment_type": "Modification",
+        "amendment_date": "2013-04-15",
+        "description": "Increased maximum sentence to 20 years",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-376-V4",
+        "to": "SEC-BD-PC-376-V3",
+        "amendment_type": "Substitution",
+        "amendment_date": "2020-10-13",
+        "description": "Introduced death penalty as punishment option",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-302-V2",
+        "to": "SEC-BD-PC-302-V1",
+        "amendment_type": "Modification",
+        "amendment_date": "2020-10-13",
+        "description": "Replaced 'transportation' with 'imprisonment'",
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "SUPERSEDES": [
+      {
+        "from": "STAT-BD-PC-1860-V2",
+        "to": "STAT-BD-PC-1860-V1",
+        "supersede_date": "2000-07-01",
+        "reason": "Amendment",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V3",
+        "to": "STAT-BD-PC-1860-V2",
+        "supersede_date": "2013-04-15",
+        "reason": "Amendment",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "STAT-BD-PC-1860-V4",
+        "to": "STAT-BD-PC-1860-V3",
+        "supersede_date": "2020-10-13",
+        "reason": "Amendment",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-302-V2",
+        "to": "SEC-BD-PC-302-V1",
+        "supersede_date": "2020-10-13",
+        "reason": "Amendment",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-376-V2",
+        "to": "SEC-BD-PC-376-V1",
+        "supersede_date": "2000-07-01",
+        "reason": "Amendment",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-376-V3",
+        "to": "SEC-BD-PC-376-V2",
+        "supersede_date": "2013-04-15",
+        "reason": "Amendment",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "SEC-BD-PC-376-V4",
+        "to": "SEC-BD-PC-376-V3",
+        "supersede_date": "2020-10-13",
+        "reason": "Amendment",
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "DECIDED_BY": [
+      {
+        "from": "CASE-BD-SC-1989-001",
+        "to": "JUDGE-BD-SC-003",
+        "role": "Presiding Judge",
+        "opinion_type": "Majority",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "JUDGE-BD-SC-001",
+        "role": "Presiding Judge",
+        "opinion_type": "Majority",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "JUDGE-BD-SC-002",
+        "role": "Member",
+        "opinion_type": "Majority",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1973-027",
+        "to": "JUDGE-IN-SC-001",
+        "role": "Presiding Judge",
+        "opinion_type": "Majority",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1978-012",
+        "to": "JUDGE-IN-SC-002",
+        "role": "Presiding Judge",
+        "opinion_type": "Majority",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-HC-2022-045",
+        "to": "JUDGE-BD-HC-001",
+        "role": "Presiding Judge",
+        "opinion_type": "Majority",
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "ADDRESSES": [
+      {
+        "from": "CASE-IN-SC-1973-027",
+        "to": "ISSUE-CONST-001",
+        "holding": "Constitution has basic structure that cannot be amended",
+        "ratio_decidendi": "While Parliament has wide amendment powers, it cannot destroy the basic structure of the Constitution",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-1989-001",
+        "to": "ISSUE-CONST-001",
+        "holding": "Bangladesh Constitution has basic structure following Indian precedent",
+        "ratio_decidendi": "Basic Structure Doctrine applies to Bangladesh Constitution",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1950-001",
+        "to": "ISSUE-CONST-002",
+        "holding": "Article 21 protects personal liberty from actions not sanctioned by law",
+        "ratio_decidendi": "Narrow interpretation - procedure need only be established by law",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1978-012",
+        "to": "ISSUE-CONST-002",
+        "holding": "Article 21 includes right to live with dignity; procedure must be fair, just and reasonable",
+        "ratio_decidendi": "Expanded interpretation - procedure must meet principles of natural justice",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "ISSUE-CRIM-001",
+        "holding": "All elements of murder under Section 302 proved beyond reasonable doubt",
+        "ratio_decidendi": "Conviction upheld based on evidence of intention and act causing death",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2023-001",
+        "to": "ISSUE-CRIM-003",
+        "holding": "Fair trial guarantees apply at all stages including investigation and trial",
+        "ratio_decidendi": "Article 32 requires procedural fairness throughout criminal process",
+        "is_main_issue": false,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2019-007",
+        "to": "ISSUE-CRIM-002",
+        "holding": "Victim's testimony alone sufficient if credible",
+        "ratio_decidendi": "Sexual offenses often occur in private; corroboration not mandatory",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2024-003",
+        "to": "ISSUE-CRIM-002",
+        "holding": "Corroboration required for rape conviction",
+        "ratio_decidendi": "Given severity of punishment, stricter evidence standards necessary",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2025-001",
+        "to": "ISSUE-CRIM-002",
+        "holding": "Victim's testimony primary evidence; corroboration preferred but not mandatory",
+        "ratio_decidendi": "Balance between protecting victims and ensuring fair trials",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-2018-067",
+        "to": "ISSUE-TAX-001",
+        "holding": "Transaction value is actual price paid or payable",
+        "ratio_decidendi": "Tax provisions should be construed strictly; ambiguity resolved in favor of taxpayer",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-HC-2024-089",
+        "to": "ISSUE-PROP-001",
+        "holding": "Ejusdem generis applied to limit general words to same category as specific items",
+        "ratio_decidendi": "Statutory interpretation requires reading statute as a whole",
+        "is_main_issue": true,
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ],
+    "APPLIES": [
+      {
+        "from": "CASE-IN-SC-1973-027",
+        "to": "PRIN-BASIC-STRUCTURE",
+        "application_type": "Established",
+        "context": "First case to establish the Basic Structure Doctrine",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-1989-001",
+        "to": "PRIN-BASIC-STRUCTURE",
+        "application_type": "Applied",
+        "context": "Applied Basic Structure Doctrine to Bangladesh Constitution",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-SC-2011-002",
+        "to": "PRIN-BASIC-STRUCTURE",
+        "application_type": "Applied",
+        "context": "Reaffirmed and applied Basic Structure Doctrine",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-PK-SC-2015-023",
+        "to": "PRIN-BASIC-STRUCTURE",
+        "application_type": "Applied",
+        "context": "Applied Basic Structure Doctrine to Pakistan Constitution",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-IN-SC-1978-012",
+        "to": "PRIN-AUDI-ALTERAM",
+        "application_type": "Applied",
+        "context": "Applied right to be heard as fundamental to Article 21",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-HC-2022-045",
+        "to": "PRIN-AUDI-ALTERAM",
+        "application_type": "Applied",
+        "context": "Applied right to be heard in bail proceedings",
+        "created_at": "2025-11-11T00:00:00Z"
+      },
+      {
+        "from": "CASE-BD-HC-2024-089",
+        "to": "PRIN-EJUSDEM-GENERIS",
+        "application_type": "Applied",
+        "context": "Applied ejusdem generis principle to interpret property statute",
+        "created_at": "2025-11-11T00:00:00Z"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "relationship_type": "HAS_OPINION",
+  "description": "A case has a judicial opinion (majority, concurring, dissenting)",
+  "from_node": "Case",
+  "to_node": "Opinion",
+  "properties": {
+    "sequence_number": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Order in which opinions appear in the judgment"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether this is the primary/majority opinion"
+    },
+    "page_reference": {
+      "type": "string",
+      "required": false,
+      "description": "Page reference in judgment document"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX has_opinion_sequence IF NOT EXISTS FOR ()-[r:HAS_OPINION]-() ON (r.sequence_number)",
+    "CREATE INDEX has_opinion_primary IF NOT EXISTS FOR ()-[r:HAS_OPINION]-() ON (r.is_primary)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all opinions for a case\nMATCH (c:Case {case_id: 'case_bd_sc_2023_123'})-[r:HAS_OPINION]->(o:Opinion)\nRETURN o.opinion_type, o.author_judge_id, r.sequence_number\nORDER BY r.sequence_number",
+    "// Find majority opinion\nMATCH (c:Case {citation: '64 DLR (AD) 199'})-[r:HAS_OPINION]->(o:Opinion)\nWHERE o.opinion_type = 'Majority'\nRETURN o.summary, o.vote_count",
+    "// Find dissenting opinions across all cases\nMATCH (:Case)-[:HAS_OPINION]->(o:Opinion)\nWHERE o.opinion_type = 'Dissenting'\nRETURN COUNT(o) AS dissent_count"
+  ]
+}

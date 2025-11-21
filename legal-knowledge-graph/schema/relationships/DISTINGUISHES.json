@@ -1,0 +1,35 @@
+{
+  "relationship_type": "DISTINGUISHES",
+  "description": "A case distinguishes itself from another case on facts or law",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "distinction_basis": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Basis for distinction",
+      "examples": ["Facts", "Law", "Both", "Procedural", "Jurisdictional"]
+    },
+    "reasoning": {
+      "type": "text",
+      "required": false,
+      "description": "Reasoning for distinction"
+    },
+    "significance": {
+      "type": "string",
+      "required": false,
+      "description": "Significance of distinction",
+      "examples": ["Material", "Minor", "Technical"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX distinguishes_basis IF NOT EXISTS FOR ()-[r:DISTINGUISHES]-() ON (r.distinction_basis)"
+  ],
+  "constraints": []
+}

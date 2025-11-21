@@ -1,0 +1,112 @@
+{
+  "node_type": "LegalIssue",
+  "description": "Legal question or issue addressed in a case",
+  "properties": {
+    "issue_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the issue",
+      "examples": ["ISSUE-001", "ISSUE-CONST-032"]
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "description": "Description of the legal issue"
+    },
+    "issue_type": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Category of issue",
+      "examples": ["Constitutional", "Procedural", "Substantive", "Evidentiary"]
+    },
+    "domain": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Legal domain",
+      "examples": ["Criminal", "Civil", "Constitutional", "Tax", "Corporate"]
+    },
+    "embedding": {
+      "type": "vector",
+      "required": false,
+      "vector_dimension": 1536,
+      "description": "Vector embedding for semantic search"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (increments on updates)",
+      "default": 1
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_issue_id IF NOT EXISTS FOR (i:LegalIssue) REQUIRE i.issue_id IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX issue_type IF NOT EXISTS FOR (i:LegalIssue) ON (i.issue_type)",
+    "CREATE INDEX issue_domain IF NOT EXISTS FOR (i:LegalIssue) ON (i.domain)",
+    "CREATE INDEX issue_source IF NOT EXISTS FOR (i:LegalIssue) ON (i.source)",
+    "CREATE INDEX issue_extracted_by IF NOT EXISTS FOR (i:LegalIssue) ON (i.extracted_by)",
+    "CREATE INDEX issue_trust_score IF NOT EXISTS FOR (i:LegalIssue) ON (i.trust_score)",
+    "CREATE INDEX issue_verification_status IF NOT EXISTS FOR (i:LegalIssue) ON (i.verification_status)",
+    "CREATE TEXT INDEX issue_description IF NOT EXISTS FOR (i:LegalIssue) ON (i.description)",
+    "CREATE VECTOR INDEX issue_embedding IF NOT EXISTS FOR (i:LegalIssue) ON (i.embedding) OPTIONS {indexConfig: {`vector.dimensions`: 1536, `vector.similarity_function`: 'cosine'}}"
+  ]
+}

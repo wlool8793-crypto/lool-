@@ -1,0 +1,27 @@
+{
+  "relationship_type": "CONTAINS",
+  "description": "A statute contains a section",
+  "from_node": "Statute",
+  "to_node": "Section",
+  "properties": {
+    "order": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Order of section in statute"
+    },
+    "part": {
+      "type": "string",
+      "required": false,
+      "description": "Part/Chapter of statute",
+      "examples": ["Part I", "Chapter III"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [],
+  "constraints": []
+}

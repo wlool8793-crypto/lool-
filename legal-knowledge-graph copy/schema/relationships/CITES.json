@@ -1,0 +1,48 @@
+{
+  "relationship_type": "CITES",
+  "description": "A case cites another case as precedent",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "citation_type": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Type of citation",
+      "examples": ["Followed", "Distinguished", "Overruled", "Approved", "Considered", "Referred", "Doubted"]
+    },
+    "treatment": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Treatment of cited case",
+      "examples": ["Positive", "Negative", "Neutral", "Questioned"]
+    },
+    "weight": {
+      "type": "float",
+      "required": false,
+      "description": "Citation weight (0-1)",
+      "default": 0.5
+    },
+    "context": {
+      "type": "text",
+      "required": false,
+      "description": "Citation context"
+    },
+    "page_number": {
+      "type": "string",
+      "required": false,
+      "description": "Page number"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX cites_type IF NOT EXISTS FOR ()-[r:CITES]-() ON (r.citation_type)",
+    "CREATE INDEX cites_treatment IF NOT EXISTS FOR ()-[r:CITES]-() ON (r.treatment)"
+  ],
+  "constraints": []
+}

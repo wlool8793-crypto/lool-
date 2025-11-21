@@ -1,0 +1,29 @@
+{
+  "relationship_type": "PETITIONER",
+  "description": "A party is the petitioner/plaintiff/appellant in a case",
+  "from_node": "Party",
+  "to_node": "Case",
+  "properties": {
+    "party_role": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Specific role of party",
+      "examples": ["Petitioner", "Plaintiff", "Appellant", "Applicant"]
+    },
+    "party_number": {
+      "type": "integer",
+      "required": false,
+      "description": "Party number (for multiple parties)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX petitioner_role IF NOT EXISTS FOR ()-[r:PETITIONER]-() ON (r.party_role)"
+  ],
+  "constraints": []
+}

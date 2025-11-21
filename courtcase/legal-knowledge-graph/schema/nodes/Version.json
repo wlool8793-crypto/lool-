@@ -1,0 +1,151 @@
+{
+  "label": "Version",
+  "description": "Represents a specific version of a statute or section for temporal tracking",
+  "required_properties": [
+    {
+      "name": "version_id",
+      "type": "string",
+      "description": "Unique identifier for the version",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "version_number",
+      "type": "integer",
+      "description": "Sequential version number",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "valid_from",
+      "type": "date",
+      "description": "Date from which this version is valid",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "valid_to",
+      "type": "date",
+      "description": "Date until which this version is valid"
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "description": "Content of this version"
+    },
+    {
+      "name": "change_summary",
+      "type": "string",
+      "description": "Summary of changes from previous version"
+    },
+    {
+      "name": "change_type",
+      "type": "string",
+      "description": "Type of change (original, amended, substituted, repealed)"
+    },
+    {
+      "name": "amending_act",
+      "type": "string",
+      "description": "Reference to amending legislation"
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "description": "Whether this is the current version"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "composite",
+      "name": "version_temporal_index",
+      "properties": ["valid_from", "valid_to", "current"]
+    },
+    {
+      "type": "property",
+      "name": "version_number_index",
+      "properties": ["version_number"]
+    },
+    {
+      "type": "property",
+      "name": "version_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "version_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "version_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "version_verification_status_index",
+      "properties": ["verification_status"]
+    }
+  ],
+  "example": {
+    "version_id": "version_bd_pc_302_v3",
+    "version_number": 3,
+    "valid_from": "2023-07-01",
+    "content": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+    "change_summary": "Added alternative sentencing and fine provision",
+    "change_type": "amended",
+    "amending_act": "Penal Code (Amendment) Act, 2023",
+    "current": true
+  }
+}

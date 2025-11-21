@@ -1,0 +1,136 @@
+{
+  "node_type": "StatusChange",
+  "description": "Tracks status changes of legal cases over time",
+  "properties": {
+    "status_change_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the status change"
+    },
+    "previous_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Previous case status",
+      "examples": ["Active", "Overruled", "Superseded", "Deprecated"]
+    },
+    "new_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "New case status",
+      "examples": ["Active", "Overruled", "Superseded", "Deprecated"]
+    },
+    "change_date": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "When the status change occurred"
+    },
+    "reason": {
+      "type": "text",
+      "required": true,
+      "description": "Reason for status change"
+    },
+    "triggered_by_case_id": {
+      "type": "string",
+      "required": false,
+      "description": "ID of case that triggered this status change"
+    },
+    "updated_by": {
+      "type": "string",
+      "required": true,
+      "description": "Who/what updated the status"
+    },
+    "data_source": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Source of this status change data",
+      "examples": ["IndianKanoon", "Manual Entry", "Court Registry", "Automated Extraction"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": false,
+      "description": "Confidence score for automated extractions (0.0-1.0)"
+    },
+    "verified": {
+      "type": "boolean",
+      "required": false,
+      "indexed": true,
+      "description": "Whether this status change has been manually verified"
+    },
+    "version": {
+      "type": "integer",
+      "required": false,
+      "description": "Version number for tracking updates to this status change"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source_url": {
+      "type": "string",
+      "required": false,
+      "description": "URL to source documenting this status change"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_status_change_id IF NOT EXISTS FOR (sc:StatusChange) REQUIRE sc.status_change_id IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX status_change_date IF NOT EXISTS FOR (sc:StatusChange) ON (sc.change_date)",
+    "CREATE INDEX status_change_new_status IF NOT EXISTS FOR (sc:StatusChange) ON (sc.new_status)",
+    "CREATE INDEX status_change_previous_status IF NOT EXISTS FOR (sc:StatusChange) ON (sc.previous_status)",
+    "CREATE INDEX status_change_verified IF NOT EXISTS FOR (sc:StatusChange) ON (sc.verified)",
+    "CREATE INDEX status_change_source IF NOT EXISTS FOR (sc:StatusChange) ON (sc.source)",
+    "CREATE INDEX status_change_extracted_by IF NOT EXISTS FOR (sc:StatusChange) ON (sc.extracted_by)",
+    "CREATE INDEX status_change_trust_score IF NOT EXISTS FOR (sc:StatusChange) ON (sc.trust_score)",
+    "CREATE INDEX status_change_verification_status IF NOT EXISTS FOR (sc:StatusChange) ON (sc.verification_status)"
+  ]
+}

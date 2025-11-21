@@ -1,0 +1,228 @@
+Understood! Let me create a focused plan for just the core functionality:
+
+  1. Naming Convention
+  2. PostgreSQL Database Schema
+  3. Metadata Extraction
+  4. Scraping & Storing Data
+                                                                                                            
+● User approved Claude's plan
+  ⎿  🚀 FOCUSED IMPLEMENTATION PLAN: Scraping & Database Storage
+
+     Scope: Naming Convention → Database → Extraction → Scraping → Storage
+
+     ---
+     PHASE 1: Enhanced Naming Convention (Days 1-2)
+
+     Format (12 Components):
+
+     {GLOBALID}_{CC}_{TYPE}_{SUBTYPE}_{YEAR}_{DOCNUM}_{IDENTIFIER}_{SUBJ}_{STATUS}_{VER}_{LANG}_{HASH16}.pdf
+
+     Files to Create:
+
+     src/naming/
+     ├── __init__.py
+     ├── enhanced_namer.py          # Main naming class (400 lines)
+     ├── citation_encoder.py        # Encode citations (250 lines)
+     ├── party_abbreviator.py       # Abbreviate parties (200 lines)
+     ├── docnum_generator.py        # Generate DOCNUM (200 lines)
+     ├── hash_generator.py          # 16-char hash (100 lines)
+     ├── filename_parser.py         # Parse filename (200 lines)
+     └── constants.py               # Codes & mappings (100 lines)
+
+     config/naming/
+     ├── citation_formats.json      # DLR, AIR, SCC, PLD patterns
+     ├── subject_codes.json         # 15 subject codes
+     ├── country_codes.json         # BD, IN, PK + courts
+     └── abbreviations.json         # Party abbreviations
+
+     tests/naming/
+     ├── test_enhanced_namer.py     # All naming tests (300 lines)
+     └── test_examples.py           # Document type examples (150 lines)
+
+     Phase 1: ~1,900 lines
+
+     ---
+     PHASE 2: PostgreSQL Database Schema (Days 3-5)
+
+     Tables (14 total):
+
+     | Table             | Purpose            | Key Columns                         |
+     |-------------------|--------------------|-------------------------------------|
+     | documents         | Main metadata      | 85 columns (all document info)      |
+     | parties           | Case parties       | petitioner, respondent, type        |
+     | judges            | Bench composition  | judge_name, is_author, opinion      |
+     | citations         | Citation details   | volume, reporter, page, encoded     |
+     | content           | Full text          | full_text, headnote, summary        |
+     | legal_references  | Citation graph     | citing_id, cited_id, relationship   |
+     | sections_cited    | Statutory refs     | act_name, section_number            |
+     | keywords          | Extracted keywords | keyword, weight, type               |
+     | amendments        | Act history        | amendment_number, sections_affected |
+     | translations      | Multi-language     | language_code, title_translated     |
+     | document_chunks   | RAG chunks         | chunk_id, chunk_text, level         |
+     | document_versions | Versioning         | version_number, valid_from          |
+     | sequence_tracker  | ID generation      | sequence_type, last_value           |
+     | scrape_history    | Audit trail        | source_url, status, timestamp       |
+
+     Files to Create:
+
+     migrations/
+     ├── 001_create_documents.sql         # Main table (200 lines)
+     ├── 002_create_parties_judges.sql    # Parties & judges (100 lines)
+     ├── 003_create_citations_content.sql # Citations & content (150 lines)
+     ├── 004_create_references.sql        # Legal references (100 lines)
+     ├── 005_create_keywords_amendments.sql # Keywords (100 lines)
+     ├── 006_create_chunks_versions.sql   # RAG & versions (120 lines)
+     ├── 007_create_system_tables.sql     # Sequence & history (80 lines)
+     ├── 008_create_indexes.sql           # All indexes (200 lines)
+     └── 009_seed_data.sql                # Initial data (100 lines)
+
+     src/database/
+     ├── __init__.py
+     ├── connection.py              # PostgreSQL manager (150 lines)
+     ├── models.py                  # SQLAlchemy models (800 lines)
+     └── repositories/
+         ├── __init__.py
+         ├── document_repo.py       # Document CRUD (300 lines)
+         ├── party_repo.py          # Party operations (150 lines)
+         ├── citation_repo.py       # Citation operations (200 lines)
+         ├── content_repo.py        # Content operations (150 lines)
+         └── reference_repo.py      # References (150 lines)
+
+     config/
+     ├── database.yaml              # Connection settings
+     └── docker-compose.postgres.yml # PostgreSQL container
+
+     Phase 2: ~3,000 lines
+
+     ---
+     PHASE 3: Metadata Extraction (Days 6-8)
+
+     Extractors:
+
+     | Extractor          | Source    | Extracts                              |
+     |--------------------|-----------|---------------------------------------|
+     | html_extractor     | HTML page | title, court, citation, date, PDF URL |
+     | pdf_extractor      | PDF file  | pages, text, metadata, hash           |
+     | citation_extractor | Text      | DLR/AIR/SCC citations                 |
+     | party_extractor    | Text      | petitioner, respondent names          |
+     | judge_extractor    | Text      | judge names, bench                    |
+     | date_extractor     | Text      | filing, hearing, judgment dates       |
+     | section_extractor  | Text      | Section 302, Article 14, etc.         |
+     | keyword_extractor  | Text      | TF-IDF keywords                       |
+
+     Files to Create:
+
+     src/extractors/
+     ├── __init__.py
+     ├── base_extractor.py          # Abstract base (150 lines)
+     ├── html_extractor.py          # HTML extraction (350 lines)
+     ├── pdf_extractor.py           # PDF extraction (400 lines)
+     ├── citation_extractor.py      # Citation patterns (300 lines)
+     ├── party_extractor.py         # Party names (250 lines)
+     ├── judge_extractor.py         # Judge names (200 lines)
+     ├── date_extractor.py          # All dates (200 lines)
+     ├── section_extractor.py       # Statutory sections (250 lines)
+     ├── keyword_extractor.py       # TF-IDF keywords (200 lines)
+     └── quality_analyzer.py        # Quality scoring (150 lines)
+
+     config/extraction/
+     ├── citation_patterns.yaml     # Regex patterns
+     ├── party_patterns.yaml        # Party patterns
+     ├── date_patterns.yaml         # Date formats
+     └── section_patterns.yaml      # Section patterns
+
+     Phase 3: ~2,600 lines
+
+     ---
+     PHASE 4: Scraper Integration & Storage (Days 9-12)
+
+     Processing Pipeline:
+
+     1. Scrape HTML page
+        ↓
+     2. Extract metadata (extractors)
+        ↓
+     3. Download PDF
+        ↓
+     4. Extract PDF content
+        ↓
+     5. Generate enhanced filename
+        ↓
+     6. Save to PostgreSQL (all tables)
+        ↓
+     7. Store PDF (local folder)
+        ↓
+     8. Log scrape history
+
+     Files to Create/Update:
+
+     src/pipeline/
+     ├── __init__.py
+     ├── document_processor.py      # Full pipeline (500 lines)
+     ├── scrape_coordinator.py      # Orchestrate scraping (300 lines)
+     ├── quality_checker.py         # Validate data (200 lines)
+     └── storage_manager.py         # File storage (200 lines)
+
+     src/scrapers/
+     ├── base_scraper.py            # UPDATE: Add extraction (+300 lines)
+     ├── bangladesh/
+     │   ├── bdlaws_scraper.py      # UPDATE: New extraction (+200 lines)
+     │   └── supreme_court_scraper.py  # UPDATE (+200 lines)
+     └── unified_scraper.py         # NEW: Universal scraper (400 lines)
+
+     scripts/
+     ├── scrape_bangladesh.py       # BD scraping script (100 lines)
+     ├── scrape_india.py            # IN scraping script (100 lines)
+     └── process_existing.py        # Process existing PDFs (150 lines)
+
+     Phase 4: ~2,650 lines
+
+     ---
+     SUMMARY
+
+     Total Deliverables:
+
+     | Phase   | Description         | Files    | Lines         |
+     |---------|---------------------|----------|---------------|
+     | Phase 1 | Naming Convention   | 12       | ~1,900        |
+     | Phase 2 | PostgreSQL Database | 18       | ~3,000        |
+     | Phase 3 | Metadata Extraction | 14       | ~2,600        |
+     | Phase 4 | Scraping & Storage  | 12       | ~2,650        |
+     | TOTAL   |                     | 56 files | ~10,150 lines |
+
+     Database: 14 tables
+
+     Docker: 1 service (PostgreSQL)
+
+     ---
+     Timeline:
+
+     | Phase                        | Days      | Duration             |
+     |------------------------------|-----------|----------------------|
+     | Phase 1: Naming Convention   | Days 1-2  | 2 days               |
+     | Phase 2: PostgreSQL Schema   | Days 3-5  | 3 days               |
+     | Phase 3: Metadata Extractors | Days 6-8  | 3 days               |
+     | Phase 4: Scraping & Storage  | Days 9-12 | 4 days               |
+     | TOTAL                        |           | 12 days (~2.5 weeks) |
+
+     ---
+     What You Get:
+
+     ✅ Enhanced 12-component naming convention
+     ✅ Complete PostgreSQL database (14 tables)
+     ✅ Full metadata extraction (8 extractors)
+     ✅ Updated Bangladesh scrapers
+     ✅ Updated India scrapers
+     ✅ Document processing pipeline
+     ✅ PDF storage system
+     ✅ Scrape history tracking
+
+     What's Deferred (Add Later):
+
+     ⏸️ Vector Database (Qdrant) - for semantic search
+     ⏸️ Graph Database (Neo4j) - for citation network
+     ⏸️ REST API - for external access
+     ⏸️ Documentation - detailed guides
+
+     ---
+     Ready to start Phase 1: Enhanced Naming Convention?

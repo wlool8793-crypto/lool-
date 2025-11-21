@@ -1,0 +1,29 @@
+{
+  "relationship_type": "RELATED_TO",
+  "description": "Generic relationship indicating two cases are related",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "relationship_nature": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Nature of relationship",
+      "examples": ["Same Parties", "Similar Facts", "Same Legal Issue", "Connected Litigation", "Appeal From"]
+    },
+    "strength": {
+      "type": "float",
+      "required": false,
+      "description": "Strength of relationship (0-1)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX related_to_nature IF NOT EXISTS FOR ()-[r:RELATED_TO]-() ON (r.relationship_nature)"
+  ],
+  "constraints": []
+}

@@ -1,0 +1,47 @@
+{
+  "relationship_type": "SUPERIOR_TO",
+  "description": "Represents hierarchical relationship between courts (e.g., Supreme Court is superior to High Court)",
+  "from_node": "Court",
+  "to_node": "Court",
+  "properties": {
+    "hierarchy_level_difference": {
+      "type": "integer",
+      "required": false,
+      "description": "Difference in court_level between superior and subordinate court",
+      "examples": [1, 2]
+    },
+    "jurisdiction_scope": {
+      "type": "string",
+      "required": false,
+      "description": "Scope of superior authority",
+      "examples": ["National", "State", "Regional", "District"]
+    },
+    "appellate_authority": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether superior court has appellate authority over subordinate",
+      "default": true
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX superior_to_hierarchy IF NOT EXISTS FOR ()-[r:SUPERIOR_TO]-() ON (r.jurisdiction_scope)"
+  ],
+  "constraints": [],
+  "examples": [
+    {
+      "description": "Supreme Court of Bangladesh superior to High Court Division",
+      "from": "Court{court_id: 'bd_sc_001', court_level: 5}",
+      "to": "Court{court_id: 'bd_hc_001', court_level: 4}",
+      "properties": {
+        "hierarchy_level_difference": 1,
+        "jurisdiction_scope": "National",
+        "appellate_authority": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "relationship_type": "HEARD_IN",
+  "description": "Indicates which court heard a specific case",
+  "from_node": "Case",
+  "to_node": "Court",
+  "properties": {
+    "hearing_date": {
+      "type": "datetime",
+      "required": true,
+      "description": "Date and time when the case was heard",
+      "indexed": true
+    },
+    "hearing_type": {
+      "type": "string",
+      "required": false,
+      "description": "Type of hearing",
+      "examples": ["Initial Hearing", "Appeal", "Final Hearing", "Interim", "Review"]
+    },
+    "bench_strength": {
+      "type": "integer",
+      "required": false,
+      "description": "Number of judges on the bench"
+    },
+    "outcome": {
+      "type": "string",
+      "required": false,
+      "description": "Outcome of the hearing",
+      "examples": ["Allowed", "Dismissed", "Partially Allowed", "Remanded", "Reserved"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX heard_in_date IF NOT EXISTS FOR ()-[r:HEARD_IN]-() ON (r.hearing_date)",
+    "CREATE INDEX heard_in_type IF NOT EXISTS FOR ()-[r:HEARD_IN]-() ON (r.hearing_type)"
+  ],
+  "constraints": [],
+  "examples": [
+    {
+      "description": "Case heard in Supreme Court of Bangladesh",
+      "from": "Case{case_id: 'bd_2023_sc_001'}",
+      "to": "Court{court_id: 'bd_sc_001', name: 'Supreme Court of Bangladesh'}",
+      "properties": {
+        "hearing_date": "2023-05-15T10:00:00Z",
+        "hearing_type": "Appeal",
+        "bench_strength": 5,
+        "outcome": "Allowed"
+      }
+    }
+  ]
+}

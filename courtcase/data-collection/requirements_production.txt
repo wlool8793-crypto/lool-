@@ -1,0 +1,38 @@
+# IndianKanoon Production Scraper - Python Dependencies
+# Install with: pip install -r requirements_production.txt
+
+# Core dependencies (from existing requirements.txt)
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+selenium>=4.15.0
+pandas>=2.0.0
+python-dotenv>=1.0.0
+sqlalchemy>=2.0.0
+lxml>=4.9.0
+webdriver-manager>=4.0.0
+
+# Google Drive API
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.1.1
+google-auth-oauthlib>=1.1.0
+
+# Configuration
+PyYAML>=6.0.1
+
+# Progress bars and monitoring
+tqdm>=4.66.0
+
+# Additional utilities
+python-dateutil>=2.8.2
+urllib3>=2.0.7
+
+# Optional: Database alternatives
+# pymongo>=4.6.0  # If using MongoDB instead of SQLite
+# psycopg2-binary>=2.9.9  # If using PostgreSQL
+
+# Optional: Performance monitoring
+# psutil>=5.9.6  # For system resource monitoring
+
+# Optional: Advanced features
+# celery>=5.3.4  # For distributed task queue (future enhancement)
+# redis>=5.0.1  # For Celery backend (future enhancement)

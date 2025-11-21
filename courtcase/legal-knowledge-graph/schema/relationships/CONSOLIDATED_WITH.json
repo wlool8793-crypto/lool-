@@ -1,0 +1,86 @@
+{
+  "relationship_type": "CONSOLIDATED_WITH",
+  "description": "Cases that have been consolidated for joint hearing and disposition due to common issues",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "consolidation_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date when cases were consolidated"
+    },
+    "consolidation_order": {
+      "type": "string",
+      "required": false,
+      "description": "Reference to consolidation order"
+    },
+    "consolidation_reason": {
+      "type": "text",
+      "required": true,
+      "description": "Reason for consolidation (common issues, common parties, etc.)"
+    },
+    "common_issues": {
+      "type": "string[]",
+      "required": false,
+      "description": "List of common legal issues"
+    },
+    "common_parties": {
+      "type": "string[]",
+      "required": false,
+      "description": "Common parties across consolidated cases"
+    },
+    "lead_case_id": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "The lead case in consolidated proceedings"
+    },
+    "consolidating_court": {
+      "type": "string",
+      "required": false,
+      "description": "Court that ordered consolidation"
+    },
+    "hearing_schedule": {
+      "type": "string",
+      "required": false,
+      "description": "Joint hearing schedule"
+    },
+    "judgment_status": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Whether consolidated cases received joint or separate judgments"
+    },
+    "outcome_consistency": {
+      "type": "string",
+      "required": false,
+      "description": "Whether outcomes were consistent across consolidated cases"
+    },
+    "deconsolidation_date": {
+      "type": "date",
+      "required": false,
+      "description": "Date if cases were later separated"
+    },
+    "deconsolidation_reason": {
+      "type": "text",
+      "required": false,
+      "description": "Reason for deconsolidation if applicable"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX consolidated_date IF NOT EXISTS FOR ()-[r:CONSOLIDATED_WITH]-() ON (r.consolidation_date)",
+    "CREATE INDEX consolidated_lead IF NOT EXISTS FOR ()-[r:CONSOLIDATED_WITH]-() ON (r.lead_case_id)",
+    "CREATE INDEX consolidated_judgment IF NOT EXISTS FOR ()-[r:CONSOLIDATED_WITH]-() ON (r.judgment_status)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all cases consolidated with a specific case\nMATCH (c1:Case {case_id: 'case_bd_sc_2023_100'})-[r:CONSOLIDATED_WITH]-(c2:Case)\nRETURN c2.citation, r.consolidation_reason, r.common_issues, r.lead_case_id",
+    "// Find lead cases with multiple consolidated cases\nMATCH (c1:Case)-[r:CONSOLIDATED_WITH]-(c2:Case)\nWHERE r.lead_case_id = c1.case_id\nRETURN c1.citation AS lead_case, COUNT(c2) AS consolidated_count, COLLECT(c2.citation) AS consolidated_cases\nORDER BY consolidated_count DESC"
+  ]
+}

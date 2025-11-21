@@ -1,0 +1,202 @@
+{
+  "label": "Clause",
+  "description": "Represents a clause within a sub-section for finest-grained statutory granularity",
+  "required_properties": [
+    {
+      "name": "clause_id",
+      "type": "string",
+      "description": "Unique identifier for the clause",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "clause_number",
+      "type": "string",
+      "description": "Clause number or identifier (e.g., '(i)', '(ii)', '(A)', '(B)')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "text",
+      "type": "text",
+      "description": "Text content of the clause",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "subsection_id",
+      "type": "string",
+      "description": "Reference to parent sub-section",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "order_index",
+      "type": "integer",
+      "description": "Order within parent sub-section (for sorting)"
+    },
+    {
+      "name": "clause_type",
+      "type": "string",
+      "description": "Type of clause (roman, lettered, numbered)"
+    },
+    {
+      "name": "effective_from",
+      "type": "date",
+      "description": "Date from which this clause is effective"
+    },
+    {
+      "name": "effective_to",
+      "type": "date",
+      "description": "Date until which this clause is effective (if repealed)"
+    },
+    {
+      "name": "is_current_version",
+      "type": "boolean",
+      "description": "Whether this is the current active version"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "description": "Status: active, repealed, superseded, amended"
+    },
+    {
+      "name": "embedding",
+      "type": "vector",
+      "description": "Vector embedding for semantic search (1536 dimensions)",
+      "vector_dimension": 1536
+    },
+    {
+      "name": "keywords",
+      "type": "string[]",
+      "description": "Extracted keywords"
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "description": "Brief summary of clause content"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "property",
+      "name": "clause_subsection_id_index",
+      "properties": ["subsection_id"]
+    },
+    {
+      "type": "composite",
+      "name": "clause_order_index",
+      "properties": ["subsection_id", "order_index"]
+    },
+    {
+      "type": "composite",
+      "name": "clause_temporal_index",
+      "properties": ["effective_from", "effective_to", "is_current_version"]
+    },
+    {
+      "type": "property",
+      "name": "clause_status_index",
+      "properties": ["status"]
+    },
+    {
+      "type": "property",
+      "name": "clause_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "clause_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "clause_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "clause_verification_status_index",
+      "properties": ["verification_status"]
+    },
+    {
+      "type": "fulltext",
+      "name": "clause_text_index",
+      "properties": ["text", "summary"]
+    },
+    {
+      "type": "vector",
+      "name": "clause_embedding_index",
+      "properties": ["embedding"],
+      "dimensions": 1536,
+      "similarity": "cosine"
+    }
+  ],
+  "example": {
+    "clause_id": "clause_bd_pc_302_1_i",
+    "clause_number": "(i)",
+    "text": "with intent to cause death, or",
+    "subsection_id": "subsection_bd_pc_302_1",
+    "order_index": 1,
+    "clause_type": "roman",
+    "effective_from": "2023-07-01",
+    "is_current_version": true,
+    "status": "active"
+  }
+}

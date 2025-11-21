@@ -1,0 +1,72 @@
+ 43        SELECT
+       44            id,
+       45            title,
+       46 -          case_number,
+       46 +          citation,
+       47            court,
+       48 -          date,
+       49 -          judges,
+       50 -          parties,
+       51 -          subject,
+       52 -          headnote,
+       53 -          summary,
+       54 -          content,
+       55 -          citations,
+       56 -          url,
+       57 -          doc_year,
+       58 -          precedent_status
+       48 +          case_date,
+       49 +          bench,
+       50 +          author,
+       51 +          snippet,
+       52 +          full_text,
+       53 +          case_url,
+       54 +          pdf_link,
+       55 +          pdf_downloaded,
+       56 +          court_type,
+       57 +          court_name,
+       58 +          state,
+       59 +          document_type,
+       60 +          year
+       61        FROM legal_cases
+       62 -      WHERE content IS NOT NULL
+       63 -          AND LENGTH(content) > 500
+       62 +      WHERE full_text IS NOT NULL
+       63 +          AND LENGTH(full_text) > 500
+       64        ORDER BY RANDOM()
+       65        LIMIT ?
+       66        """
+     ...
+       71            doc = {
+       72                "id": row["id"],
+       73                "title": row["title"] or "Untitled Case",
+       74 -              "case_number": row["case_number"],
+       75 -              "court": row["court"] or "Unknown Court",
+       76 -              "date": row["date"],
+       77 -              "judges": row["judges"],
+       78 -              "parties": row["parties"],
+       79 -              "subject": row["subject"] or "General",
+       80 -              "headnote": row["headnote"],
+       81 -              "summary": row["summary"],
+       82 -              "content": row["content"],
+       83 -              "citations": row["citations"],
+       84 -              "url": row["url"],
+       85 -              "year": row["doc_year"],
+       86 -              "precedent_status": row["precedent_status"],
+       74 +              "citation": row["citation"],
+       75 +              "court": row["court"] or row["court_name"] or "Unknown Court",
+       76 +              "date": row["case_date"],
+       77 +              "bench": row["bench"],
+       78 +              "author": row["author"],
+       79 +              "snippet": row["snippet"],
+       80 +              "content": row["full_text"],
+       81 +              "url": row["case_url"],
+       82 +              "pdf_link": row["pdf_link"],
+       83 +              "pdf_downloaded": row["pdf_downloaded"],
+       84 +              "court_type": row["court_type"],
+       85 +              "state": row["state"],
+       86 +              "document_type": row["document_type"],
+       87 +              "year": row["year"],
+       88                "jurisdiction": "India",  # All IndianKanoon cases
+       89                "source": "IndianKanoon"
+       90            }

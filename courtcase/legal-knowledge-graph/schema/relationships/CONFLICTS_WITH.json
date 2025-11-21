@@ -1,0 +1,124 @@
+{
+  "relationship_type": "CONFLICTS_WITH",
+  "description": "Indicates direct conflicts between case holdings, either within the same jurisdiction or across jurisdictions, requiring resolution by higher authority",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "issue": {
+      "type": "text",
+      "required": true,
+      "description": "Specific legal issue or holding that is in conflict",
+      "examples": [
+        "Whether preventive detention requires judicial review within 24 hours",
+        "Interpretation of 'reasonable restriction' on free speech",
+        "Scope of parliamentary privilege in defamation suits"
+      ]
+    },
+    "conflict_type": {
+      "type": "string",
+      "required": false,
+      "description": "Type of conflict",
+      "indexed": true,
+      "examples": ["Direct Conflict", "Implicit Conflict", "Precedential Conflict", "Inter-Jurisdictional Conflict"]
+    },
+    "resolution": {
+      "type": "text",
+      "required": false,
+      "description": "How the conflict was resolved, if applicable",
+      "examples": [
+        "Resolved by Supreme Court en banc decision",
+        "Earlier precedent overruled",
+        "Distinction drawn between factual contexts",
+        "Constitutional amendment superseded both holdings"
+      ]
+    },
+    "resolution_case_id": {
+      "type": "string",
+      "required": false,
+      "description": "Case ID that resolved the conflict"
+    },
+    "resolution_date": {
+      "type": "date",
+      "required": false,
+      "description": "Date when conflict was resolved"
+    },
+    "resolution_status": {
+      "type": "enum",
+      "required": true,
+      "description": "Current status of the conflict",
+      "indexed": true,
+      "values": ["Unresolved", "Resolved", "Partially Resolved", "Pending Higher Court"]
+    },
+    "conflict_severity": {
+      "type": "enum",
+      "required": false,
+      "description": "Severity of the conflict for legal certainty",
+      "indexed": true,
+      "values": ["Low", "Medium", "High", "Critical"]
+    },
+    "same_jurisdiction": {
+      "type": "boolean",
+      "required": true,
+      "description": "Whether conflict is within the same jurisdiction",
+      "indexed": true
+    },
+    "binding_hierarchy": {
+      "type": "string",
+      "required": false,
+      "description": "Which case takes precedence based on court hierarchy",
+      "examples": ["From case (higher court)", "To case (higher court)", "Equal level - needs resolution"]
+    },
+    "notes": {
+      "type": "text",
+      "required": false,
+      "description": "Additional context, scholarly analysis, or pending resolution details"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX conflicts_status IF NOT EXISTS FOR ()-[r:CONFLICTS_WITH]-() ON (r.resolution_status)",
+    "CREATE INDEX conflicts_severity IF NOT EXISTS FOR ()-[r:CONFLICTS_WITH]-() ON (r.conflict_severity)",
+    "CREATE INDEX conflicts_type IF NOT EXISTS FOR ()-[r:CONFLICTS_WITH]-() ON (r.conflict_type)",
+    "CREATE INDEX conflicts_jurisdiction IF NOT EXISTS FOR ()-[r:CONFLICTS_WITH]-() ON (r.same_jurisdiction)"
+  ],
+  "constraints": [],
+  "examples": [
+    {
+      "description": "Conflict between two High Court decisions on bail provisions",
+      "from": "Case{case_id: 'bd_2021_hc_234', court_level: 4}",
+      "to": "Case{case_id: 'bd_2020_hc_189', court_level: 4}",
+      "properties": {
+        "issue": "Whether non-bailable offense accused can be granted bail before trial based on delay in proceedings",
+        "conflict_type": "Direct Conflict",
+        "resolution": "Resolved by Supreme Court holding that delay beyond reasonable time warrants bail consideration even in non-bailable offenses",
+        "resolution_case_id": "bd_2022_sc_067",
+        "resolution_date": "2022-08-15",
+        "resolution_status": "Resolved",
+        "conflict_severity": "High",
+        "same_jurisdiction": true,
+        "binding_hierarchy": "Equal level - needed Supreme Court resolution",
+        "notes": "Created legal uncertainty for 8 months until Supreme Court clarified the position"
+      }
+    },
+    {
+      "description": "Unresolved inter-jurisdictional conflict on privacy rights",
+      "from": "Case{case_id: 'bd_2023_sc_012', jurisdiction: 'BD'}",
+      "to": "Case{case_id: 'in_2017_sc_494', jurisdiction: 'IN'}",
+      "properties": {
+        "issue": "Whether right to privacy extends to protection of biometric data collected by state",
+        "conflict_type": "Inter-Jurisdictional Conflict",
+        "resolution": null,
+        "resolution_case_id": null,
+        "resolution_status": "Unresolved",
+        "conflict_severity": "Medium",
+        "same_jurisdiction": false,
+        "binding_hierarchy": "Different jurisdictions - no formal precedential relationship",
+        "notes": "Bangladesh SC took narrower view of data privacy rights compared to Indian SC's expansive interpretation"
+      }
+    }
+  ]
+}

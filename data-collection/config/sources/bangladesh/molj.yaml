@@ -1,0 +1,333 @@
+# Ministry of Law, Justice & Parliamentary Affairs Scraper Configuration
+# Source: molj.gov.bd - Official government legal publications
+
+# Basic Information
+country: bangladesh
+name: "Ministry of Law, Justice & Parliamentary Affairs"
+source_id: "molj"
+tier: tier1
+source_type: administrative
+enabled: true
+priority: 4
+
+# Access Information
+base_url: "https://molj.gov.bd"
+requires_auth: false
+auth_method: null
+
+# Expected Content
+expected_content_types:
+  - "notification"
+  - "circular"
+  - "ordinance"
+  - "act"
+  - "bill"
+  - "policy_document"
+  - "parliamentary_business"
+
+estimated_total_docs: 8000
+
+# Scraping Configuration
+request_delay: 2.0
+use_selenium: false
+headless: true
+timeout: 30
+max_retries: 3
+
+# Ministry Sections and Content Types
+content_sections:
+  acts_and_ordinances:
+    name: "Acts and Ordinances"
+    url_path: "/acts-ordinances"
+    priority: 1
+    estimated_docs: 2000
+    content_types:
+      - "act"
+      - "ordinance"
+      - "amendment_act"
+      - "repealing_act"
+
+  notifications:
+    name: "Notifications"
+    url_path: "/notifications"
+    priority: 2
+    estimated_docs: 3000
+    content_types:
+      - "government_notification"
+      - "administrative_order"
+      - "policy_circular"
+      - "office_memorandum"
+
+  parliamentary_business:
+    name: "Parliamentary Business"
+    url_path: "/parliamentary"
+    priority: 3
+    estimated_docs: 1500
+    content_types:
+      - "bill"
+      - "parliamentary_report"
+      - "committee_report"
+      - "legislative_summary"
+
+  legal_forms:
+    name: "Legal Forms"
+    url_path: "/forms"
+    priority: 4
+    estimated_docs: 500
+    content_types:
+      - "affidavit_form"
+      - "application_form"
+      - "petition_form"
+
+  publications:
+    name: "Publications"
+    url_path: "/publications"
+    priority: 5
+    estimated_docs: 1000
+    content_types:
+      - "annual_report"
+      - "research_paper"
+      - "legal_journal"
+      - "conference_proceedings"
+
+# Index Pages and Navigation
+indexes:
+  main_archive:
+    url: "/archive"
+    method: "chronological"
+    sort_by: "date_desc"
+    max_items: 10000
+
+  acts_archive:
+    url: "/acts-archive"
+    method: "year_based"
+    year_range: [1972, 2025]
+    year_param: "year"
+
+  notifications_by_year:
+    url: "/notifications/year/{year}"
+    method: "year_based"
+    years_range: [1991, 2025]  # Since 1991 return to democracy
+
+  parliamentary_sessions:
+    url: "/parliamentary/sessions"
+    method: "session_based"
+    session_types:
+      - "budget_session"
+      - "winter_session"
+      - "monsoon_session"
+
+# Content Extraction Selectors
+selectors:
+  content_list:
+    item_row: "div.content-item, article.document, tr.document-row"
+    title_link: "a.title-link, h3.title a"
+    title: "h3.title, h2.document-title"
+    date: "span.publish-date, div.date-meta"
+    content_type: "span.content-type, div.category-tag"
+    document_number: "span.doc-number, div.reference-no"
+    ministry_section: "div.section-name, span.department"
+
+  document_detail:
+    title: "h1.document-title, h1.main-title"
+    subtitle: "h2.subtitle, h2.document-subtitle"
+    document_number: "div.document-number, span.reference"
+    publication_date: "div.publication-date, span.publish-date"
+    effective_date: "div.effective-date, span.effective"
+    gazette_reference: "div.gazette-reference, span.gazette-ref"
+    content_text: "div.document-content, div.main-content, article.content"
+    summary: "div.executive-summary, div.abstract"
+    pdf_link: "a.pdf-download, a.download-pdf, a[onclick*='.pdf']"
+    html_content: "div.full-content, div.document-body"
+
+  metadata_section:
+    keywords: "div.keywords, meta[name='keywords']"
+    ministry: "div.ministry-name, span.publishing-ministry"
+    department: "div.department, span.govt-department"
+    classification: "div.classification, span.security-classification"
+    language: "div.language, span.content-language"
+    file_size: "span.file-size, div.file-info"
+
+# Metadata Fields
+metadata_fields:
+  # Document Identification
+  document_number: true
+  document_title: true
+  document_subtitle: true
+  document_type: true
+  content_category: true
+
+  # Publication Information
+  publication_date: true
+  effective_date: true
+  gazette_number: true
+  gazette_date: true
+  publication_authority: true
+
+  # Government Information
+  ministry_name: true
+  department_name: true
+  issuing_authority: true
+  implementing_agency: true
+
+  # Legal Information
+  act_reference: true
+  ordinance_reference: true
+  amendment_of: true
+  repeals: true
+  applies_to: true
+
+  # Content Information
+  subject_keywords: true
+  geographical_scope: true
+  target_audience: true
+  implementation_timeline: true
+
+  # Technical Metadata
+  pdf_url: true
+  html_content: true
+  page_count: true
+  word_count: true
+  file_size_bytes: true
+  download_count: true
+
+# File Organization
+html_dir: "./data/html/bangladesh/molj"
+pdf_dir: "./data/pdfs/bangladesh/molj"
+organize_by: "content_type_and_year"
+folder_structure:
+  - "molj/"
+  - "{content_type}/"
+  - "{year}/"
+  - "{month}/"
+
+# Download Settings
+download_pdfs: true
+download_html: true
+extract_full_text: true
+validate_pdfs: true
+pdf_timeout: 60
+
+# Data Validation
+validation_rules:
+  required_fields:
+    - "title"
+    - "document_type"
+    - "publication_date"
+    - "ministry_name"
+  date_formats:
+    - "%d-%m-%Y"
+    - "%d/%m/%Y"
+    - "%Y-%m-%d"
+    - "%d %B %Y"
+    - "%B %d, %Y"
+  document_number_patterns:
+    - r"S\.R\.O\. No\. \d+-\d{4}"
+    - r"Notification No\. \d+/[A-Z]+/\d{4}"
+    - r"Act No\. \d+ of \d{4}"
+    - r"Ordinance No\. \d+ of \d{4}"
+
+# Special Configuration
+special_config:
+  # Handle government website structure
+  government_site: true
+  respect_robots_txt: true
+
+  # Handle different content types differently
+  content_type_handlers:
+    "act":
+      extract_sections: true
+      extract_schedules: true
+      extract_definitions: true
+    "notification":
+      extract_recipients: true
+      extract_effective_date: true
+      extract_compliance_deadlines: true
+    "bill":
+      extract_parliamentary_stage: true
+      extract_sponsor: true
+      extract_co_sponsors: true
+
+  # Handle large documents
+  chunk_processing: true
+  max_document_size: 100  # MB
+
+  # Handle multiple language content
+  support_bengali: true
+  bengali_selectors:
+    title: "h1.bn-title, h1.document-title-bn"
+    content: "div.bn-content, div.document-body-bn"
+
+# Rate Limiting and Headers
+headers:
+  User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+  Accept-Language: "en-US,en;q=0.8,bn;q=0.6"
+  Accept-Encoding: "gzip, deflate"
+  Connection: "keep-alive"
+  Referer: "https://molj.gov.bd/"
+
+# Error Handling
+retry_config:
+  max_retries: 3
+  retry_delay: 2.0
+  retry_on_status:
+    - 429
+    - 500
+    - 502
+    - 503
+    - 504
+  exponential_backoff: true
+
+# Content Processing
+content_processing:
+  # Extract structured data from legislative text
+  extract_section_numbers: true
+  extract_clause_numbers: true
+  extract_schedule_references: true
+
+  # Handle tables and annexures
+  process_tables: true
+  extract_table_headings: true
+  process_annexures: true
+
+  # Handle footnotes and references
+  extract_footnotes: true
+  process_cross_references: true
+  identify_legal_precedents: true
+
+# Logging and Monitoring
+log_level: "INFO"
+log_file: "./logs/bangladesh_molj.log"
+log_rotation: true
+max_log_size: "15MB"
+backup_count: 8
+
+# Testing Configuration
+test_mode:
+  enabled: true
+  max_documents: 5
+  test_sections: ["acts_and_ordinances", "notifications"]
+  validate_extraction: true
+
+# Database Integration
+database_config:
+  collection_name: "molj_publications"
+  batch_size: 100
+  update_existing: true
+  conflict_resolution: "update_metadata"
+  index_fields:
+    - "document_number"
+    - "document_type"
+    - "publication_date"
+    - "ministry_name"
+
+# Google Drive Integration
+google_drive:
+  folder_structure: "BD/MOLJ/{content_type}/{year}/"
+  upload_pdfs: true
+  metadata_fields:
+    - "document_type"
+    - "publication_date"
+    - "ministry_name"
+    - "document_number"

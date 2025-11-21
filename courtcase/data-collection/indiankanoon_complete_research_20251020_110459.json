@@ -1,0 +1,365 @@
+{
+  "research_date": "2025-10-20T11:02:52.935195",
+  "website": "https://indiankanoon.org",
+  "document_types": {
+    "supremecourt": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "highcourt": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "tribunal": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "district": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "appellate": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "sessions": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "magistrate": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "act": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "statute": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "ordinance": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "amendment": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "bill": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "constitution": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "article": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "notification": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "circular": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "order": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "resolution": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "gazette": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "government order": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "judgment": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "verdict": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "ruling": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "decision": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "petition": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "writ": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    },
+    "appeal": {
+      "available": true,
+      "results_per_page": 10,
+      "max_page_found": 9,
+      "estimated_2023": 100
+    }
+  },
+  "courts_discovered": {
+    "Supreme Court": {
+      "by_year": {
+        "2015": 100,
+        "2016": 100,
+        "2017": 100,
+        "2018": 100,
+        "2019": 100,
+        "2020": 100,
+        "2021": 100,
+        "2022": 100,
+        "2023": 100,
+        "2024": 100
+      },
+      "total": 1000,
+      "years_covered": "2015-2024"
+    },
+    "Delhi": {
+      "results_2023": 70,
+      "pages": 7
+    },
+    "Mumbai/Bombay": {
+      "results_2023": 50,
+      "pages": 5
+    },
+    "Kolkata/Calcutta": {
+      "results_2023": 30,
+      "pages": 3
+    },
+    "Chennai/Madras": {
+      "results_2023": 50,
+      "pages": 5
+    },
+    "Karnataka/Bangalore": {
+      "results_2023": 100,
+      "pages": 10
+    },
+    "Kerala": {
+      "results_2023": 40,
+      "pages": 4
+    },
+    "Gujarat/Ahmedabad": {
+      "results_2023": 30,
+      "pages": 3
+    },
+    "Rajasthan": {
+      "results_2023": 30,
+      "pages": 3
+    },
+    "Punjab/Chandigarh": {
+      "results_2023": 30,
+      "pages": 3
+    },
+    "Allahabad/UP": {
+      "results_2023": 20,
+      "pages": 2
+    },
+    "Patna/Bihar": {
+      "results_2023": 5,
+      "pages": 1
+    },
+    "Andhra Pradesh": {
+      "results_2023": 100,
+      "pages": 10
+    },
+    "Telangana": {
+      "results_2023": 3,
+      "pages": 1
+    },
+    "Orissa/Odisha": {
+      "results_2023": 8,
+      "pages": 1
+    },
+    "Jharkhand": {
+      "results_2023": 4,
+      "pages": 1
+    },
+    "Chhattisgarh": {
+      "results_2023": 9,
+      "pages": 1
+    },
+    "Uttarakhand": {
+      "results_2023": 3,
+      "pages": 1
+    },
+    "Himachal Pradesh": {
+      "results_2023": 20,
+      "pages": 2
+    },
+    "Jammu & Kashmir": {
+      "results_2023": 2,
+      "pages": 1
+    },
+    "Guwahati/Assam": {
+      "results_2023": 1,
+      "pages": 1
+    },
+    "Tripura": {
+      "results_2023": 3,
+      "pages": 1
+    },
+    "Meghalaya": {
+      "results_2023": 1,
+      "pages": 1
+    },
+    "Manipur": {
+      "results_2023": 2,
+      "pages": 1
+    },
+    "CAT Tribunal": {
+      "available": true
+    },
+    "ITAT Tribunal": {
+      "available": true
+    },
+    "CESTAT Tribunal": {
+      "available": true
+    },
+    "NCLAT Tribunal": {
+      "available": true
+    },
+    "NCLT Tribunal": {
+      "available": true
+    },
+    "NGT Tribunal": {
+      "available": true
+    },
+    "AFT Tribunal": {
+      "available": true
+    },
+    "Railway Claims Tribunal": {
+      "available": true
+    },
+    "Consumer Tribunal": {
+      "available": true
+    },
+    "Labour Tribunal": {
+      "available": true
+    }
+  },
+  "search_features": {
+    "Date Range": {
+      "works": true,
+      "results_found": 10
+    },
+    "Court Filter": {
+      "works": false,
+      "results_found": 0
+    },
+    "Citation Search": {
+      "works": true,
+      "results_found": 10
+    },
+    "Section Reference": {
+      "works": true,
+      "results_found": 10
+    },
+    "Keyword": {
+      "works": true,
+      "results_found": 10
+    },
+    "Boolean AND": {
+      "works": true,
+      "results_found": 10
+    },
+    "Boolean OR": {
+      "works": true,
+      "results_found": 10
+    }
+  },
+  "content_categories": {},
+  "year_coverage": {},
+  "total_estimates": {
+    "supreme_court_all_years": 7500,
+    "high_courts_estimated": 42770,
+    "total_conservative": 50270,
+    "note": "Conservative estimate based on sampling. Actual may be 2-3x higher."
+  },
+  "navigation_structure": {
+    "info": [
+      {
+        "text": "About",
+        "url": "https://indiankanoon.org/about.html"
+      }
+    ],
+    "browse": [
+      {
+        "text": "Browse laws",
+        "url": "https://indiankanoon.org/browselaws/"
+      },
+      {
+        "text": "Browse judgments",
+        "url": "https://indiankanoon.org/browse/"
+      }
+    ]
+  },
+  "sample_documents": []
+}

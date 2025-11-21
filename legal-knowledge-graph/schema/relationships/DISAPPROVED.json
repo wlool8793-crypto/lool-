@@ -1,0 +1,70 @@
+{
+  "relationship_type": "DISAPPROVED",
+  "description": "A case's holding or reasoning is expressly disapproved by a later case (stronger than questioned, weaker than overruled)",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "disapproval_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type: complete, partial, obiter_dicta, reasoning, holding"
+    },
+    "disapproval_reason": {
+      "type": "text",
+      "required": true,
+      "description": "Explicit reason for disapproval stated by the court"
+    },
+    "disapproved_aspect": {
+      "type": "string",
+      "required": false,
+      "description": "What was disapproved: holding, reasoning, interpretation, principle"
+    },
+    "scope": {
+      "type": "string",
+      "required": false,
+      "description": "Scope of disapproval: narrow, moderate, broad"
+    },
+    "binding_effect": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Whether disapproval has binding effect: binding, persuasive, none"
+    },
+    "citation_quote": {
+      "type": "text",
+      "required": false,
+      "description": "Direct quote from judgment expressing disapproval"
+    },
+    "disapproved_by_judge": {
+      "type": "string",
+      "required": false,
+      "description": "Judge who disapproved the precedent"
+    },
+    "continuing_validity": {
+      "type": "string",
+      "required": false,
+      "description": "Extent to which disapproved case retains validity"
+    },
+    "subsequent_citations": {
+      "type": "integer",
+      "required": false,
+      "description": "Number of citations after disapproval"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX disapproved_type IF NOT EXISTS FOR ()-[r:DISAPPROVED]-() ON (r.disapproval_type)",
+    "CREATE INDEX disapproved_binding IF NOT EXISTS FOR ()-[r:DISAPPROVED]-() ON (r.binding_effect)",
+    "CREATE INDEX disapproved_aspect IF NOT EXISTS FOR ()-[r:DISAPPROVED]-() ON (r.disapproved_aspect)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all disapprovals of a specific case\nMATCH (disapproved:Case {citation: '64 DLR (AD) 199'})<-[d:DISAPPROVED]-(disapproving:Case)\nRETURN disapproving.citation, d.disapproval_reason, d.disapproval_type, d.binding_effect",
+    "// Find cases with binding disapprovals\nMATCH (c:Case)<-[d:DISAPPROVED]-(:Case)\nWHERE d.binding_effect = 'binding'\nRETURN c.citation, COUNT(*) AS disapproval_count\nORDER BY disapproval_count DESC\nLIMIT 10"
+  ]
+}

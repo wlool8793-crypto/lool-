@@ -1,0 +1,846 @@
+{
+  "version": "v1.0",
+  "iteration": 1,
+  "nodes": [
+    {
+      "label": "Case",
+      "properties": {
+        "uuid": "string (unique)",
+        "citation": "string (e.g., '52 DLR (AD) 82')",
+        "caseNumber": "string",
+        "title": "string (e.g., 'Anwar Hossain Chowdhury v. Bangladesh')",
+        "decisionDate": "date",
+        "jurisdiction": "string (e.g., 'Bangladesh', 'India', 'Pakistan')",
+        "summary": "text",
+        "fullText": "text",
+        "created_at": "datetime",
+        "updated_at": "datetime",
+        "source": {
+          "type": "string",
+          "required": true,
+          "description": "The origin of the data (e.g., 'Official Court Website', 'LexisNexis', 'Manual Entry')."
+        },
+        "extracted_at": {
+          "type": "datetime",
+          "required": true,
+          "description": "Timestamp of when the data was extracted from the source."
+        },
+        "extracted_by": {
+          "type": "string",
+          "required": true,
+          "description": "Identifier for the process or user that extracted the data (e.g., 'Scraper v2.1', 'user:jane.doe')."
+        },
+        "confidence_score": {
+          "type": "float",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "required": false,
+          "description": "A score from 0.0 to 1.0 indicating the confidence in the accuracy of the extracted data."
+        },
+        "version": {
+          "type": "integer",
+          "required": true,
+          "default": 1,
+          "description": "An integer that increments with each update to the node, for tracking changes over time."
+        },
+        "changelog": {
+          "type": "text",
+          "required": false,
+          "description": "A log of changes made in each version, typically stored as a JSON string."
+        },
+        "trust_score": {
+          "type": "float",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "required": true,
+          "description": "A composite score reflecting the overall trustworthiness of the node, calculated from authority, verification, and citations."
+        },
+        "authority_level": {
+          "type": "string",
+          "enum": [
+            "Binding",
+            "Persuasive",
+            "Primary",
+            "Secondary",
+            "Unclassified"
+          ],
+          "required": true,
+          "description": "The legal authority of the document (e.g., a Supreme Court decision is 'Binding')."
+        },
+        "citation_count": {
+          "type": "integer",
+          "required": true,
+          "default": 0,
+          "description": "The number of other documents in the graph that cite this document."
+        },
+        "verification_status": {
+          "type": "string",
+          "enum": [
+            "Verified",
+            "Unverified",
+            "Disputed",
+            "Deprecated"
+          ],
+          "required": true,
+          "default": "Unverified",
+          "description": "The status of human or automated verification of the node's content."
+        }
+      },
+      "description": "Represents a single legal case or judgment. It is the central node for case law analysis, linking to parties, judges, courts, statutes, and other cases."
+    },
+    {
+      "label": "Statute",
+      "properties": {
+        "uuid": "string (unique)",
+        "title": "string (e.g., 'The Code of Civil Procedure, 1908')",
+        "shortTitle": "string (e.g., 'CPC, 1908')",
+        "actNumber": "string",
+        "enactmentYear": "integer",
+        "jurisdiction": "string (e.g., 'Bangladesh')",
+        "preamble": "text",
+        "created_at": {
+          "type": "datetime",
+          "required": true,
+          "description": "Timestamp of when the node was first created in the database."
+        },
+        "updated_at": {
+          "type": "datetime",
+          "required": true,
+          "description": "Timestamp of the last update to the node."
+        },
+        "source": {
+          "type": "string",
+          "required": true,
+          "description": "The origin of the data (e.g., 'Official Gazette', 'Government Portal')."
+        },
+        "extracted_at": {
+          "type": "datetime",
+          "required": true,
+          "description": "Timestamp of when the data was extracted from the source."
+        },
+        "extracted_by": {
+          "type": "string",
+          "required": true,
+          "description": "Identifier for the process or user that extracted the data."
+        },
+        "confidence_score": {
+          "type": "float",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "required": false,
+          "description": "A score from 0.0 to 1.0 indicating the confidence in the accuracy of the extracted text."
+        },
+        "version": {
+          "type": "integer",
+          "required": true,
+          "default": 1,
+          "description": "An integer that increments with each amendment or update to the statute."
+        },
+        "changelog": {
+          "type": "text",
+          "required": false,
+          "description": "A log of amendments or changes made in each version."
+        },
+        "trust_score": {
+          "type": "float",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "required": true,
+          "description": "A composite score reflecting the overall trustworthiness of the statute text."
+        },
+        "authority_level": {
+          "type": "string",
+          "enum": [
+            "Primary",
+            "Repealed"
+          ],
+          "required": true,
+          "default": "Primary",
+          "description": "The legal authority of the statute."
+        },
+        "citation_count": {
+          "type": "integer",
+          "required": true,
+          "default": 0,
+          "description": "The number of cases or other documents that cite this statute."
+        },
+        "verification_status": {
+          "type": "string",
+          "enum": [
+            "Verified",
+            "Unverified",
+            "Amended"
+          ],
+          "required": true,
+          "default": "Unverified",
+          "description": "The status of verification against the official source."
+        }
+      },
+      "description": "Represents a legislative act, ordinance, or code, such as the Code of Civil Procedure. It serves as a container for its structural components like Parts, Orders, and Sections."
+    },
+    {
+      "label": "Section",
+      "properties": {
+        "uuid": "string (unique)",
+        "sectionNumber": "string (e.g., '151')",
+        "title": "string",
+        "text": "text",
+        "isActive": "boolean",
+        "created_at": "datetime",
+        "updated_at": "datetime"
+      },
+      "description": "A specific section of a Statute. This is a primary unit of statutory law that cases interpret and apply."
+    },
+    {
+      "label": "Judge",
+      "properties": {
+        "uuid": "string (unique)",
+        "name": "string (e.g., 'Justice Mustafa Kamal')",
+        "judgeId": "string (unique)",
+        "tenureStart": "date",
+        "tenureEnd": "date",
+        "bio": "text"
+      },
+      "description": "Represents a judge who presides over cases. Linking cases to judges allows for analysis of judicial tendencies and influence."
+    },
+    {
+      "label": "Court",
+      "properties": {
+        "uuid": "string (unique)",
+        "name": "string (e.g., 'Appellate Division, Supreme Court of Bangladesh')",
+        "level": "string (e.g., 'Appellate', 'High Court Division', 'Trial')",
+        "jurisdiction": "string (e.g., 'Bangladesh')",
+        "location": "string (e.g., 'Dhaka')"
+      },
+      "description": "Represents a court or tribunal where a case is heard. Essential for understanding the procedural hierarchy and venue."
+    },
+    {
+      "label": "Party",
+      "properties": {
+        "uuid": "string (unique)",
+        "name": "string",
+        "type": "string (e.g., 'Individual', 'Corporation', 'Government Agency')"
+      },
+      "description": "A litigant (person or entity) involved in a case, such as a petitioner or respondent."
+    },
+    {
+      "label": "Principle",
+      "properties": {
+        "uuid": "string (unique)",
+        "statement": "text",
+        "keywords": "list<string>"
+      },
+      "description": "A specific legal principle or ratio decidendi established or affirmed in a case. This node abstracts the core legal reasoning for analytical purposes."
+    },
+    {
+      "label": "Doctrine",
+      "properties": {
+        "uuid": "string (unique)",
+        "name": "string (e.g., 'Res Judicata', 'Basic Structure Doctrine')",
+        "description": "text",
+        "jurisdictionOfOrigin": "string"
+      },
+      "description": "A well-established legal doctrine that may be applied across multiple cases. Unlike a Principle, a Doctrine is a broader, named concept."
+    },
+    {
+      "label": "Holding",
+      "properties": {
+        "uuid": "string (unique)",
+        "holdingText": "text",
+        "issue": "string"
+      },
+      "description": "The specific ruling or decision on a point of law in a case. It is the direct answer to a legal question posed in the case."
+    },
+    {
+      "label": "Appeal",
+      "properties": {
+        "uuid": "string (unique)",
+        "appealNumber": "string",
+        "filingDate": "date",
+        "outcome": "string (e.g., 'Affirmed', 'Reversed', 'Remanded')"
+      },
+      "description": "Represents the procedural event of an appeal, linking the lower court case to the appellate court case and capturing metadata about the appeal itself."
+    },
+    {
+      "label": "Motion",
+      "properties": {
+        "uuid": "string (unique)",
+        "motionType": "string (e.g., 'Injunction', 'Stay of Proceedings')",
+        "filingDate": "date",
+        "outcome": "string (e.g., 'Granted', 'Denied')"
+      },
+      "description": "A procedural request made by a party during a case for the court to take a specific action."
+    },
+    {
+      "label": "Part",
+      "properties": {
+        "uuid": "string (unique)",
+        "partNumber": "string (e.g., 'I')",
+        "title": "string (e.g., 'Suits in General')"
+      },
+      "description": "A structural division of a Statute, like the Parts in the Code of Civil Procedure. It contains Sections."
+    },
+    {
+      "label": "Order",
+      "properties": {
+        "uuid": "string (unique)",
+        "orderNumber": "string (e.g., 'XLI')",
+        "title": "string (e.g., 'Appeals from Original Decrees')"
+      },
+      "description": "A structural division of a procedural code like the CPC. It contains Rules."
+    },
+    {
+      "label": "Definition",
+      "properties": {
+        "uuid": "string (unique)",
+        "term": "string (e.g., 'Decree')",
+        "definedText": "text"
+      },
+      "description": "A formal definition of a term provided within a Statute, typically in a definitions section."
+    },
+    {
+      "label": "Rule",
+      "properties": {
+        "uuid": "string (unique)",
+        "ruleNumber": "string (e.g., '1')",
+        "text": "text"
+      },
+      "description": "A specific rule within an Order of a procedural code like the CPC. It provides detailed procedural instructions."
+    },
+    {
+      "label": "CaseVersion",
+      "properties": {
+        "uuid": "string (unique)",
+        "reporterCitation": "string (e.g., 'BLD 1990 (AD) 119')",
+        "reporterName": "string (e.g., 'Bangladesh Legal Decisions')",
+        "publicationDate": "date"
+      },
+      "description": "Represents a specific published version of a case in a law reporter. This allows for multiple citations to point to a single canonical Case node."
+    },
+    {
+      "label": "Amendment",
+      "properties": {
+        "uuid": "string (unique)",
+        "amendmentActTitle": "string",
+        "amendmentActNumber": "string",
+        "effectiveDate": "date",
+        "description": "text"
+      },
+      "description": "Represents a specific legislative amendment event that changes a Statute or its components."
+    },
+    {
+      "label": "ChangeLog",
+      "properties": {
+        "uuid": "string (unique)",
+        "changeDate": "datetime",
+        "description": "text",
+        "author": "string",
+        "version": "integer"
+      },
+      "description": "A generic node to track changes or versions of any legal entity, particularly for tracking the evolution of statutory text over time."
+    },
+    {
+      "label": "Chunk",
+      "properties": {
+        "uuid": "string (unique)",
+        "text": "text",
+        "embedding": "vector (1536)",
+        "chunk_seq_id": "integer",
+        "start_char_offset": "integer",
+        "end_char_offset": "integer",
+        "source_document_id": "string",
+        "source_document_type": "string ('Case', 'Section')",
+        "metadata": "map"
+      },
+      "description": "A text segment from a larger document (Case or Section), optimized for semantic search. Each chunk has a vector embedding for similarity search. Properties like offsets and sequence ID allow for precise source attribution and context assembly. Runtime metadata such as 'relevance_score' and 'rerank_score' will be associated with this node during a query."
+    },
+    {
+      "label": "Case",
+      "properties": {
+        "uuid": "string (unique)",
+        "citation": "string (e.g., '52 DLR (AD) 82')",
+        "caseNumber": "string",
+        "title": "string (e.g., 'Anwar Hossain Chowdhury v. Bangladesh')",
+        "decisionDate": "date",
+        "jurisdiction": "string (e.g., 'Bangladesh', 'India', 'Pakistan')",
+        "summary": "text",
+        "fullText": "text",
+        "embedding": "vector (1536)",
+        "created_at": "datetime",
+        "updated_at": "datetime",
+        "source": {
+          "type": "string",
+          "required": true,
+          "description": "The origin of the data (e.g., 'Official Court Website', 'LexisNexis', 'Manual Entry')."
+        },
+        "extracted_at": {
+          "type": "datetime",
+          "required": true,
+          "description": "Timestamp of when the data was extracted from the source."
+        },
+        "extracted_by": {
+          "type": "string",
+          "required": true,
+          "description": "Identifier for the process or user that extracted the data (e.g., 'Scraper v2.1', 'user:jane.doe')."
+        },
+        "confidence_score": {
+          "type": "float",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "required": false,
+          "description": "A score from 0.0 to 1.0 indicating the confidence in the accuracy of the extracted data."
+        },
+        "version": {
+          "type": "integer",
+          "required": true,
+          "default": 1,
+          "description": "An integer that increments with each update to the node, for tracking changes over time."
+        },
+        "changelog": {
+          "type": "text",
+          "required": false,
+          "description": "A log of changes made in each version, typically stored as a JSON string."
+        },
+        "trust_score": {
+          "type": "float",
+          "range": [
+            0.0,
+            1.0
+          ],
+          "required": true,
+          "description": "A composite score reflecting the overall trustworthiness of the node, calculated from authority, verification, and citations."
+        },
+        "authority_level": {
+          "type": "string",
+          "enum": [
+            "Binding",
+            "Persuasive",
+            "Primary",
+            "Secondary",
+            "Unclassified"
+          ],
+          "required": true,
+          "description": "The legal authority of the document (e.g., a Supreme Court decision is 'Binding')."
+        },
+        "citation_count": {
+          "type": "integer",
+          "required": true,
+          "default": 0,
+          "description": "The number of other documents in the graph that cite this document."
+        },
+        "verification_status": {
+          "type": "string",
+          "enum": [
+            "Verified",
+            "Unverified",
+            "Disputed",
+            "Deprecated"
+          ],
+          "required": true,
+          "default": "Unverified",
+          "description": "The status of human or automated verification of the node's content."
+        }
+      },
+      "description": "Represents a single legal case. The new 'embedding' property holds a vector representation of the case summary or another representative text, enabling case-level semantic search as part of a multi-granularity retrieval strategy."
+    },
+    {
+      "label": "Section",
+      "properties": {
+        "uuid": "string (unique)",
+        "sectionNumber": "string (e.g., '151')",
+        "title": "string",
+        "text": "text",
+        "embedding": "vector (1536)",
+        "isActive": "boolean",
+        "created_at": "datetime",
+        "updated_at": "datetime"
+      },
+      "description": "A specific section of a Statute. The new 'embedding' property contains a vector of the section's text, allowing for direct semantic retrieval of statutory provisions, complementing chunk-level search within cases."
+    }
+  ],
+  "relationships": [
+    {
+      "type": "CITES_PRECEDENT",
+      "from": "Case",
+      "to": "Case",
+      "properties": {
+        "cited_for": "string (e.g., 'On the principle of natural justice')",
+        "pageNumber": "string",
+        "isPositive": "boolean"
+      },
+      "description": "Connects a case to a precedent it cites. This is the fundamental relationship for building citation networks."
+    },
+    {
+      "type": "OVERRULES",
+      "from": "Case",
+      "to": "Case",
+      "properties": {
+        "reasoning": "text"
+      },
+      "description": "A strong negative citation where a higher court explicitly overrules the legal principle of a prior case."
+    },
+    {
+      "type": "AFFIRMS",
+      "from": "Case",
+      "to": "Case",
+      "properties": {},
+      "description": "Connects an appellate case to the lower court case it is upholding. Part of the procedural history."
+    },
+    {
+      "type": "DISTINGUISHES",
+      "from": "Case",
+      "to": "Case",
+      "properties": {
+        "reasoning": "text"
+      },
+      "description": "Connects a case to a precedent it is differentiating itself from, explaining why the precedent does not apply."
+    },
+    {
+      "type": "PART_OF",
+      "from": "Section | Order | Rule | Part | Definition",
+      "to": "Statute | Order | Part",
+      "properties": {},
+      "description": "A hierarchical relationship showing that one structural element is a component of another (e.g., a Section is PART_OF a Statute; a Rule is PART_OF an Order)."
+    },
+    {
+      "type": "BELONGS_TO",
+      "from": "Section",
+      "to": "Statute",
+      "properties": {},
+      "description": "Synonymous with PART_OF, explicitly linking a statutory component to its parent Act."
+    },
+    {
+      "type": "APPLIES_SECTION",
+      "from": "Case",
+      "to": "Section",
+      "properties": {
+        "interpretation": "text"
+      },
+      "description": "Crucial relationship linking case law to statutory law, indicating that a case has applied or interpreted a specific section of a statute."
+    },
+    {
+      "type": "DECIDED_BY",
+      "from": "Case",
+      "to": "Judge",
+      "properties": {
+        "role": "string (e.g., 'Author', 'Concurring', 'Dissenting')"
+      },
+      "description": "Connects a case to the judge(s) who heard and decided it."
+    },
+    {
+      "type": "BEFORE_COURT",
+      "from": "Case",
+      "to": "Court",
+      "properties": {},
+      "description": "Indicates which court heard and delivered the judgment for a case."
+    },
+    {
+      "type": "PETITIONER",
+      "from": "Party",
+      "to": "Case",
+      "properties": {},
+      "description": "Identifies a party as the petitioner or plaintiff in a case."
+    },
+    {
+      "type": "RESPONDENT",
+      "from": "Party",
+      "to": "Case",
+      "properties": {},
+      "description": "Identifies a party as the respondent or defendant in a case."
+    },
+    {
+      "type": "AMENDS",
+      "from": "Amendment",
+      "to": "Section | Statute",
+      "properties": {
+        "previousText": "text"
+      },
+      "description": "Shows that an Amendment event has altered a Section or an entire Statute."
+    },
+    {
+      "type": "SUPERSEDES",
+      "from": "Statute",
+      "to": "Statute",
+      "properties": {
+        "repealDate": "date"
+      },
+      "description": "Indicates that a new statute has completely replaced an older one."
+    },
+    {
+      "type": "VERSION_OF",
+      "from": "CaseVersion",
+      "to": "Case",
+      "properties": {},
+      "description": "Links a specific published version (e.g., from DLR) to the abstract, canonical case entity."
+    },
+    {
+      "type": "APPEALED_FROM",
+      "from": "Appeal",
+      "to": "Case",
+      "properties": {},
+      "description": "Connects an appeal event to the original, lower court case."
+    },
+    {
+      "type": "RESULTED_IN",
+      "from": "Appeal",
+      "to": "Case",
+      "properties": {},
+      "description": "Connects an appeal event to the new, appellate court case."
+    },
+    {
+      "type": "ESTABLISHES",
+      "from": "Case",
+      "to": "Principle",
+      "properties": {},
+      "description": "Indicates that a landmark case has established a new legal principle."
+    },
+    {
+      "type": "HAS_HOLDING",
+      "from": "Case",
+      "to": "Holding",
+      "properties": {},
+      "description": "Connects a case to its specific legal holding(s)."
+    },
+    {
+      "type": "FILED_IN",
+      "from": "Motion",
+      "to": "Case",
+      "properties": {},
+      "description": "Connects a motion to the case in which it was filed."
+    },
+    {
+      "type": "CHUNK_OF",
+      "from": "Chunk",
+      "to": "Case | Section",
+      "properties": {
+        "position": "integer"
+      },
+      "description": "Connects a text Chunk to its parent document (a Case or a Section). This hierarchical link is essential for context assembly and providing accurate source attribution in RAG responses."
+    },
+    {
+      "type": "CITES_IN_CHUNK",
+      "from": "Chunk",
+      "to": "Case",
+      "properties": {
+        "citation_text": "string"
+      },
+      "description": "A granular citation link from a specific text Chunk to a Case it mentions. This allows retrieval to find the exact context where a precedent was discussed, far more precise than a document-level 'CITES_PRECEDENT' link."
+    },
+    {
+      "type": "REFERENCES",
+      "from": "Chunk",
+      "to": "Section",
+      "properties": {
+        "reference_text": "string"
+      },
+      "description": "Connects a Chunk from a case judgment to a statutory Section it refers to. This relationship is crucial for finding judicial interpretations of specific laws at the most granular level."
+    }
+  ],
+  "indexes": [
+    {
+      "type": "composite",
+      "node_label": "Case",
+      "properties": [
+        "jurisdiction",
+        "decisionDate",
+        "case_type"
+      ],
+      "name": "case_jurisdiction_date_type_idx",
+      "notes": "Supports common filtering patterns for browsing cases by jurisdiction and time. Assumes 'case_type' property exists. Uses 'decisionDate' from schema for 'date' requirement."
+    },
+    {
+      "type": "composite",
+      "node_label": "Case",
+      "properties": [
+        "jurisdiction",
+        "year"
+      ],
+      "name": "case_jurisdiction_year_idx",
+      "notes": "A more granular index for yearly reviews within a jurisdiction. Assumes 'year' property is added to the Case node for performance."
+    },
+    {
+      "type": "composite",
+      "node_label": "Section",
+      "properties": [
+        "statute_title",
+        "part",
+        "section_number"
+      ],
+      "name": "section_statute_part_number_idx",
+      "notes": "Enables fast lookup of specific sections within a statute. Assumes 'statute_title' is denormalized onto the Section node."
+    },
+    {
+      "type": "vector",
+      "node_label": "Case",
+      "property": "embedding",
+      "name": "case_embedding_index",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "notes": "For case-level semantic search and retrieval."
+    },
+    {
+      "type": "vector",
+      "node_label": "Section",
+      "property": "embedding",
+      "name": "section_embedding_index",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "notes": "For finding relevant statutory provisions via semantic search."
+    },
+    {
+      "type": "vector",
+      "node_label": "Chunk",
+      "property": "embedding",
+      "name": "chunk_embedding_index",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "notes": "Primary index for granular semantic search across the entire text corpus."
+    },
+    {
+      "type": "fulltext",
+      "node_label": "Case",
+      "properties": [
+        "title",
+        "summary",
+        "fullText"
+      ],
+      "name": "case_fulltext_idx",
+      "notes": "Supports keyword search across key textual fields of a Case."
+    },
+    {
+      "type": "fulltext",
+      "node_label": "Section",
+      "properties": [
+        "title",
+        "fullText"
+      ],
+      "name": "section_fulltext_idx",
+      "notes": "Supports keyword search on the title and text of statutory Sections."
+    },
+    {
+      "type": "single",
+      "node_label": "Case",
+      "property": "citation",
+      "unique": true,
+      "name": "case_citation_idx",
+      "notes": "Critical for direct case lookup. Uniqueness constraint ensures data integrity."
+    },
+    {
+      "type": "single",
+      "node_label": "Section",
+      "property": "section_id",
+      "unique": true,
+      "name": "section_id_idx",
+      "notes": "For direct lookup of a specific section. Uniqueness constraint ensures a reliable internal identifier."
+    },
+    {
+      "type": "single",
+      "node_label": "Case",
+      "property": "trust_score",
+      "name": "case_trust_score_idx",
+      "notes": "For efficient filtering and sorting of cases based on their calculated trust or relevance score."
+    },
+    {
+      "type": "single",
+      "node_label": "Case",
+      "property": "year",
+      "name": "case_year_idx",
+      "notes": "Optimizes queries that filter or range scan on the year of the case, a very common access pattern."
+    },
+    {
+      "name": "chunk_embedding_index",
+      "node_label": "Chunk",
+      "property": "embedding",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "description": "Primary index for semantic search. Enables finding the most relevant text snippets across the entire legal corpus in response to a user query."
+    },
+    {
+      "name": "case_embedding_index",
+      "node_label": "Case",
+      "property": "embedding",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "description": "Index for case-level retrieval. Used in a multi-granularity strategy to first identify relevant cases and then drill down to find relevant chunks within them."
+    },
+    {
+      "name": "section_embedding_index",
+      "node_label": "Section",
+      "property": "embedding",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "description": "Index for section-level retrieval. Allows users to find relevant statutory provisions directly via semantic search."
+    }
+  ],
+  "constraints": [
+    {
+      "type": "uniqueness",
+      "node_label": "Case",
+      "property": "uuid",
+      "name": "unique_case_uuid"
+    },
+    {
+      "type": "uniqueness",
+      "node_label": "Case",
+      "property": "citation",
+      "name": "unique_case_citation"
+    },
+    {
+      "type": "uniqueness",
+      "node_label": "Statute",
+      "property": "uuid",
+      "name": "unique_statute_uuid"
+    },
+    {
+      "type": "uniqueness",
+      "node_label": "Statute",
+      "property": "title",
+      "name": "unique_statute_title"
+    },
+    {
+      "type": "property_validation",
+      "node_label": "Case",
+      "property": "trust_score",
+      "name": "check_case_trust_score_range",
+      "details": "value must be between 0.0 and 1.0"
+    },
+    {
+      "type": "property_validation",
+      "node_label": "Case",
+      "property": "verification_status",
+      "name": "check_case_verification_status_enum",
+      "details": "value must be one of ['Verified', 'Unverified', 'Disputed', 'Deprecated']"
+    },
+    {
+      "type": "referential_integrity",
+      "name": "enforce_relationship_integrity",
+      "details": "All relationships must connect to existing start and end nodes. Deleting a node must also delete its connecting relationships."
+    }
+  ],
+  "rag_configuration": {
+    "iteration": 2,
+    "chunk_size": 512,
+    "chunk_overlap": 50,
+    "embedding_model": "text-embedding-3-large",
+    "retrieval_strategy": "Hybrid (Vector + Graph) with Multi-Granularity Fallback. The primary path is vector search on the 'chunk_embedding_index'. Retrieved chunks are then expanded by traversing 'CHUNK_OF', 'CITES_IN_CHUNK', and 'REFERENCES' relationships to build context. If initial chunk search is insufficient, the system can fall back to a broader search on 'case_embedding_index' or 'section_embedding_index' to identify relevant documents before narrowing the search to chunks within those documents."
+  },
+  "changes_from_previous": [
+    "Initial schema design"
+  ],
+  "design_rationale": {
+    "legal_design": "18 entities covering Bangladesh legal system",
+    "rag_design": "Multi-granularity embeddings with 3 vector indexes",
+    "performance": "15 indexes for query optimization",
+    "quality": "7 constraints ensuring data integrity"
+  }
+}

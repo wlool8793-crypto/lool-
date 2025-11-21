@@ -1,0 +1,109 @@
+{
+  "node_type": "LegalDomain",
+  "description": "Represents a legal domain or area of law",
+  "properties": {
+    "domain_id": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Unique identifier for the domain",
+      "examples": ["DOMAIN-CIVIL", "DOMAIN-CRIMINAL", "DOMAIN-CONSTITUTIONAL"]
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Name of the legal domain",
+      "examples": ["Civil Law", "Criminal Law", "Constitutional Law", "Property Law", "Family Law", "Commercial Law", "Tax Law", "Administrative Law"]
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "description": "Description of the domain"
+    },
+    "parent_domain": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Parent domain for hierarchical structure"
+    },
+    "keywords": {
+      "type": "string[]",
+      "required": false,
+      "description": "Keywords associated with this domain"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of node creation"
+    },
+    "updated_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Data source",
+      "examples": ["IndianKanoon", "BDLaws", "Manual Entry"]
+    },
+    "extracted_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp of data extraction"
+    },
+    "extracted_by": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Extractor identifier",
+      "examples": ["GPT-4", "Gemini-2.5-Pro", "Manual"]
+    },
+    "confidence_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    "version": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Version number (increments on updates)",
+      "default": 1
+    },
+    "changelog": {
+      "type": "list<json>",
+      "required": false,
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    "trust_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Verification status",
+      "examples": ["Verified", "Unverified", "Disputed", "Deprecated"]
+    }
+  },
+  "constraints": [
+    "CONSTRAINT unique_domain_id IF NOT EXISTS FOR (d:LegalDomain) REQUIRE d.domain_id IS UNIQUE",
+    "CONSTRAINT unique_domain_name IF NOT EXISTS FOR (d:LegalDomain) REQUIRE d.name IS UNIQUE"
+  ],
+  "indexes": [
+    "CREATE INDEX domain_name IF NOT EXISTS FOR (d:LegalDomain) ON (d.name)",
+    "CREATE INDEX domain_source IF NOT EXISTS FOR (d:LegalDomain) ON (d.source)",
+    "CREATE INDEX domain_extracted_by IF NOT EXISTS FOR (d:LegalDomain) ON (d.extracted_by)",
+    "CREATE INDEX domain_trust_score IF NOT EXISTS FOR (d:LegalDomain) ON (d.trust_score)",
+    "CREATE INDEX domain_verification_status IF NOT EXISTS FOR (d:LegalDomain) ON (d.verification_status)",
+    "CREATE TEXT INDEX domain_keywords IF NOT EXISTS FOR (d:LegalDomain) ON (d.keywords)"
+  ]
+}

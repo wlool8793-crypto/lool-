@@ -1,0 +1,162 @@
+# ============================================================================
+# IndianKanoon Production Scraper Configuration
+# Target: 1.4M+ documents with Google Drive storage
+# ============================================================================
+
+# ============================================================================
+# URL COLLECTION SETTINGS
+# ============================================================================
+url_collection:
+  base_search_url: "https://indiankanoon.org/search/?formInput=doctype:%20judgments"
+  max_pages: null  # null = collect all pages (set to 10 for testing)
+  checkpoint_every: 10000  # Save progress every N URLs
+  page_load_timeout: 30  # Seconds
+
+# ============================================================================
+# SCRAPER SETTINGS
+# ============================================================================
+scraper:
+  # Concurrency
+  num_threads: 10  # 8-20 depending on VM performance
+  batch_size: 1000  # URLs to process per run
+
+  # Rate limiting (seconds)
+  delay_between_requests: 0.5  # 0.5-2.0 recommended
+
+  # Retry settings
+  max_retries: 3
+  retry_delay: 2  # Initial delay, doubles each retry
+
+  # Timeouts (seconds)
+  timeout: 30
+  pdf_download_timeout: 120
+
+  # Batch upload
+  batch_upload_size: 50  # Upload to Drive every N files
+
+# ============================================================================
+# STORAGE SETTINGS
+# ============================================================================
+storage:
+  # Local storage
+  temp_dir: "./data/temp_pdfs"
+
+  # Google Drive
+  drive_folder_name: "IndianKanoon_PDFs"
+  organize_by: "flat"  # Options: flat, court, year
+
+  # Disk management
+  min_free_space_gb: 10  # Pause if less than this
+  auto_cleanup_after_upload: true
+
+# ============================================================================
+# GOOGLE DRIVE SETTINGS
+# ============================================================================
+google_drive:
+  enabled: true
+  credentials_file: "./config/credentials.json"
+  token_file: "./config/token.pickle"
+  batch_size: 50  # Files per batch upload
+  max_retries: 3
+  retry_delay: 2
+
+# ============================================================================
+# DATABASE SETTINGS
+# ============================================================================
+database:
+  # SQLite (default)
+  url: "sqlite:///data/indiankanoon_production.db"
+
+  # PostgreSQL (for production scale - optional)
+  # url: "postgresql://user:password@localhost:5432/indiankanoon"
+
+  pool_size: 5
+  max_overflow: 10
+  echo: false  # Set to true for SQL debugging
+
+# ============================================================================
+# MONITORING & LOGGING
+# ============================================================================
+monitoring:
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_to_file: true
+  log_to_console: true
+  log_file: "./logs/production_scraper.log"
+
+  # Progress reporting
+  progress_interval: 100  # Log progress every N documents
+  checkpoint_every: 500  # Save database checkpoint every N documents
+
+# ============================================================================
+# PERFORMANCE TUNING
+# ============================================================================
+performance:
+  # Thread pool
+  max_workers: 10
+
+  # Connection pooling
+  connection_pool_size: 10
+  connection_keepalive: 30
+
+  # Memory management
+  max_queue_size: 1000  # Maximum download queue size
+  clear_temp_on_start: false  # Clear temp directory on startup
+
+# ============================================================================
+# SAFETY & ERROR HANDLING
+# ============================================================================
+safety:
+  # IP ban protection
+  max_requests_per_minute: 120  # Automatic rate limiting
+  backoff_on_429: true  # Back off if rate limited
+  backoff_multiplier: 2
+
+  # Error handling
+  max_consecutive_errors: 10  # Stop if too many errors in a row
+  skip_after_attempts: 3  # Skip document after N failed attempts
+
+  # Validation
+  validate_pdf_header: true  # Check %PDF signature
+  min_pdf_size: 1024  # Minimum valid PDF size (bytes)
+
+# ============================================================================
+# ESTIMATIONS (for planning)
+# ============================================================================
+estimations:
+  total_documents: 1400000
+  average_pdf_size_mb: 0.3  # 300 KB
+  total_storage_gb: 420  # 1.4M * 0.3MB
+
+  # Performance estimates
+  docs_per_hour: 500  # Conservative estimate with rate limiting
+  total_hours: 2800  # ~117 days at single thread
+  parallel_hours: 280  # ~12 days at 10 threads
+
+  # Cost estimates (GCP)
+  vm_cost_per_day_usd: 5  # e2-standard-4
+  total_cost_usd: 60  # 12 days * $5/day
+
+# ============================================================================
+# GCP DEPLOYMENT (for reference)
+# ============================================================================
+gcp:
+  project_id: "YOUR_PROJECT_ID"
+  zone: "us-central1-a"
+
+  # VM specifications
+  machine_type: "e2-standard-4"  # 4 vCPU, 16 GB RAM
+  boot_disk_size_gb: 100
+  boot_disk_type: "pd-ssd"
+
+  # Alternative high-performance VM
+  # machine_type: "n2-standard-8"  # 8 vCPU, 32 GB RAM (faster but more expensive)
+
+# ============================================================================
+# TESTING & DEBUGGING
+# ============================================================================
+testing:
+  test_mode: false
+  test_max_documents: 100
+  test_max_pages: 10
+  skip_drive_upload: false
+  verbose_logging: false

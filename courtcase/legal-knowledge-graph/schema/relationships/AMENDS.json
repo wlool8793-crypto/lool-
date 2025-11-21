@@ -1,0 +1,36 @@
+{
+  "relationship_type": "AMENDS",
+  "description": "One statute/section version amends another",
+  "from_node": ["Statute", "Section"],
+  "to_node": ["Statute", "Section"],
+  "properties": {
+    "amendment_type": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Type of amendment",
+      "examples": ["Addition", "Deletion", "Substitution", "Modification", "Insertion"]
+    },
+    "amendment_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date of amendment"
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "description": "Description of changes"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX amends_type IF NOT EXISTS FOR ()-[r:AMENDS]-() ON (r.amendment_type)",
+    "CREATE INDEX amends_date IF NOT EXISTS FOR ()-[r:AMENDS]-() ON (r.amendment_date)"
+  ],
+  "constraints": []
+}

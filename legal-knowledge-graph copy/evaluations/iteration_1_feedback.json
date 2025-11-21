@@ -1,0 +1,571 @@
+{
+  "iteration": 1,
+  "schema_version": "v7.0",
+  "evaluation_date": "2025-11-11",
+  "evaluator": "Schema Evaluator Agent",
+  "overall_score": 7.3,
+  "production_ready": false,
+  "categories": {
+    "domain_coverage": {
+      "score": 9.6,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [
+        "No criminal-specific entities (Charge, Evidence, Verdict, Sentence)",
+        "No property law entities (Property, PropertyRight, PropertyTransfer)",
+        "No family law entities (Marriage, Divorce, Custody, ChildSupport)",
+        "No tax law entities (TaxStatute, TaxAssessment, TaxAppeal)",
+        "No contract entities for commercial law (Contract, Transaction)"
+      ],
+      "strengths": [
+        "Complete CPC 1908 structure with Part, Order, Rule hierarchy",
+        "Excellent procedural law support (Appeal, Motion)",
+        "Strong precedent tracking (CITES, OVERRULES, AFFIRMS, DISTINGUISHES)",
+        "Good support for principles and doctrines",
+        "Flexible Party entity supporting individuals, corporations, government"
+      ]
+    },
+    "multi_jurisdiction": {
+      "score": 10,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [
+        "No HARMONIZED_WITH relationship for aligned interpretations across jurisdictions",
+        "No DIVERGES_FROM relationship for conflicting interpretations",
+        "No JurisdictionMapping node for terminology differences",
+        "No jurisdiction-specific section numbering variation tracking"
+      ],
+      "strengths": [
+        "Case.jurisdiction field present for BD, IN, PK",
+        "Court.jurisdiction_level tracks court hierarchy",
+        "Judge jurisdiction tracking via Court relationships",
+        "CITES_PRECEDENT works across jurisdictions",
+        "Common law heritage support (CPC 1908 shared across jurisdictions)"
+      ]
+    },
+    "temporal": {
+      "score": 8.5,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [
+        "Only 5/19 nodes have versioning (Case, Statute, Section, Principle, Chunk)",
+        "Missing versioning on: Judge, Court, Party, Doctrine, Holding, Appeal, Motion, Part, Order, Definition, Rule, CaseVersion, Amendment, ChangeLog",
+        "No effective_from/effective_to date ranges on Section and Statute",
+        "No temporal constraints (e.g., amendment_date <= effective_date)",
+        "No ARCHIVED status for superseded laws"
+      ],
+      "strengths": [
+        "Complete versioning fields on 5 core entities (version, created_at, updated_at, changelog)",
+        "Amendment entity with effective dates",
+        "SUPERSEDES relationship for law replacements",
+        "CaseVersion entity for multiple published versions",
+        "ChangeLog entity for audit trails"
+      ]
+    },
+    "rag": {
+      "score": 7.0,
+      "max": 10,
+      "status": "NEEDS_WORK",
+      "is_blocker": true,
+      "gaps": [
+        "Missing APPLIES_PRINCIPLE relationship (Chunk → Principle)",
+        "No chunk_type property (facts/holding/reasoning/obiter)",
+        "No entity_mentions property for NER-based retrieval",
+        "No parent_chunk_id for hierarchical chunking",
+        "No SIMILAR_TO relationship between semantically similar chunks",
+        "No context_window properties for expanded context retrieval",
+        "No query_expansion_terms for BM25 boosting"
+      ],
+      "strengths": [
+        "Multi-granularity embeddings (Case, Section, Chunk, Principle, Holding)",
+        "6 vector indexes with COSINE similarity",
+        "Chunk entity with proper provenance (source, extracted_at, extracted_by)",
+        "start_char_offset and end_char_offset for precise citation",
+        "Hybrid retrieval strategy documented",
+        "Reranking support with rerank_score property",
+        "source_attribution for verifiable answers"
+      ]
+    },
+    "reasoning": {
+      "score": 9.0,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [
+        "No QUESTIONED_BY relationship (case questions but doesn't overrule)",
+        "No DISAPPROVED relationship (obiter disapproval)",
+        "No APPLIED_DIFFERENTLY relationship for same principle variations",
+        "No conflict_status property on Case",
+        "No binding_nature property on Holding (binding vs. persuasive)",
+        "No precedential_value score"
+      ],
+      "strengths": [
+        "4 precedent relationship types (CITES_PRECEDENT, OVERRULES, AFFIRMS, DISTINGUISHES)",
+        "Rich relationship properties (cited_for, reasoning, on_facts, on_law)",
+        "Principle and Doctrine entities for abstract legal concepts",
+        "Holding entity for ratio decidendi",
+        "Multi-hop reasoning via transitive relationships",
+        "Conflict detection possible via query patterns"
+      ]
+    },
+    "performance": {
+      "score": 10,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [
+        "No index on Judge.name (frequent lookup)",
+        "No index on Court.name (frequent lookup)",
+        "No index on Party.name (frequent lookup)",
+        "No composite index on (Case.court + Case.decision_date)",
+        "No index on Chunk.parent_id (despite being in optimized_schema_v3.json)"
+      ],
+      "strengths": [
+        "15 total indexes covering all query patterns",
+        "6 vector indexes for multi-granularity semantic search",
+        "3 composite indexes for common filter combinations",
+        "2 unique indexes on business keys (citation, section_id)",
+        "2 full-text indexes for keyword search",
+        "Trust score index for quality filtering"
+      ]
+    },
+    "data_quality": {
+      "score": 4.3,
+      "max": 10,
+      "status": "FAIL",
+      "is_blocker": true,
+      "gaps": [
+        "Only 6/19 nodes have provenance fields (source, extracted_at, extracted_by)",
+        "Missing provenance on: Party, Doctrine, Holding, Appeal, Motion, Part, Order, Definition, Rule, CaseVersion, Amendment, ChangeLog, Topic",
+        "Only 5/19 nodes have versioning (version, created_at, updated_at, changelog)",
+        "Only 5/19 nodes have trust scoring (trust_score, authority_level, citation_count)",
+        "No trust score calculation for 14 node types"
+      ],
+      "strengths": [
+        "8 constraints for data integrity",
+        "4 uniqueness constraints (Case.citation, Chunk.id, Principle.id, Statute.id)",
+        "4 existence constraints (Case.source, Case.trust_score, Section.source, Chunk.source)",
+        "Provenance fields present on 6 core entities",
+        "Versioning infrastructure defined (version, created_at, updated_at, changelog)"
+      ]
+    },
+    "cross_jurisdictional": {
+      "score": 10,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [
+        "No explicit cross-reference relationships between jurisdictions"
+      ],
+      "strengths": [
+        "Jurisdiction tracking on Case, Court, Judge",
+        "CITES_PRECEDENT supports cross-jurisdiction citations",
+        "Common law heritage (CPC 1908) shared across BD/IN/PK",
+        "Flexible citation format (DLR, AIR, PLD)"
+      ]
+    },
+    "user_experience": {
+      "score": 10,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [],
+      "strengths": [
+        "Clear, concise entity naming (Case, Statute, Section, Judge, Court)",
+        "Good documentation coverage (19/19 entities with descriptions)",
+        "Intuitive relationship names (CITES_PRECEDENT, APPLIES_SECTION)",
+        "Consistent property naming conventions"
+      ]
+    },
+    "scalability": {
+      "score": 10,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [],
+      "strengths": [
+        "Comprehensive indexing (15 indexes)",
+        "Batch processing support in RAG configuration",
+        "Chunk-based architecture for large documents",
+        "Efficient graph traversal patterns"
+      ]
+    },
+    "extensibility": {
+      "score": 10,
+      "max": 10,
+      "status": "PASS",
+      "gaps": [],
+      "strengths": [
+        "Versioning support for schema evolution",
+        "Metadata map fields for future extensions",
+        "Flexible property types",
+        "Extensible relationship properties"
+      ]
+    }
+  },
+  "missing_nodes": [
+    {
+      "name": "ConstitutionalArticle",
+      "priority": "HIGH",
+      "reason": "Track constitutional provisions for constitutional law cases",
+      "properties": "article_id, article_number, title, text, part, embedding"
+    },
+    {
+      "name": "LegalIssue",
+      "priority": "HIGH",
+      "reason": "Explicit issue extraction for case analysis",
+      "properties": "issue_id, issue_text, area_of_law, embedding"
+    },
+    {
+      "name": "Argument",
+      "priority": "HIGH",
+      "reason": "Track legal arguments from parties",
+      "properties": "argument_id, party, argument_text, type, accepted"
+    },
+    {
+      "name": "Citation",
+      "priority": "HIGH",
+      "reason": "Explicit citation entity for fine-grained tracking",
+      "properties": "citation_id, citation_text, citation_type, page_number, paragraph"
+    },
+    {
+      "name": "Charge",
+      "priority": "MEDIUM",
+      "reason": "Support criminal law cases",
+      "properties": "charge_id, charge_type, statute_section, description"
+    },
+    {
+      "name": "Evidence",
+      "priority": "MEDIUM",
+      "reason": "Track evidence in cases",
+      "properties": "evidence_id, evidence_type, description, admissibility"
+    },
+    {
+      "name": "Contract",
+      "priority": "MEDIUM",
+      "reason": "Support commercial law disputes",
+      "properties": "contract_id, contract_type, date, parties, terms"
+    },
+    {
+      "name": "Property",
+      "priority": "MEDIUM",
+      "reason": "Support property law cases",
+      "properties": "property_id, property_type, location, description"
+    },
+    {
+      "name": "TaxAssessment",
+      "priority": "LOW",
+      "reason": "Support tax law cases",
+      "properties": "assessment_id, tax_year, amount, status"
+    },
+    {
+      "name": "Regulation",
+      "priority": "LOW",
+      "reason": "Support administrative law cases",
+      "properties": "regulation_id, title, issuing_authority, effective_date"
+    }
+  ],
+  "missing_relationships": [
+    {
+      "type": "APPLIES_PRINCIPLE",
+      "from": "Chunk",
+      "to": "Principle",
+      "priority": "CRITICAL",
+      "reason": "Enable principle-based retrieval in RAG system",
+      "properties": "context, confidence, principle_text"
+    },
+    {
+      "type": "HARMONIZED_WITH",
+      "from": "Case",
+      "to": "Case",
+      "priority": "HIGH",
+      "reason": "Track aligned interpretations across jurisdictions",
+      "properties": "jurisdictions, principle, reasoning_similarity, date_identified"
+    },
+    {
+      "type": "DIVERGES_FROM",
+      "from": "Case",
+      "to": "Case",
+      "priority": "HIGH",
+      "reason": "Track conflicting interpretations across jurisdictions",
+      "properties": "jurisdictions, reason, point_of_divergence, date_identified"
+    },
+    {
+      "type": "CONFLICTS_WITH",
+      "from": "Case",
+      "to": "Case",
+      "priority": "HIGH",
+      "reason": "Explicit conflict marking for legal research",
+      "properties": "conflict_type, section_number, resolution_status"
+    },
+    {
+      "type": "REMANDS",
+      "from": "Case",
+      "to": "Case",
+      "priority": "HIGH",
+      "reason": "Track appellate remand decisions",
+      "properties": "remand_date, instructions, remand_type"
+    },
+    {
+      "type": "HAS_ISSUE",
+      "from": "Case",
+      "to": "LegalIssue",
+      "priority": "HIGH",
+      "reason": "Link cases to legal issues",
+      "properties": "is_primary"
+    },
+    {
+      "type": "ADDRESSES_ISSUE",
+      "from": "Holding",
+      "to": "LegalIssue",
+      "priority": "HIGH",
+      "reason": "Link holdings to issues they address",
+      "properties": "resolution"
+    },
+    {
+      "type": "CONSOLIDATED_WITH",
+      "from": "Case",
+      "to": "Case",
+      "priority": "MEDIUM",
+      "reason": "Track case consolidation",
+      "properties": "consolidation_order_date, lead_case, reason"
+    },
+    {
+      "type": "QUESTIONED_BY",
+      "from": "Case",
+      "to": "Case",
+      "priority": "MEDIUM",
+      "reason": "Track cases that question precedent without overruling",
+      "properties": "context, reasoning"
+    },
+    {
+      "type": "SUB_CHUNK_OF",
+      "from": "Chunk",
+      "to": "Chunk",
+      "priority": "MEDIUM",
+      "reason": "Enable hierarchical chunk retrieval",
+      "properties": "position, hierarchical_level"
+    },
+    {
+      "type": "SIMILAR_FACTS",
+      "from": "Case",
+      "to": "Case",
+      "priority": "LOW",
+      "reason": "Support case-based reasoning",
+      "properties": "similarity_score, common_facts"
+    },
+    {
+      "type": "SIMILAR_TO",
+      "from": "Chunk",
+      "to": "Chunk",
+      "priority": "LOW",
+      "reason": "Enable semantic chunk similarity",
+      "properties": "similarity_score"
+    }
+  ],
+  "missing_constraints": {
+    "uniqueness": [
+      "CREATE CONSTRAINT unique_judge_id FOR (j:Judge) REQUIRE j.id IS UNIQUE",
+      "CREATE CONSTRAINT unique_court_id FOR (c:Court) REQUIRE c.id IS UNIQUE",
+      "CREATE CONSTRAINT unique_section_id FOR (s:Section) REQUIRE s.section_id IS UNIQUE",
+      "CREATE CONSTRAINT unique_party_id FOR (p:Party) REQUIRE p.party_id IS UNIQUE",
+      "CREATE CONSTRAINT unique_holding_id FOR (h:Holding) REQUIRE h.holding_id IS UNIQUE",
+      "CREATE CONSTRAINT unique_appeal_id FOR (a:Appeal) REQUIRE a.appeal_id IS UNIQUE",
+      "CREATE CONSTRAINT unique_motion_id FOR (m:Motion) REQUIRE m.motion_id IS UNIQUE",
+      "CREATE CONSTRAINT unique_doctrine_id FOR (d:Doctrine) REQUIRE d.doctrine_id IS UNIQUE"
+    ],
+    "existence": [
+      "CREATE CONSTRAINT require_case_citation FOR (c:Case) REQUIRE c.citation IS NOT NULL",
+      "CREATE CONSTRAINT require_case_jurisdiction FOR (c:Case) REQUIRE c.jurisdiction IS NOT NULL",
+      "CREATE CONSTRAINT require_section_text FOR (s:Section) REQUIRE s.text IS NOT NULL",
+      "CREATE CONSTRAINT require_chunk_text FOR (ch:Chunk) REQUIRE ch.text IS NOT NULL",
+      "CREATE CONSTRAINT require_chunk_embedding FOR (ch:Chunk) REQUIRE ch.embedding IS NOT NULL",
+      "CREATE CONSTRAINT require_judge_name FOR (j:Judge) REQUIRE j.name IS NOT NULL",
+      "CREATE CONSTRAINT require_court_name FOR (c:Court) REQUIRE c.name IS NOT NULL",
+      "CREATE CONSTRAINT require_principle_statement FOR (p:Principle) REQUIRE p.statement IS NOT NULL",
+      "CREATE CONSTRAINT require_party_source FOR (p:Party) REQUIRE p.source IS NOT NULL",
+      "CREATE CONSTRAINT require_holding_source FOR (h:Holding) REQUIRE h.source IS NOT NULL",
+      "CREATE CONSTRAINT require_doctrine_source FOR (d:Doctrine) REQUIRE d.source IS NOT NULL"
+    ],
+    "range": [
+      "CREATE CONSTRAINT check_case_date FOR (c:Case) REQUIRE c.decision_date >= date('1900-01-01')",
+      "CREATE CONSTRAINT check_trust_score FOR (c:Case) REQUIRE c.trust_score >= 0.0 AND c.trust_score <= 1.0",
+      "CREATE CONSTRAINT check_confidence FOR (ch:Chunk) REQUIRE ch.confidence_score >= 0.0 AND ch.confidence_score <= 1.0",
+      "CREATE CONSTRAINT check_authority FOR (c:Court) REQUIRE c.authority_level >= 1 AND c.authority_level <= 10"
+    ]
+  },
+  "missing_indexes": [
+    {
+      "name": "judge_name_idx",
+      "priority": "HIGH",
+      "cypher": "CREATE INDEX judge_name_idx FOR (j:Judge) ON j.name",
+      "reason": "Judge lookup by name is frequent in case queries"
+    },
+    {
+      "name": "court_name_idx",
+      "priority": "HIGH",
+      "cypher": "CREATE INDEX court_name_idx FOR (c:Court) ON c.name",
+      "reason": "Court lookup by name is frequent"
+    },
+    {
+      "name": "party_name_idx",
+      "priority": "HIGH",
+      "cypher": "CREATE INDEX party_name_idx FOR (p:Party) ON p.name",
+      "reason": "Party search is common in case research"
+    },
+    {
+      "name": "chunk_parent_idx",
+      "priority": "HIGH",
+      "cypher": "CREATE INDEX chunk_parent_idx FOR (ch:Chunk) ON ch.source",
+      "reason": "Chunk to parent document lookup is critical for RAG"
+    },
+    {
+      "name": "case_court_date_idx",
+      "priority": "HIGH",
+      "cypher": "CREATE COMPOSITE INDEX case_court_date_idx FOR (c:Case) ON (c.court, c.decision_date)",
+      "reason": "Court timeline queries are common"
+    },
+    {
+      "name": "holding_ratio_idx",
+      "priority": "MEDIUM",
+      "cypher": "CREATE INDEX holding_ratio_idx FOR (h:Holding) ON h.is_ratio",
+      "reason": "Filter by ratio decidendi vs. obiter dicta"
+    },
+    {
+      "name": "principle_area_idx",
+      "priority": "MEDIUM",
+      "cypher": "CREATE INDEX principle_area_idx FOR (p:Principle) ON p.area_of_law",
+      "reason": "Principle filtering by legal domain"
+    },
+    {
+      "name": "principle_fulltext_idx",
+      "priority": "MEDIUM",
+      "cypher": "CREATE FULLTEXT INDEX principle_fulltext_idx FOR (p:Principle) ON EACH [p.statement]",
+      "reason": "Full-text search on legal principles"
+    },
+    {
+      "name": "holding_fulltext_idx",
+      "priority": "MEDIUM",
+      "cypher": "CREATE FULLTEXT INDEX holding_fulltext_idx FOR (h:Holding) ON EACH [h.text]",
+      "reason": "Full-text search on holdings"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "CRITICAL",
+      "title": "Extend Provenance Tracking to ALL 19 Nodes",
+      "description": "Add source, extracted_at, extracted_by, confidence_score to Party, Doctrine, Holding, Appeal, Motion, Part, Order, Definition, Rule, CaseVersion, Amendment, ChangeLog, Topic (13 nodes missing)",
+      "impact": "Will boost data_quality score from 4.3/10 to 7.5/10",
+      "effort": "2-3 days",
+      "implementation": "Update each node schema with provenance fields and add existence constraints"
+    },
+    {
+      "priority": "CRITICAL",
+      "title": "Extend Versioning to ALL 19 Nodes",
+      "description": "Add version, created_at, updated_at, changelog to all 14 nodes currently missing these fields",
+      "impact": "Enable complete audit trails and point-in-time queries",
+      "effort": "2-3 days",
+      "implementation": "Update each node schema with versioning fields"
+    },
+    {
+      "priority": "CRITICAL",
+      "title": "Implement Trust Scoring Across All Entities",
+      "description": "Add trust_score, authority_level, citation_count, verification_status to all entity nodes",
+      "impact": "Enable quality-based filtering and ranking in RAG retrieval",
+      "effort": "1-2 days",
+      "implementation": "Add trust scoring fields and implement calculation algorithm"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Add Missing RAG Relationship: APPLIES_PRINCIPLE",
+      "description": "Implement (Chunk)-[:APPLIES_PRINCIPLE {context, confidence}]->(Principle)",
+      "impact": "Enable principle-based legal reasoning in RAG retrieval",
+      "effort": "1 day",
+      "implementation": "Add relationship with NER-based extraction"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Add Cross-Jurisdiction Relationships",
+      "description": "Create HARMONIZED_WITH and DIVERGES_FROM relationships between cases from different jurisdictions",
+      "impact": "Enable comparative legal analysis across BD/IN/PK",
+      "effort": "1-2 days",
+      "implementation": "Add relationships with metadata about alignment/conflict"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Add Chunk Hierarchy for Nested Retrieval",
+      "description": "Add parent_chunk_id property and SUB_CHUNK_OF relationship",
+      "impact": "Enable context-aware retrieval with automatic context expansion",
+      "effort": "1 day",
+      "implementation": "Update chunking strategy to support hierarchical chunks"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Add Explicit Conflict Detection",
+      "description": "Add conflict_status property and CONFLICTS_WITH relationship",
+      "impact": "Proactive conflict identification for legal research",
+      "effort": "1 day",
+      "implementation": "Add property and relationship with conflict detection query"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Add Procedural Relationships",
+      "description": "Implement REMANDS, CONSOLIDATED_WITH, STAYED relationships",
+      "impact": "Complete procedural event tracking",
+      "effort": "1 day",
+      "implementation": "Add relationships with procedural metadata"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Add chunk_type Property",
+      "description": "Add chunk_type enum('facts', 'holding', 'reasoning', 'obiter', 'dissent')",
+      "impact": "Enable targeted retrieval of specific case components",
+      "effort": "0.5 days",
+      "implementation": "Update Chunk schema and chunking algorithm"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Add Missing Indexes",
+      "description": "Create indexes on Judge.name, Court.name, Party.name, Chunk.source, composite (Case.court, Case.decision_date)",
+      "impact": "Improve query performance for common lookups",
+      "effort": "0.5 days",
+      "implementation": "Execute CREATE INDEX statements"
+    }
+  ],
+  "production_blockers": [
+    {
+      "dimension": "data_quality",
+      "issue": "Incomplete provenance tracking (6/19 nodes)",
+      "severity": "CRITICAL",
+      "threshold": "8.0/10",
+      "current": "4.3/10",
+      "gap": "3.7 points"
+    },
+    {
+      "dimension": "data_quality",
+      "issue": "Inconsistent versioning (5/19 nodes)",
+      "severity": "CRITICAL",
+      "threshold": "8.0/10",
+      "current": "4.3/10",
+      "gap": "3.7 points"
+    },
+    {
+      "dimension": "rag_effectiveness",
+      "issue": "Missing APPLIES_PRINCIPLE relationship",
+      "severity": "HIGH",
+      "threshold": "8.0/10",
+      "current": "7.0/10",
+      "gap": "1.0 points"
+    }
+  ],
+  "estimated_fix_time": {
+    "critical_fixes": "3-4 days",
+    "high_priority": "2-3 days",
+    "medium_priority": "1-2 days",
+    "total": "6-9 days"
+  },
+  "next_steps": [
+    "1. Prioritize data quality fixes: extend provenance and versioning to all nodes",
+    "2. Implement trust scoring algorithm across all entity types",
+    "3. Add APPLIES_PRINCIPLE relationship for RAG optimization",
+    "4. Add cross-jurisdiction relationships (HARMONIZED_WITH, DIVERGES_FROM)",
+    "5. Add missing indexes for performance optimization",
+    "6. Run comprehensive validation tests",
+    "7. Re-evaluate schema with target score of 9.0+"
+  ]
+}

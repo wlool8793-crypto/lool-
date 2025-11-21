@@ -1,0 +1,27 @@
+# Multi-Agent Schema Evolution System Dependencies
+
+# LangGraph for multi-agent coordination
+langgraph>=0.0.30
+langgraph-checkpoint>=0.0.1
+
+# LangChain core
+langchain>=0.1.0
+langchain-core>=0.1.0
+
+# LLM providers (use one of these)
+langchain-anthropic>=0.1.0  # For Anthropic Claude (legacy)
+langchain-openai>=0.1.0     # For Azure OpenAI or OpenAI (legacy)
+langchain-google-genai>=2.1.0  # For Google Gemini API (simple)
+langchain-google-vertexai>=2.1.0  # For Google Vertex AI (current - enterprise)
+
+# Neo4j
+neo4j>=5.14.0
+
+# Utilities
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+pyyaml>=6.0.1
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

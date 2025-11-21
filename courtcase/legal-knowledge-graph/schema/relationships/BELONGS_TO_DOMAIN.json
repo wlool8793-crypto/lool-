@@ -1,0 +1,29 @@
+{
+  "relationship_type": "BELONGS_TO_DOMAIN",
+  "description": "A case, statute, or section belongs to a legal domain",
+  "from_node": ["Case", "Statute", "Section", "LegalIssue"],
+  "to_node": "LegalDomain",
+  "properties": {
+    "relevance": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Relevance to domain",
+      "examples": ["Primary", "Secondary", "Tangential"]
+    },
+    "confidence": {
+      "type": "float",
+      "required": false,
+      "description": "Confidence score for domain classification (0-1)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX belongs_to_domain_relevance IF NOT EXISTS FOR ()-[r:BELONGS_TO_DOMAIN]-() ON (r.relevance)"
+  ],
+  "constraints": []
+}

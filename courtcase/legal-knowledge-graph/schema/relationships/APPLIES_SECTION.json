@@ -1,0 +1,34 @@
+{
+  "relationship_type": "APPLIES_SECTION",
+  "description": "A case applies a specific section of a statute",
+  "from_node": "Case",
+  "to_node": "Section",
+  "properties": {
+    "application_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "How the section is applied",
+      "examples": ["Directly Applied", "Interpreted", "Distinguished", "Analyzed"]
+    },
+    "interpretation": {
+      "type": "text",
+      "required": false,
+      "description": "Court's interpretation of the section"
+    },
+    "context": {
+      "type": "text",
+      "required": false,
+      "description": "Context of application"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX applies_section_type IF NOT EXISTS FOR ()-[r:APPLIES_SECTION]-() ON (r.application_type)"
+  ],
+  "constraints": []
+}

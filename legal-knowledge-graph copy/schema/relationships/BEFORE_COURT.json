@@ -1,0 +1,34 @@
+{
+  "relationship_type": "BEFORE_COURT",
+  "description": "A case was heard before a specific court",
+  "from_node": "Case",
+  "to_node": "Court",
+  "properties": {
+    "hearing_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date of hearing"
+    },
+    "decision_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Date of decision"
+    },
+    "court_level": {
+      "type": "string",
+      "required": false,
+      "description": "Level at which heard (original, appellate, etc.)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX before_court_date IF NOT EXISTS FOR ()-[r:BEFORE_COURT]-() ON (r.decision_date)"
+  ],
+  "constraints": []
+}

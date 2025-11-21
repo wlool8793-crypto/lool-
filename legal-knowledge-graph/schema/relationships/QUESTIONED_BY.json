@@ -1,0 +1,58 @@
+{
+  "relationship_type": "QUESTIONED_BY",
+  "description": "A case's holding or reasoning is questioned by a later case without being overruled",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "questioned_aspect": {
+      "type": "string",
+      "required": false,
+      "description": "What aspect is being questioned (holding, reasoning, dicta, interpretation)"
+    },
+    "questioned_reason": {
+      "type": "text",
+      "required": false,
+      "description": "Reason why the precedent is being questioned"
+    },
+    "severity": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Severity of questioning: mild, moderate, significant, severe"
+    },
+    "specific_point": {
+      "type": "text",
+      "required": false,
+      "description": "The specific legal point being questioned"
+    },
+    "citation_context": {
+      "type": "text",
+      "required": false,
+      "description": "Context in which the questioning appears"
+    },
+    "questioned_by_judge": {
+      "type": "string",
+      "required": false,
+      "description": "Judge who questioned the precedent"
+    },
+    "subsequent_treatment": {
+      "type": "string",
+      "required": false,
+      "description": "How this precedent was treated in later cases"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX questioned_severity IF NOT EXISTS FOR ()-[r:QUESTIONED_BY]-() ON (r.severity)",
+    "CREATE INDEX questioned_aspect IF NOT EXISTS FOR ()-[r:QUESTIONED_BY]-() ON (r.questioned_aspect)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all cases where a precedent has been questioned\nMATCH (questioned:Case {case_id: 'case_bd_sc_2020_123'})<-[q:QUESTIONED_BY]-(questioning:Case)\nRETURN questioning.citation, q.questioned_reason, q.severity\nORDER BY questioning.decision_date DESC",
+    "// Find severely questioned precedents in constitutional law\nMATCH (questioned:Case)<-[q:QUESTIONED_BY]-(questioning:Case)\nWHERE questioned.primary_domain = 'Constitutional'\n  AND q.severity IN ['significant', 'severe']\nRETURN questioned.citation, COUNT(questioning) AS question_count\nORDER BY question_count DESC"
+  ]
+}

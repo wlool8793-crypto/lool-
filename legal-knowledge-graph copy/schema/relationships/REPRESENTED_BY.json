@@ -1,0 +1,29 @@
+{
+  "relationship_type": "REPRESENTED_BY",
+  "description": "A party is represented by a lawyer in a case",
+  "from_node": "Party",
+  "to_node": "Lawyer",
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Case in which representation occurred"
+    },
+    "representation_type": {
+      "type": "string",
+      "required": false,
+      "description": "Type of representation",
+      "examples": ["Lead Counsel", "Assisting Counsel", "Amicus Curiae"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX represented_by_case IF NOT EXISTS FOR ()-[r:REPRESENTED_BY]-() ON (r.case_id)"
+  ],
+  "constraints": []
+}

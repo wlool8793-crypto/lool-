@@ -1,0 +1,135 @@
+{
+  "label": "Topic",
+  "description": "Represents a legal topic or subject matter for organizing legal knowledge",
+  "required_properties": [
+    {
+      "name": "topic_id",
+      "type": "string",
+      "description": "Unique identifier for the topic",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Name of the topic",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "description",
+      "type": "string",
+      "description": "Description of the topic"
+    },
+    {
+      "name": "parent_topic",
+      "type": "string",
+      "description": "Parent topic for hierarchical organization"
+    },
+    {
+      "name": "legal_domain",
+      "type": "string",
+      "description": "Primary legal domain"
+    },
+    {
+      "name": "keywords",
+      "type": "string[]",
+      "description": "Keywords associated with topic"
+    },
+    {
+      "name": "hierarchy_level",
+      "type": "integer",
+      "description": "Level in topic hierarchy (0=root, 1=category, 2=subcategory, etc.)"
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp"
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp"
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')"
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction"
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')"
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "fulltext",
+      "name": "topic_fulltext_index",
+      "properties": ["name", "description", "keywords"]
+    },
+    {
+      "type": "property",
+      "name": "topic_domain_index",
+      "properties": ["legal_domain"]
+    },
+    {
+      "type": "property",
+      "name": "topic_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "topic_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "topic_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "topic_verification_status_index",
+      "properties": ["verification_status"]
+    }
+  ],
+  "example": {
+    "topic_id": "topic_contract_law",
+    "name": "Contract Law",
+    "description": "Legal principles and rules governing contracts and agreements",
+    "legal_domain": "civil",
+    "keywords": ["contract", "agreement", "offer", "acceptance", "consideration"],
+    "hierarchy_level": 1
+  }
+}

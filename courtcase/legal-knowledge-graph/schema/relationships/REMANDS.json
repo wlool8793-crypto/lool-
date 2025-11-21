@@ -1,0 +1,81 @@
+{
+  "relationship_type": "REMANDS",
+  "description": "An appellate court remands a case back to a lower court for further proceedings",
+  "from_node": "Case",
+  "to_node": "Case",
+  "properties": {
+    "remand_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Type: complete_remand, partial_remand, remand_for_retrial, remand_for_fresh_evidence, remand_for_reconsideration"
+    },
+    "remand_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date when remand order was issued"
+    },
+    "remand_reason": {
+      "type": "text",
+      "required": true,
+      "description": "Reason for remanding the case"
+    },
+    "remand_directions": {
+      "type": "text",
+      "required": false,
+      "description": "Specific directions given to lower court"
+    },
+    "issues_remanded": {
+      "type": "string[]",
+      "required": false,
+      "description": "Specific issues remanded for determination"
+    },
+    "remanding_court": {
+      "type": "string",
+      "required": false,
+      "description": "Court that issued remand order"
+    },
+    "receiving_court": {
+      "type": "string",
+      "required": false,
+      "description": "Court receiving the remanded case"
+    },
+    "time_limit": {
+      "type": "string",
+      "required": false,
+      "description": "Time limit specified for disposal after remand"
+    },
+    "remand_status": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "Status: pending, disposed, appealed_again, withdrawn"
+    },
+    "subsequent_outcome": {
+      "type": "string",
+      "required": false,
+      "description": "Outcome after remand"
+    },
+    "remand_order_reference": {
+      "type": "string",
+      "required": false,
+      "description": "Reference to remand order in judgment"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX remands_type IF NOT EXISTS FOR ()-[r:REMANDS]-() ON (r.remand_type)",
+    "CREATE INDEX remands_date IF NOT EXISTS FOR ()-[r:REMANDS]-() ON (r.remand_date)",
+    "CREATE INDEX remands_status IF NOT EXISTS FOR ()-[r:REMANDS]-() ON (r.remand_status)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all cases remanded by a higher court\nMATCH (higher:Case)-[r:REMANDS]->(lower:Case)\nWHERE higher.case_id = 'case_bd_sc_2023_456'\nRETURN lower.citation, r.remand_reason, r.remand_type, r.remand_status",
+    "// Find pending remanded cases\nMATCH (higher:Case)-[r:REMANDS]->(lower:Case)\nWHERE r.remand_status = 'pending'\nRETURN higher.citation, lower.citation, r.remand_date, r.remand_directions\nORDER BY r.remand_date DESC"
+  ]
+}

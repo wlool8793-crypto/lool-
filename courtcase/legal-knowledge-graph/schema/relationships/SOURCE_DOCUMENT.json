@@ -1,0 +1,26 @@
+{
+  "relationship_type": "SOURCE_DOCUMENT",
+  "description": "Links a node to its source document",
+  "from_node": ["Case", "Statute", "Section"],
+  "to_node": "Document",
+  "properties": {
+    "extraction_method": {
+      "type": "string",
+      "required": false,
+      "description": "How content was extracted",
+      "examples": ["OCR", "Manual", "API", "Web Scraping"]
+    },
+    "confidence": {
+      "type": "float",
+      "required": false,
+      "description": "Confidence in extraction (0-1)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [],
+  "constraints": []
+}

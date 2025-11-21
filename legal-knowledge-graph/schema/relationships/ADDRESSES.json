@@ -1,0 +1,31 @@
+{
+  "relationship_type": "ADDRESSES",
+  "description": "A case addresses a legal issue",
+  "from_node": "Case",
+  "to_node": "LegalIssue",
+  "properties": {
+    "holding": {
+      "type": "text",
+      "required": false,
+      "description": "Court's holding on the issue"
+    },
+    "ratio_decidendi": {
+      "type": "text",
+      "required": false,
+      "description": "Reasoning for the decision"
+    },
+    "is_main_issue": {
+      "type": "boolean",
+      "required": false,
+      "indexed": true,
+      "description": "Whether this is the main issue in the case"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [],
+  "constraints": []
+}

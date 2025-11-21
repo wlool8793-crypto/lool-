@@ -1,0 +1,110 @@
+{
+  "evaluation_id": "eval-001",
+  "schema_version": "v2.0",
+  "timestamp": "2025-11-08T17:16:55.712121",
+  "overall_score": 9.15,
+  "dimension_scores": {
+    "legal_completeness": {
+      "score": 9.5,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [
+        "Appeal",
+        "Holding"
+      ],
+      "strengths": [
+        "Good entity coverage: 80%"
+      ]
+    },
+    "rag_effectiveness": {
+      "score": 9.0,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [
+        "Section embeddings"
+      ],
+      "strengths": [
+        "Multi-granularity embeddings implemented"
+      ]
+    },
+    "performance": {
+      "score": 8.5,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [],
+      "strengths": [
+        "9 indexes for optimization"
+      ]
+    },
+    "data_quality": {
+      "score": 8.8,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [
+        "Versioning on all nodes"
+      ],
+      "strengths": [
+        "Trust scoring on Case nodes"
+      ]
+    },
+    "cross_jurisdictional": {
+      "score": 9.0,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [],
+      "strengths": [
+        "Jurisdiction tracking present"
+      ]
+    },
+    "user_experience": {
+      "score": 8.5,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [],
+      "strengths": [
+        "Clear, concise entity naming"
+      ]
+    },
+    "scalability": {
+      "score": 9.0,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [],
+      "strengths": [
+        "Comprehensive indexing (9 indexes)"
+      ]
+    },
+    "extensibility": {
+      "score": 9.0,
+      "max_score": 10.0,
+      "details": {},
+      "missing_components": [],
+      "strengths": [
+        "Versioning support for schema evolution"
+      ]
+    }
+  },
+  "critical_improvements": [
+    {
+      "priority": "HIGH",
+      "dimension": "legal_completeness",
+      "issue": "Missing: Appeal entity",
+      "impact": "Current score: 8.8/10",
+      "suggestion": "Add Appeal entity to improve legal_completeness"
+    },
+    {
+      "priority": "MEDIUM",
+      "dimension": "rag_effectiveness",
+      "issue": "Missing: Section embeddings",
+      "impact": "Current score: 8.2/10",
+      "suggestion": "Add Section-level embeddings to improve rag_effectiveness"
+    }
+  ],
+  "strengths": [
+    "rag_effectiveness: Multi-granularity embeddings implemented",
+    "scalability: 9.0/10 - Excellent",
+    "Comprehensive indexing (9 indexes)"
+  ],
+  "ready_for_production": true,
+  "production_blockers": []
+}

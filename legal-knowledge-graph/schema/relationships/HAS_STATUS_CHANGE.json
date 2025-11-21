@@ -1,0 +1,23 @@
+{
+  "relationship_type": "HAS_STATUS_CHANGE",
+  "description": "Links a case to its status change history",
+  "from_node": ["Case"],
+  "to_node": ["StatusChange"],
+  "properties": {
+    "sequence_number": {
+      "type": "integer",
+      "required": true,
+      "indexed": true,
+      "description": "Order of this status change in the case's history (1 = first change, 2 = second, etc.)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX has_status_change_sequence IF NOT EXISTS FOR ()-[r:HAS_STATUS_CHANGE]-() ON (r.sequence_number)"
+  ],
+  "constraints": []
+}

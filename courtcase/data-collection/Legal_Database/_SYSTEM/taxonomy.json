@@ -1,0 +1,368 @@
+{
+  "taxonomy_version": "1.0",
+  "last_updated": "2025-10-22",
+  "description": "Universal Legal Subject Classification System",
+  "subjects": {
+    "CRIMINAL": {
+      "code": "CRM",
+      "name": "Criminal Law",
+      "description": "All criminal law matters including offenses, procedure, and evidence",
+      "subcategories": {
+        "PEN": {
+          "name": "Penal Code",
+          "keywords": ["penal", "offense", "crime", "punishment", "imprisonment"]
+        },
+        "PRO": {
+          "name": "Criminal Procedure",
+          "keywords": ["procedure", "trial", "arrest", "investigation", "prosecution"]
+        },
+        "EVD": {
+          "name": "Evidence",
+          "keywords": ["evidence", "testimony", "witness", "proof", "admissibility"]
+        },
+        "JUV": {
+          "name": "Juvenile Justice",
+          "keywords": ["juvenile", "minor", "child", "youth"]
+        },
+        "NAR": {
+          "name": "Narcotics",
+          "keywords": ["narcotics", "drugs", "opium", "psychotropic"]
+        },
+        "COR": {
+          "name": "Corruption",
+          "keywords": ["corruption", "bribery", "anti-corruption"]
+        }
+      }
+    },
+    "CIVIL": {
+      "code": "CIV",
+      "name": "Civil Law",
+      "description": "Civil matters including contracts, torts, and civil procedure",
+      "subcategories": {
+        "CPC": {
+          "name": "Civil Procedure",
+          "keywords": ["civil procedure", "suit", "plaint", "decree", "execution"]
+        },
+        "CON": {
+          "name": "Contract",
+          "keywords": ["contract", "agreement", "breach", "specific performance"]
+        },
+        "TOR": {
+          "name": "Tort",
+          "keywords": ["tort", "negligence", "damages", "liability"]
+        },
+        "SUC": {
+          "name": "Succession",
+          "keywords": ["succession", "inheritance", "will", "estate", "probate"]
+        },
+        "TRU": {
+          "name": "Trust",
+          "keywords": ["trust", "trustee", "beneficiary"]
+        }
+      }
+    },
+    "CONSTITUTIONAL": {
+      "code": "CON",
+      "name": "Constitutional Law",
+      "description": "Constitutional matters, fundamental rights, and government structure",
+      "subcategories": {
+        "FUN": {
+          "name": "Fundamental Rights",
+          "keywords": ["fundamental rights", "article 14", "article 19", "article 21", "equality", "freedom"]
+        },
+        "WRI": {
+          "name": "Writs",
+          "keywords": ["writ", "habeas corpus", "mandamus", "certiorari", "prohibition"]
+        },
+        "ELE": {
+          "name": "Elections",
+          "keywords": ["election", "electoral", "voting", "constituency"]
+        },
+        "FED": {
+          "name": "Federalism",
+          "keywords": ["federal", "state", "union", "division of powers"]
+        }
+      }
+    },
+    "PROPERTY": {
+      "code": "PRO",
+      "name": "Property Law",
+      "description": "Real estate, land, and property matters",
+      "subcategories": {
+        "LAN": {
+          "name": "Land",
+          "keywords": ["land", "immovable", "real estate", "property"]
+        },
+        "TEN": {
+          "name": "Tenancy",
+          "keywords": ["tenant", "landlord", "rent", "lease", "eviction"]
+        },
+        "REG": {
+          "name": "Registration",
+          "keywords": ["registration", "deed", "document"]
+        },
+        "ACQ": {
+          "name": "Acquisition",
+          "keywords": ["acquisition", "eminent domain", "compulsory purchase"]
+        }
+      }
+    },
+    "FAMILY": {
+      "code": "FAM",
+      "name": "Family Law",
+      "description": "Marriage, divorce, adoption, and family matters",
+      "subcategories": {
+        "MAR": {
+          "name": "Marriage",
+          "keywords": ["marriage", "matrimonial", "wedding"]
+        },
+        "DIV": {
+          "name": "Divorce",
+          "keywords": ["divorce", "dissolution", "separation"]
+        },
+        "ADO": {
+          "name": "Adoption",
+          "keywords": ["adoption", "guardian", "custody"]
+        },
+        "MAI": {
+          "name": "Maintenance",
+          "keywords": ["maintenance", "alimony", "support"]
+        }
+      }
+    },
+    "COMMERCIAL": {
+      "code": "COM",
+      "name": "Commercial Law",
+      "description": "Business, trade, and commercial transactions",
+      "subcategories": {
+        "CMP": {
+          "name": "Company",
+          "keywords": ["company", "corporation", "shares", "directors"]
+        },
+        "BAN": {
+          "name": "Banking",
+          "keywords": ["bank", "banking", "finance", "credit"]
+        },
+        "INS": {
+          "name": "Insurance",
+          "keywords": ["insurance", "insurer", "policy", "premium"]
+        },
+        "SEC": {
+          "name": "Securities",
+          "keywords": ["securities", "stock", "exchange", "sebi"]
+        },
+        "ARB": {
+          "name": "Arbitration",
+          "keywords": ["arbitration", "arbitrator", "award"]
+        },
+        "INS_BAN": {
+          "name": "Insolvency & Bankruptcy",
+          "keywords": ["insolvency", "bankruptcy", "liquidation", "resolution"]
+        }
+      }
+    },
+    "TAX": {
+      "code": "TAX",
+      "name": "Tax Law",
+      "description": "Taxation, revenue, and customs",
+      "subcategories": {
+        "INC": {
+          "name": "Income Tax",
+          "keywords": ["income tax", "assessment", "deduction"]
+        },
+        "GST": {
+          "name": "GST",
+          "keywords": ["gst", "goods and services tax", "vat"]
+        },
+        "CUS": {
+          "name": "Customs",
+          "keywords": ["customs", "import", "export", "duty"]
+        },
+        "EXC": {
+          "name": "Excise",
+          "keywords": ["excise", "central excise"]
+        }
+      }
+    },
+    "LABOR": {
+      "code": "LAB",
+      "name": "Labor & Employment Law",
+      "description": "Employment, labor rights, and industrial relations",
+      "subcategories": {
+        "IND": {
+          "name": "Industrial Disputes",
+          "keywords": ["industrial disputes", "strike", "lockout", "trade union"]
+        },
+        "WAG": {
+          "name": "Wages",
+          "keywords": ["wages", "minimum wage", "payment of wages"]
+        },
+        "FAC": {
+          "name": "Factories",
+          "keywords": ["factories", "factory", "workplace safety"]
+        },
+        "SOC": {
+          "name": "Social Security",
+          "keywords": ["social security", "provident fund", "pension", "gratuity"]
+        }
+      }
+    },
+    "ENVIRONMENTAL": {
+      "code": "ENV",
+      "name": "Environmental Law",
+      "description": "Environment, pollution, and natural resources",
+      "subcategories": {
+        "POL": {
+          "name": "Pollution",
+          "keywords": ["pollution", "air", "water", "noise"]
+        },
+        "FOR": {
+          "name": "Forest",
+          "keywords": ["forest", "wildlife", "conservation"]
+        },
+        "ENV_PRO": {
+          "name": "Environmental Protection",
+          "keywords": ["environmental protection", "green", "ecology"]
+        }
+      }
+    },
+    "INTELLECTUAL_PROPERTY": {
+      "code": "IP",
+      "name": "Intellectual Property",
+      "description": "Patents, trademarks, copyright, and IP rights",
+      "subcategories": {
+        "PAT": {
+          "name": "Patent",
+          "keywords": ["patent", "invention", "patentee"]
+        },
+        "TRA": {
+          "name": "Trademark",
+          "keywords": ["trademark", "brand", "logo"]
+        },
+        "COP": {
+          "name": "Copyright",
+          "keywords": ["copyright", "author", "literary", "artistic"]
+        },
+        "DES": {
+          "name": "Design",
+          "keywords": ["design", "industrial design"]
+        }
+      }
+    },
+    "ADMINISTRATIVE": {
+      "code": "ADM",
+      "name": "Administrative Law",
+      "description": "Government administration and regulatory matters",
+      "subcategories": {
+        "SER": {
+          "name": "Service Law",
+          "keywords": ["service", "government servant", "civil service", "appointment"]
+        },
+        "REG": {
+          "name": "Regulatory",
+          "keywords": ["regulation", "regulatory", "licensing"]
+        }
+      }
+    },
+    "CONSUMER": {
+      "code": "CNS",
+      "name": "Consumer Protection",
+      "description": "Consumer rights and protection",
+      "subcategories": {
+        "PRO": {
+          "name": "Consumer Protection",
+          "keywords": ["consumer", "consumer protection", "unfair trade"]
+        }
+      }
+    },
+    "INFORMATION_TECHNOLOGY": {
+      "code": "IT",
+      "name": "Information Technology",
+      "description": "IT, cyber law, and digital matters",
+      "subcategories": {
+        "CYB": {
+          "name": "Cyber Law",
+          "keywords": ["cyber", "information technology", "electronic", "digital"]
+        },
+        "DAT": {
+          "name": "Data Protection",
+          "keywords": ["data protection", "privacy", "personal data"]
+        }
+      }
+    },
+    "INTERNATIONAL": {
+      "code": "INT",
+      "name": "International Law",
+      "description": "International treaties, conventions, and cross-border matters",
+      "subcategories": {
+        "TRE": {
+          "name": "Treaties",
+          "keywords": ["treaty", "convention", "international agreement"]
+        },
+        "EXT": {
+          "name": "Extradition",
+          "keywords": ["extradition", "mutual legal assistance"]
+        }
+      }
+    },
+    "HUMAN_RIGHTS": {
+      "code": "HR",
+      "name": "Human Rights",
+      "description": "Human rights and social justice",
+      "subcategories": {
+        "HUM": {
+          "name": "Human Rights",
+          "keywords": ["human rights", "rights commission", "discrimination"]
+        },
+        "WOM": {
+          "name": "Women's Rights",
+          "keywords": ["women", "dowry", "domestic violence"]
+        },
+        "CHI": {
+          "name": "Child Rights",
+          "keywords": ["child rights", "children", "child labor"]
+        }
+      }
+    },
+    "GENERAL": {
+      "code": "GEN",
+      "name": "General/Miscellaneous",
+      "description": "Documents that don't fit other categories",
+      "subcategories": {
+        "MIS": {
+          "name": "Miscellaneous",
+          "keywords": []
+        }
+      }
+    }
+  },
+  "country_specific_mappings": {
+    "IN": {
+      "subjects_priority": ["CONSTITUTIONAL", "CRIMINAL", "CIVIL", "COMMERCIAL", "TAX"],
+      "common_acts": {
+        "Indian Penal Code": "CRIMINAL.PEN",
+        "Code of Criminal Procedure": "CRIMINAL.PRO",
+        "Code of Civil Procedure": "CIVIL.CPC",
+        "Contract Act": "CIVIL.CON",
+        "Income Tax Act": "TAX.INC",
+        "Companies Act": "COMMERCIAL.CMP"
+      }
+    },
+    "BD": {
+      "subjects_priority": ["CRIMINAL", "CIVIL", "COMMERCIAL", "CONSTITUTIONAL", "TAX"],
+      "common_acts": {
+        "Penal Code": "CRIMINAL.PEN",
+        "Criminal Procedure Code": "CRIMINAL.PRO",
+        "Evidence Act": "CRIMINAL.EVD",
+        "Contract Act": "CIVIL.CON"
+      }
+    },
+    "PK": {
+      "subjects_priority": ["CRIMINAL", "CIVIL", "CONSTITUTIONAL", "COMMERCIAL", "TAX"],
+      "common_acts": {
+        "Pakistan Penal Code": "CRIMINAL.PEN",
+        "Criminal Procedure Code": "CRIMINAL.PRO"
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "relationship_type": "HAS_KEYWORD",
+  "description": "A document has an associated keyword for search optimization",
+  "from_node": ["Case", "Statute", "Section", "LegalPrinciple", "LegalIssue"],
+  "to_node": "Keyword",
+  "properties": {
+    "relevance_score": {
+      "type": "float",
+      "required": false,
+      "description": "Relevance score of keyword to document (0-1)"
+    },
+    "frequency": {
+      "type": "integer",
+      "required": false,
+      "description": "Frequency of keyword in document"
+    },
+    "extraction_method": {
+      "type": "string",
+      "required": false,
+      "description": "How keyword was extracted",
+      "examples": ["Manual", "TF-IDF", "NER", "KeyBERT"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX has_keyword_relevance IF NOT EXISTS FOR ()-[r:HAS_KEYWORD]-() ON (r.relevance_score)"
+  ],
+  "constraints": []
+}

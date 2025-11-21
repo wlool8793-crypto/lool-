@@ -1,0 +1,156 @@
+{
+  "label": "Legal_Principle",
+  "description": "Represents a legal principle, doctrine, or maxim established or applied in cases",
+  "required_properties": [
+    {
+      "name": "principle_id",
+      "type": "string",
+      "description": "Unique identifier for the legal principle",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Name of the principle",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "Description/explanation of the principle",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "latin_name",
+      "type": "string",
+      "description": "Latin maxim if applicable (e.g., 'nemo judex in causa sua')"
+    },
+    {
+      "name": "principle_type",
+      "type": "string",
+      "description": "Type (doctrine, maxim, rule, test, standard)"
+    },
+    {
+      "name": "legal_domain",
+      "type": "string[]",
+      "description": "Legal domains where principle applies"
+    },
+    {
+      "name": "jurisdiction",
+      "type": "string[]",
+      "description": "Jurisdictions where recognized"
+    },
+    {
+      "name": "origin",
+      "type": "string",
+      "description": "Origin of the principle (common law, equity, statute)"
+    },
+    {
+      "name": "keywords",
+      "type": "string[]",
+      "description": "Keywords for search"
+    },
+    {
+      "name": "chunk_text",
+      "type": "string",
+      "description": "Preprocessed text for RAG"
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp"
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp"
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')"
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction"
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')"
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)"
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)"
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "fulltext",
+      "name": "principle_fulltext_index",
+      "properties": ["name", "latin_name", "description", "keywords"]
+    },
+    {
+      "type": "vector",
+      "name": "principle_embedding_index",
+      "properties": ["embedding"],
+      "dimensions": 1536,
+      "similarity": "cosine"
+    },
+    {
+      "type": "property",
+      "name": "principle_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "principle_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "principle_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "principle_verification_status_index",
+      "properties": ["verification_status"]
+    }
+  ],
+  "example": {
+    "principle_id": "principle_001",
+    "name": "Natural Justice",
+    "latin_name": "audi alteram partem",
+    "description": "The principle that no person should be judged without a fair hearing in which each party is given the opportunity to respond to the evidence against them.",
+    "principle_type": "doctrine",
+    "legal_domain": ["administrative", "constitutional"],
+    "jurisdiction": ["Bangladesh", "India", "Pakistan"],
+    "origin": "common law",
+    "keywords": ["natural justice", "fair hearing", "audi alteram partem"]
+  }
+}

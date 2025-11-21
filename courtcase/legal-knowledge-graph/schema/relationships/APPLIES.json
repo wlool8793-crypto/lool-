@@ -1,0 +1,29 @@
+{
+  "relationship_type": "APPLIES",
+  "description": "A case applies a legal principle",
+  "from_node": "Case",
+  "to_node": "LegalPrinciple",
+  "properties": {
+    "application_type": {
+      "type": "string",
+      "required": false,
+      "indexed": true,
+      "description": "How principle is applied",
+      "examples": ["Established", "Applied", "Modified", "Rejected", "Questioned"]
+    },
+    "context": {
+      "type": "text",
+      "required": false,
+      "description": "Context of application"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX applies_type IF NOT EXISTS FOR ()-[r:APPLIES]-() ON (r.application_type)"
+  ],
+  "constraints": []
+}

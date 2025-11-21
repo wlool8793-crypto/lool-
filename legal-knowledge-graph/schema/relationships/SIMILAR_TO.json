@@ -1,0 +1,139 @@
+{
+  "relationship_type": "SIMILAR_TO",
+  "description": "Semantic similarity between chunks for RAG lateral context expansion, enabling discovery of related legal concepts and analogous reasoning beyond initial search results",
+  "from_node": "Chunk",
+  "to_node": "Chunk",
+  "properties": {
+    "similarity_score": {
+      "type": "float",
+      "required": true,
+      "indexed": true,
+      "description": "Semantic similarity score (0.0-1.0), typically cosine similarity between embeddings"
+    },
+    "similarity_type": {
+      "type": "string",
+      "required": true,
+      "indexed": true,
+      "description": "Type: semantic, factual, legal_reasoning, precedent_pattern, statutory_interpretation, procedural"
+    },
+    "context_overlap": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether chunks share contextual entities, keywords, or topics"
+    },
+    "shared_entities": {
+      "type": "string[]",
+      "required": false,
+      "description": "Common entities between chunks (judges, cases, statutes, parties)"
+    },
+    "shared_keywords": {
+      "type": "string[]",
+      "required": false,
+      "description": "Common keywords indicating topical similarity"
+    },
+    "shared_legal_issues": {
+      "type": "string[]",
+      "required": false,
+      "description": "Common legal issues or principles discussed"
+    },
+    "computed_at": {
+      "type": "datetime",
+      "required": true,
+      "indexed": true,
+      "description": "Timestamp when similarity was computed"
+    },
+    "computed_by": {
+      "type": "string",
+      "required": true,
+      "description": "Algorithm/model used (e.g., 'cosine-similarity-ada-002', 'cross-encoder-v1')"
+    },
+    "bidirectional": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether similarity is symmetric (typically true for cosine similarity)"
+    },
+    "similarity_rank": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Rank of this similar chunk (1 = most similar, 2 = second most similar, etc.)"
+    },
+    "distance_metric": {
+      "type": "string",
+      "required": false,
+      "description": "Distance metric used: cosine, euclidean, dot_product"
+    },
+    "rag_weight": {
+      "type": "float",
+      "required": false,
+      "description": "Adjusted weight for RAG retrieval combining similarity and trust scores"
+    },
+    "expansion_hop": {
+      "type": "integer",
+      "required": false,
+      "description": "Number of hops from original query result (1 = direct similar, 2 = similar to similar, etc.)"
+    },
+    "validated": {
+      "type": "boolean",
+      "required": false,
+      "description": "Whether similarity has been manually validated"
+    },
+    "validation_feedback": {
+      "type": "string",
+      "required": false,
+      "description": "Human feedback on similarity quality: relevant, partially_relevant, not_relevant"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX similar_to_score IF NOT EXISTS FOR ()-[r:SIMILAR_TO]-() ON (r.similarity_score)",
+    "CREATE INDEX similar_to_type IF NOT EXISTS FOR ()-[r:SIMILAR_TO]-() ON (r.similarity_type)",
+    "CREATE INDEX similar_to_rank IF NOT EXISTS FOR ()-[r:SIMILAR_TO]-() ON (r.similarity_rank)",
+    "CREATE INDEX similar_to_computed IF NOT EXISTS FOR ()-[r:SIMILAR_TO]-() ON (r.computed_at)",
+    "CREATE INDEX similar_to_rag_weight IF NOT EXISTS FOR ()-[r:SIMILAR_TO]-() ON (r.rag_weight)"
+  ],
+  "constraints": [
+    "// Prevent self-similarity loops",
+    "// Note: Neo4j does not support relationship constraints preventing self-loops at schema level",
+    "// Implement this validation at application level: startNode(r) <> endNode(r)"
+  ],
+  "usage_examples": [
+    "// RAG Query: Find similar chunks for lateral context expansion\nMATCH (query_chunk:Chunk {chunk_id: 'bd_2023_sc_001_chunk_003'})\nMATCH (query_chunk)-[s:SIMILAR_TO]->(similar:Chunk)\nWHERE s.similarity_score >= 0.75\n  AND similar.trust_score >= 0.8\n  AND similar.verification_status = 'Verified'\nRETURN similar.chunk_text, similar.chunk_type, s.similarity_score, s.similarity_type\nORDER BY s.similarity_score DESC\nLIMIT 5",
+    "// Multi-hop lateral expansion (find similar to similar)\nMATCH (query_chunk:Chunk {chunk_id: 'bd_2023_sc_001_chunk_003'})\nMATCH path = (query_chunk)-[s1:SIMILAR_TO*1..2]->(expanded:Chunk)\nWHERE ALL(r IN relationships(path) WHERE r.similarity_score >= 0.70)\n  AND expanded.trust_score >= 0.8\nWITH expanded, \n     REDUCE(min_score = 1.0, r IN relationships(path) | \n       CASE WHEN r.similarity_score < min_score THEN r.similarity_score ELSE min_score END\n     ) AS path_min_similarity,\n     length(path) AS hop_count\nRETURN expanded.chunk_text, expanded.chunk_type, path_min_similarity, hop_count\nORDER BY path_min_similarity DESC, hop_count ASC\nLIMIT 10",
+    "// Trust-weighted RAG retrieval combining similarity and trust\nMATCH (query_chunk:Chunk {chunk_id: 'bd_2023_sc_001_chunk_003'})\nMATCH (query_chunk)-[s:SIMILAR_TO]->(similar:Chunk)\nWHERE s.similarity_score >= 0.65\nWITH similar, s,\n     (s.similarity_score * 0.6 + similar.trust_score * 0.3 + similar.confidence_score * 0.1) AS composite_rag_score\nRETURN similar.chunk_text, \n       similar.chunk_type,\n       s.similarity_score,\n       similar.trust_score,\n       composite_rag_score\nORDER BY composite_rag_score DESC\nLIMIT 20",
+    "// Find chunks with specific similarity type and context overlap\nMATCH (c1:Chunk)-[s:SIMILAR_TO]->(c2:Chunk)\nWHERE s.similarity_type = 'legal_reasoning'\n  AND s.context_overlap = true\n  AND s.similarity_score >= 0.80\n  AND size(s.shared_legal_issues) > 0\nRETURN c1.chunk_id, c2.chunk_id, s.shared_legal_issues, s.similarity_score\nORDER BY s.similarity_score DESC",
+    "// Validate similarity quality using human feedback\nMATCH (c1:Chunk)-[s:SIMILAR_TO]->(c2:Chunk)\nWHERE s.validated = true\n  AND s.validation_feedback = 'relevant'\nRETURN s.similarity_type, \n       AVG(s.similarity_score) AS avg_score,\n       COUNT(*) AS validated_count\nGROUP BY s.similarity_type\nORDER BY avg_score DESC"
+  ],
+  "rag_optimization_notes": {
+    "purpose": "Enables lateral context expansion beyond initial vector search results",
+    "use_cases": [
+      "Discovering analogous legal reasoning from different cases",
+      "Finding similar statutory interpretations across jurisdictions",
+      "Expanding context with related legal principles",
+      "Improving recall by exploring similar procedural patterns"
+    ],
+    "implementation_strategy": [
+      "Pre-compute SIMILAR_TO relationships offline using batch embedding similarity",
+      "Store only top-k (e.g., 10-20) most similar chunks per chunk",
+      "Set minimum similarity threshold (e.g., 0.65) to reduce graph density",
+      "Update relationships periodically as new chunks are added",
+      "Use rag_weight for runtime re-ranking combining similarity + trust + authority"
+    ],
+    "query_optimization": [
+      "Use similarity_rank for quick top-k retrieval without sorting",
+      "Leverage composite indexes on (similarity_score, similarity_type)",
+      "Limit multi-hop expansion to 2 hops maximum to prevent combinatorial explosion",
+      "Apply trust_score and verification_status filters early in query",
+      "Consider caching frequently accessed similarity subgraphs"
+    ],
+    "trust_weighted_scoring": {
+      "formula": "rag_weight = α * similarity_score + β * trust_score + γ * confidence_score",
+      "default_weights": "α=0.6, β=0.3, γ=0.1",
+      "rationale": "Balance semantic relevance with data quality and source reliability"
+    }
+  }
+}

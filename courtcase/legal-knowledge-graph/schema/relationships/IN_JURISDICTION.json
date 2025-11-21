@@ -1,0 +1,29 @@
+{
+  "relationship_type": "IN_JURISDICTION",
+  "description": "A case, statute, or court is in a specific jurisdiction",
+  "from_node": ["Case", "Statute", "Court", "Judge", "Lawyer"],
+  "to_node": "Jurisdiction",
+  "properties": {
+    "from_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "Start date of jurisdiction"
+    },
+    "to_date": {
+      "type": "date",
+      "required": false,
+      "indexed": true,
+      "description": "End date of jurisdiction (if changed)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX in_jurisdiction_dates IF NOT EXISTS FOR ()-[r:IN_JURISDICTION]-() ON (r.from_date, r.to_date)"
+  ],
+  "constraints": []
+}

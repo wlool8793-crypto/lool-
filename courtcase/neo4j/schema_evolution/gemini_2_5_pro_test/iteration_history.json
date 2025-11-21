@@ -1,0 +1,19 @@
+[
+  {
+    "iteration": 1,
+    "schema_version": "v1.0",
+    "overall_score": 8.69,
+    "dimension_scores": {
+      "legal_completeness": 9.3,
+      "rag_effectiveness": 10.0,
+      "performance": 10.0,
+      "data_quality": 3.5,
+      "cross_jurisdictional": 8.0,
+      "user_experience": 10.0,
+      "scalability": 10.0,
+      "extensibility": 10.0
+    },
+    "improvements_made": 2,
+    "duration_seconds": 176.024253
+  }
+]

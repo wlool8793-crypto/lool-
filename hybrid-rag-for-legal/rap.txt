@@ -1,0 +1,17 @@
+i went to brain stam a this project act as legal ai engier and data syitice and lawer and use defrent agent one for give proposalin text not code  and anothe agent will evalute and also 
+another lawer agent evalute it according to thewre need 
+
+● I understand you want to brainstorm a hybrid RAG system for legal applications with multiple agent perspectives. Let me clarify your requirements so I can provide the best proposal:
+                                                                                                                                                
+● User answered Claude's questions:
+  ⎿  · What is the primary legal domain and use case for this hybrid RAG system? → Multi-domain
+     · What retrieval strategies should the hybrid RAG system combine? → Vector/Semantic Search, Keyword/BM25, Knowledge Graph, Citation Network
+     · Who are the primary users of this system? → Lawyers/Advocates, Legal Researchers, Paralegals/Clerks, General Public
+     · What scale and data sources are you targeting? → Multi-jurisdiction
+
+● Perfect! Now I'll research hybrid RAG architectures, legal AI systems, and multi-agent frameworks to create a comprehensive proposal for your multi-domain, multi-jurisdiction legal AI system.
+
+● Plan(Research hybrid RAG for legal)
+  ⎿  Done (27 tool uses · 0 tokens · 1m 54s)                                                                                                                                                     
+  ⎿  Weekly limit reached ∙ resets 6pm
+     /upgrade to increase your usage limit.

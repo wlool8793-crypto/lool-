@@ -1,0 +1,155 @@
+{
+  "label": "Lawyer",
+  "description": "Represents a lawyer/advocate who appeared in cases",
+  "required_properties": [
+    {
+      "name": "lawyer_id",
+      "type": "string",
+      "description": "Unique identifier for the lawyer",
+      "constraints": ["UNIQUE", "NOT NULL"]
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Full name of the lawyer",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "source",
+      "type": "string",
+      "description": "Data source (e.g., 'IndianKanoon', 'BDLaws', 'Manual Entry')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_at",
+      "type": "datetime",
+      "description": "Timestamp of data extraction",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "extracted_by",
+      "type": "string",
+      "description": "Extractor identifier (e.g., 'GPT-4', 'Gemini-2.5-Pro', 'Manual')",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "confidence_score",
+      "type": "float",
+      "description": "Extraction confidence score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "description": "Node creation timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "updated_at",
+      "type": "datetime",
+      "description": "Last update timestamp",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "description": "Version number (increments on updates, default: 1)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "trust_score",
+      "type": "float",
+      "description": "Composite trust score (0.0-1.0)",
+      "constraints": ["NOT NULL"]
+    },
+    {
+      "name": "verification_status",
+      "type": "string",
+      "description": "Verification status: Verified, Unverified, Disputed, Deprecated",
+      "constraints": ["NOT NULL"]
+    }
+  ],
+  "optional_properties": [
+    {
+      "name": "designation",
+      "type": "string",
+      "description": "Designation (Senior Advocate, Additional Solicitor General, etc.)"
+    },
+    {
+      "name": "bar_council_registration",
+      "type": "string",
+      "description": "Bar council registration number"
+    },
+    {
+      "name": "jurisdiction",
+      "type": "string",
+      "description": "Primary jurisdiction of practice"
+    },
+    {
+      "name": "specialization",
+      "type": "string[]",
+      "description": "Areas of legal specialization"
+    },
+    {
+      "name": "practicing_since",
+      "type": "date",
+      "description": "Date when started practicing"
+    },
+    {
+      "name": "active",
+      "type": "boolean",
+      "description": "Whether currently active"
+    },
+    {
+      "name": "firm_name",
+      "type": "string",
+      "description": "Name of law firm if applicable"
+    },
+    {
+      "name": "changelog",
+      "type": "list<json>",
+      "description": "Array of change records: [{version, date, changes, updated_by}]"
+    }
+  ],
+  "indexes": [
+    {
+      "type": "fulltext",
+      "name": "lawyer_name_index",
+      "properties": ["name"]
+    },
+    {
+      "type": "property",
+      "name": "lawyer_jurisdiction_index",
+      "properties": ["jurisdiction"]
+    },
+    {
+      "type": "property",
+      "name": "lawyer_source_index",
+      "properties": ["source"]
+    },
+    {
+      "type": "property",
+      "name": "lawyer_extracted_by_index",
+      "properties": ["extracted_by"]
+    },
+    {
+      "type": "property",
+      "name": "lawyer_trust_score_index",
+      "properties": ["trust_score"]
+    },
+    {
+      "type": "property",
+      "name": "lawyer_verification_status_index",
+      "properties": ["verification_status"]
+    }
+  ],
+  "example": {
+    "lawyer_id": "lawyer_bd_001",
+    "name": "Mr. A.F. Hassan Ariff",
+    "designation": "Senior Advocate",
+    "jurisdiction": "Bangladesh",
+    "specialization": ["constitutional law", "civil law"],
+    "practicing_since": "1980-01-01",
+    "active": true
+  }
+}

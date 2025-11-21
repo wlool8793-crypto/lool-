@@ -1,0 +1,62 @@
+{
+  "relationship_type": "CONTAINS",
+  "description": "Hierarchical containment relationship for statutory structures (Statute→Section, Section→SubSection, SubSection→Clause)",
+  "variants": [
+    {
+      "from_node": "Statute",
+      "to_node": "Section",
+      "description": "A statute contains a section"
+    },
+    {
+      "from_node": "Section",
+      "to_node": "SubSection",
+      "description": "A section contains a sub-section (Iteration 3 enhancement)"
+    },
+    {
+      "from_node": "SubSection",
+      "to_node": "Clause",
+      "description": "A sub-section contains a clause (Iteration 3 enhancement)"
+    }
+  ],
+  "properties": {
+    "order": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Order within parent (for sorting)"
+    },
+    "part": {
+      "type": "string",
+      "required": false,
+      "description": "Part/Chapter/Division identifier",
+      "examples": ["Part I", "Chapter III", "Division A"]
+    },
+    "sequence_number": {
+      "type": "integer",
+      "required": false,
+      "indexed": true,
+      "description": "Sequential ordering for proper display"
+    },
+    "hierarchy_level": {
+      "type": "integer",
+      "required": false,
+      "description": "Level in hierarchy (1=Section, 2=SubSection, 3=Clause)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX contains_order IF NOT EXISTS FOR ()-[r:CONTAINS]-() ON (r.order)",
+    "CREATE INDEX contains_sequence IF NOT EXISTS FOR ()-[r:CONTAINS]-() ON (r.sequence_number)",
+    "CREATE INDEX contains_hierarchy IF NOT EXISTS FOR ()-[r:CONTAINS]-() ON (r.hierarchy_level)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Statute to Section\nMATCH (s:Statute {statute_id: 'bd_pc'})-[c:CONTAINS]->(sec:Section)\nRETURN sec.section_number, c.order\nORDER BY c.order",
+    "// Section to SubSection (new in Iteration 3)\nMATCH (sec:Section {section_id: 'section_bd_pc_302'})-[c:CONTAINS]->(ss:SubSection)\nRETURN ss.subsection_number, c.sequence_number\nORDER BY c.sequence_number",
+    "// SubSection to Clause (new in Iteration 3)\nMATCH (ss:SubSection)-[c:CONTAINS]->(cl:Clause)\nWHERE ss.subsection_id = 'subsection_bd_pc_302_1'\nRETURN cl.clause_number, cl.text\nORDER BY c.sequence_number"
+  ]
+}

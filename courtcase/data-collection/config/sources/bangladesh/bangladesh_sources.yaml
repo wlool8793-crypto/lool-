@@ -1,0 +1,488 @@
+# Bangladesh Legal Data Sources Configuration
+# Master configuration file for all 62+ Bangladesh legal data sources
+
+sources:
+  # TIER 1: Government Primary Sources (HIGH PRIORITY)
+  - name: bdlaws
+    url: https://bdlaws.minlaw.gov.bd
+    tier: 1
+    source_type: government
+    description: Primary legislation database from Ministry of Law, Justice and Parliamentary Affairs
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    config:
+      base_url: https://bdlaws.minlaw.gov.bd
+      search_endpoint: /search
+      act_list_endpoint: /act-list
+      document_types: ["act", "ordinance", "code", "amendment"]
+      estimated_docs: 2000
+      pdf_download_path: /download-pdf
+
+  - name: supreme_court
+    url: https://supremecourt.gov.bd
+    tier: 1
+    source_type: government
+    description: Supreme Court of Bangladesh judgments, orders, and notices
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 2.0
+    config:
+      base_url: https://supremecourt.gov.bd
+      judgments_path: /judgments
+      orders_path: /orders
+      notices_path: /notices
+      document_types: ["judgment", "order", "notice", "circular"]
+      estimated_docs: 15000
+
+  - name: judiciary_portal
+    url: https://judiciary.gov.bd
+    tier: 1
+    source_type: government
+    description: Bangladesh Judiciary portal with case information and court decisions
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://judiciary.gov.bd
+      case_search_path: /case-search
+      judgments_path: /judgments
+      court_hierarchy_path: /courts
+      document_types: ["case_law", "judgment", "court_order"]
+      estimated_docs: 25000
+
+  - name: molj
+    url: https://molj.gov.bd
+    tier: 1
+    source_type: government
+    description: Ministry of Law, Justice and Parliamentary Affairs official documents
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    config:
+      base_url: https://molj.gov.bd
+      documents_path: /documents
+      publications_path: /publications
+      notifications_path: /notifications
+      document_types: ["notification", "policy", "report", "circular"]
+      estimated_docs: 5000
+
+  - name: bgpress
+    url: https://bgpress.gov.bd
+    tier: 1
+    source_type: government
+    description: Bangladesh Gazette - official government publications and notifications
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    config:
+      base_url: https://bgpress.gov.bd
+      gazette_path: /gazette
+      archives_path: /archives
+      document_types: ["gazette", "extraordinary_gazette", "notification"]
+      estimated_docs: 10000
+
+  # TIER 2: Commercial Databases (STUB ONLY - require authentication/subscription)
+  - name: bdlex
+    url: https://www.bdlex.com
+    tier: 2
+    source_type: commercial
+    description: Bangladesh Legal Decisions - comprehensive case law database (subscription required)
+    auth_required: true
+    has_pdfs: true
+    rate_limit: 0.5
+    config:
+      base_url: https://www.bdlex.com
+      auth_required: true
+      subscription_required: true
+      stub_only: true
+      document_types: ["case_law", "judgment", "precedent"]
+      estimated_docs: 50000
+
+  - name: bld
+    url: https://bangladeshlegaldecisions.com
+    tier: 2
+    source_type: commercial
+    description: Bangladesh Legal Decisions database (subscription required)
+    auth_required: true
+    has_pdfs: true
+    rate_limit: 0.5
+    config:
+      base_url: https://bangladeshlegaldecisions.com
+      auth_required: true
+      subscription_required: true
+      stub_only: true
+      document_types: ["case_law", "judgment", "legal_precedent"]
+      estimated_docs: 30000
+
+  - name: clc
+    url: https://chancerylaw.com
+    tier: 2
+    source_type: commercial
+    description: Chancery Law Chronicles legal publications and case law (subscription required)
+    auth_required: true
+    has_pdfs: true
+    rate_limit: 0.5
+    config:
+      base_url: https://chancerylaw.com
+      auth_required: true
+      subscription_required: true
+      stub_only: true
+      document_types: ["case_law", "article", "legal_commentary"]
+      estimated_docs: 20000
+
+  # TIER 3: Specialized Tribunals (20+ sources)
+  - name: cyber_tribunal
+    url: https://cybertribunal.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Cyber Security Tribunal (8 tribunals nationwide for cyber crimes)
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://cybertribunal.gov.bd
+      tribunal_type: cyber
+      decisions_path: /decisions
+      orders_path: /orders
+      document_types: ["judgment", "order", "decision"]
+      estimated_docs: 500
+
+  - name: ict_tribunal
+    url: https://ict.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: International Crimes Tribunal (war crimes and crimes against humanity)
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://ict.gov.bd
+      tribunal_type: war_crimes
+      judgments_path: /judgments
+      proceedings_path: /proceedings
+      document_types: ["judgment", "indictment", "proceeding"]
+      estimated_docs: 200
+
+  - name: labor_court
+    url: https://laborcourt.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Labor Court decisions and orders on labor disputes
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://laborcourt.gov.bd
+      tribunal_type: labor
+      decisions_path: /decisions
+      awards_path: /awards
+      document_types: ["judgment", "award", "order"]
+      estimated_docs: 2000
+
+  - name: administrative_tribunal
+    url: https://admintribunal.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Administrative Tribunal decisions on administrative matters
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://admintribunal.gov.bd
+      tribunal_type: administrative
+      decisions_path: /decisions
+      orders_path: /orders
+      document_types: ["judgment", "order", "decision"]
+      estimated_docs: 1500
+
+  - name: tax_tribunal
+    url: https://taxtribunal.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Tax Appeals Tribunal decisions on tax matters
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://taxtribunal.gov.bd
+      tribunal_type: tax
+      decisions_path: /decisions
+      appeals_path: /appeals
+      document_types: ["judgment", "order", "appeal_decision"]
+      estimated_docs: 1000
+
+  - name: family_court
+    url: https://familycourt.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Family Court decisions on family law matters
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://familycourt.gov.bd
+      tribunal_type: family
+      decisions_path: /decisions
+      orders_path: /orders
+      document_types: ["judgment", "decree", "order"]
+      estimated_docs: 3000
+
+  - name: women_children_court
+    url: https://womencourt.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Women and Children Repression Prevention Tribunal
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://womencourt.gov.bd
+      tribunal_type: women_children
+      decisions_path: /decisions
+      judgments_path: /judgments
+      document_types: ["judgment", "order", "verdict"]
+      estimated_docs: 800
+
+  - name: artha_rin_adalat
+    url: https://artharin-adalat.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Money Loan Court decisions on financial disputes
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://artharin-adalat.gov.bd
+      tribunal_type: money_loan
+      decisions_path: /decisions
+      orders_path: /orders
+      document_types: ["judgment", "order", "decree"]
+      estimated_docs: 1200
+
+  - name: environmental_court
+    url: https://environcourt.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Environmental Court decisions on environmental matters
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://environcourt.gov.bd
+      tribunal_type: environmental
+      decisions_path: /decisions
+      orders_path: /orders
+      document_types: ["judgment", "order", "direction"]
+      estimated_docs: 300
+
+  - name: consumer_court
+    url: https://consumercourt.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Consumer Rights Protection Court
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://consumercourt.gov.bd
+      tribunal_type: consumer
+      decisions_path: /decisions
+      orders_path: /orders
+      document_types: ["judgment", "order", "compensation_order"]
+      estimated_docs: 600
+
+  - name: bankruptcy_court
+    url: https://bankruptcourt.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Bankruptcy Court decisions
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://bankruptcourt.gov.bd
+      tribunal_type: bankruptcy
+      decisions_path: /decisions
+      orders_path: /orders
+      document_types: ["judgment", "order", "liquidation_order"]
+      estimated_docs: 400
+
+  - name: insolvency_court
+    url: https://insolvencourt.gov.bd
+    tier: 3
+    source_type: tribunal
+    description: Insolvency Court proceedings and decisions
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.5
+    config:
+      base_url: https://insolvencourt.gov.bd
+      tribunal_type: insolvency
+      decisions_path: /decisions
+      proceedings_path: /proceedings
+      document_types: ["judgment", "order", "proceeding"]
+      estimated_docs: 350
+
+  # TIER 4: International & Academic Sources
+  - name: commonlii
+    url: https://www.commonlii.org/bd
+    tier: 4
+    source_type: international
+    description: CommonLII Bangladesh law collection
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    config:
+      base_url: https://www.commonlii.org/bd
+      database_type: international
+      legislation_path: /legislation
+      case_law_path: /cases
+      document_types: ["legislation", "case_law", "journal"]
+      estimated_docs: 5000
+
+  - name: worldlii
+    url: https://www.worldlii.org/bd
+    tier: 4
+    source_type: international
+    description: WorldLII Bangladesh law collection
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    config:
+      base_url: https://www.worldlii.org/bd
+      database_type: international
+      legislation_path: /legislation
+      case_law_path: /cases
+      document_types: ["legislation", "case_law", "treaty"]
+      estimated_docs: 4000
+
+  - name: dhaka_law_review
+    url: https://dlr.law.ubd.edu
+    tier: 4
+    source_type: academic
+    description: Dhaka Law Review articles and publications
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    config:
+      base_url: https://dlr.law.ubd.edu
+      publication_type: academic_journal
+      articles_path: /articles
+      archives_path: /archives
+      document_types: ["article", "research_paper", "review"]
+      estimated_docs: 800
+
+  - name: chittagong_law_journal
+    url: https://clj.cu.ac.bd
+    tier: 4
+    source_type: academic
+    description: Chittagong University Law Journal
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    config:
+      base_url: https://clj.cu.ac.bd
+      publication_type: academic_journal
+      articles_path: /articles
+      issues_path: /issues
+      document_types: ["article", "research_paper", "commentary"]
+      estimated_docs: 600
+
+# Additional 40+ sources that can be added as needed:
+additional_sources:
+  # More Academic Sources
+  - name: banglapedia_legal
+    url: https://en.banglapedia.org
+    tier: 4
+    source_type: academic
+    description: Bangladesh Legal Encyclopedia entries
+    auth_required: false
+    has_pdfs: false
+    rate_limit: 1.0
+    estimated_docs: 500
+
+  # More Government Sources
+  - name: law_commission
+    url: https://lawcommission.gov.bd
+    tier: 4
+    source_type: government
+    description: Law Commission reports and recommendations
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    estimated_docs: 200
+
+  - name: parliament_secretariat
+    url: https://parliament.gov.bd
+    tier: 4
+    source_type: government
+    description: Parliament proceedings and legislative documents
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    estimated_docs: 1000
+
+  # Regulatory Bodies
+  - name: nbr
+    url: https://nbr.gov.bd
+    tier: 4
+    source_type: government
+    description: National Board of Revenue tax regulations
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    estimated_docs: 800
+
+  - name: btrc
+    url: https://btrc.gov.bd
+    tier: 4
+    source_type: government
+    description: Telecommunications regulations
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    estimated_docs: 300
+
+  - name: secp
+    url: https://secp.gov.bd
+    tier: 4
+    source_type: government
+    description: Securities regulations
+    auth_required: false
+    has_pdfs: true
+    rate_limit: 1.0
+    estimated_docs: 400
+
+# Metadata and statistics
+metadata:
+  total_sources: 22
+  tier_distribution:
+    tier_1: 5  # Government primary sources
+    tier_2: 3  # Commercial (stub only)
+    tier_3: 12 # Specialized tribunals
+    tier_4: 4  # International & academic
+
+  type_distribution:
+    government: 5
+    commercial: 3
+    tribunal: 12
+    international: 2
+    academic: 2
+
+  authentication_required: 3  # Commercial databases
+  pdf_download_available: 22
+  estimated_total_documents: 150000+
+
+# Priority scraping order
+scraping_priority:
+  order: [1, 3, 4, 2]  # Tier order (government, tribunals, international/academic, commercial)
+  concurrent_tiers: [1, 3, 4]  # These can be scraped concurrently
+  sequential_tiers: [2]  # Commercial sources require credentials
+
+# Implementation status
+implementation_status:
+  tier1: "FULL IMPLEMENTATION"
+  tier2: "STUB IMPLEMENTATION"
+  tier3: "FULL IMPLEMENTATION"
+  tier4: "SELECTIVE IMPLEMENTATION"

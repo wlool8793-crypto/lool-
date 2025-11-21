@@ -1,0 +1,37 @@
+{
+  "relationship_type": "AUTHORED",
+  "description": "A judge authored a judicial opinion",
+  "from_node": "Judge",
+  "to_node": "Opinion",
+  "properties": {
+    "authorship_type": {
+      "type": "string",
+      "required": false,
+      "description": "Type of authorship: primary, co-author, joined"
+    },
+    "contribution": {
+      "type": "string",
+      "required": false,
+      "description": "Description of judge's contribution"
+    },
+    "joined_date": {
+      "type": "date",
+      "required": false,
+      "description": "Date when judge joined the opinion (if joining later)"
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX authored_type IF NOT EXISTS FOR ()-[r:AUTHORED]-() ON (r.authorship_type)"
+  ],
+  "constraints": [],
+  "usage_examples": [
+    "// Find all opinions authored by a judge\nMATCH (j:Judge {name: 'Justice Rahman'})-[r:AUTHORED]->(o:Opinion)\nRETURN o.opinion_type, o.case_id, r.authorship_type",
+    "// Find judges who authored dissenting opinions\nMATCH (j:Judge)-[:AUTHORED]->(o:Opinion)\nWHERE o.opinion_type = 'Dissenting'\nRETURN j.name, COUNT(o) AS dissent_count\nORDER BY dissent_count DESC",
+    "// Judicial philosophy analysis: judge's opinion patterns\nMATCH (j:Judge {judge_id: 'judge_bd_001'})-[:AUTHORED]->(o:Opinion)<-[:HAS_OPINION]-(c:Case)\nWHERE c.primary_domain = 'Constitutional'\nRETURN o.opinion_type, COUNT(*) AS count"
+  ]
+}

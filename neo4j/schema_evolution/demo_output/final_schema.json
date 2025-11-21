@@ -1,0 +1,325 @@
+{
+  "version": "v2.0",
+  "iteration": 2,
+  "nodes": [
+    {
+      "label": "Case",
+      "properties": {
+        "citation": "string",
+        "title": "string",
+        "date": "datetime",
+        "jurisdiction": "string",
+        "case_type": "string",
+        "full_text": "string",
+        "summary": "string",
+        "embedding": "vector(1536)",
+        "trust_score": "float",
+        "source": "string",
+        "extracted_at": "datetime",
+        "version": "integer",
+        "updated_at": "datetime"
+      },
+      "description": "Legal case from Bangladesh courts"
+    },
+    {
+      "label": "Statute",
+      "properties": {
+        "statute_id": "string",
+        "title": "string",
+        "enacted_date": "date",
+        "jurisdiction": "string",
+        "full_text": "string",
+        "source": "string",
+        "version": "integer"
+      },
+      "description": "Legal statute like CPC 1908"
+    },
+    {
+      "label": "Section",
+      "properties": {
+        "section_id": "string",
+        "section_number": "string",
+        "title": "string",
+        "full_text": "string",
+        "part": "string",
+        "embedding": "vector(1536)",
+        "source": "string"
+      },
+      "description": "Individual section of a statute"
+    },
+    {
+      "label": "Judge",
+      "properties": {
+        "judge_id": "string",
+        "name": "string",
+        "court": "string",
+        "appointment_date": "date"
+      },
+      "description": "Judge who decided cases"
+    },
+    {
+      "label": "Court",
+      "properties": {
+        "court_id": "string",
+        "name": "string",
+        "jurisdiction": "string",
+        "level": "string"
+      },
+      "description": "Court where cases are heard"
+    },
+    {
+      "label": "Party",
+      "properties": {
+        "party_id": "string",
+        "name": "string",
+        "role": "string"
+      },
+      "description": "Party to a legal case"
+    },
+    {
+      "label": "Principle",
+      "properties": {
+        "principle_id": "string",
+        "name": "string",
+        "description": "string",
+        "domain": "string"
+      },
+      "description": "Legal principle or doctrine"
+    },
+    {
+      "label": "Chunk",
+      "properties": {
+        "chunk_id": "string",
+        "text": "string",
+        "embedding": "vector(1536)",
+        "position": "integer",
+        "relevance_score": "float",
+        "context": "string"
+      },
+      "description": "Text chunk for RAG retrieval"
+    },
+    {
+      "label": "Appeal",
+      "properties": {
+        "appeal_id": "string",
+        "case_id": "string",
+        "appeal_date": "date",
+        "status": "string",
+        "court": "string"
+      },
+      "description": "Appeal filed against a case decision"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "CITES_PRECEDENT",
+      "from": "Case",
+      "to": "Case",
+      "properties": {
+        "cited_for": "string",
+        "weight": "float"
+      }
+    },
+    {
+      "type": "OVERRULES",
+      "from": "Case",
+      "to": "Case",
+      "properties": {}
+    },
+    {
+      "type": "AFFIRMS",
+      "from": "Case",
+      "to": "Case",
+      "properties": {}
+    },
+    {
+      "type": "DISTINGUISHES",
+      "from": "Case",
+      "to": "Case",
+      "properties": {
+        "reason": "string"
+      }
+    },
+    {
+      "type": "APPLIES_SECTION",
+      "from": "Case",
+      "to": "Section",
+      "properties": {}
+    },
+    {
+      "type": "PART_OF",
+      "from": "Section",
+      "to": "Statute",
+      "properties": {}
+    },
+    {
+      "type": "DECIDED_BY",
+      "from": "Case",
+      "to": "Judge",
+      "properties": {}
+    },
+    {
+      "type": "BEFORE_COURT",
+      "from": "Case",
+      "to": "Court",
+      "properties": {}
+    },
+    {
+      "type": "PETITIONER",
+      "from": "Party",
+      "to": "Case",
+      "properties": {}
+    },
+    {
+      "type": "RESPONDENT",
+      "from": "Party",
+      "to": "Case",
+      "properties": {}
+    },
+    {
+      "type": "ESTABLISHES",
+      "from": "Case",
+      "to": "Principle",
+      "properties": {}
+    },
+    {
+      "type": "CHUNK_OF",
+      "from": "Chunk",
+      "to": "Case",
+      "properties": {
+        "position": "integer"
+      }
+    },
+    {
+      "type": "REFERENCES",
+      "from": "Chunk",
+      "to": "Section",
+      "properties": {}
+    },
+    {
+      "type": "APPEALS",
+      "from": "Appeal",
+      "to": "Case",
+      "properties": {}
+    }
+  ],
+  "indexes": [
+    {
+      "type": "composite",
+      "node_label": "Case",
+      "properties": [
+        "jurisdiction",
+        "date",
+        "case_type"
+      ],
+      "name": "case_jurisdiction_idx"
+    },
+    {
+      "type": "composite",
+      "node_label": "Section",
+      "properties": [
+        "statute",
+        "section_number"
+      ],
+      "name": "section_statute_idx"
+    },
+    {
+      "type": "vector",
+      "node_label": "Case",
+      "property": "embedding",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "name": "case_embedding_idx"
+    },
+    {
+      "type": "vector",
+      "node_label": "Section",
+      "property": "embedding",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "name": "section_embedding_idx"
+    },
+    {
+      "type": "vector",
+      "node_label": "Chunk",
+      "property": "embedding",
+      "dimensions": 1536,
+      "similarity": "cosine",
+      "name": "chunk_embedding_idx"
+    },
+    {
+      "type": "fulltext",
+      "node_label": "Case",
+      "properties": [
+        "title",
+        "summary",
+        "full_text"
+      ],
+      "name": "case_fulltext_idx"
+    },
+    {
+      "type": "fulltext",
+      "node_label": "Section",
+      "properties": [
+        "title",
+        "full_text"
+      ],
+      "name": "section_fulltext_idx"
+    },
+    {
+      "type": "single",
+      "node_label": "Case",
+      "property": "citation",
+      "unique": true,
+      "name": "case_citation_idx"
+    },
+    {
+      "type": "single",
+      "node_label": "Case",
+      "property": "trust_score",
+      "unique": false,
+      "name": "case_trust_idx"
+    }
+  ],
+  "constraints": [
+    {
+      "type": "uniqueness",
+      "node_label": "Case",
+      "property": "citation",
+      "name": "case_citation_unique"
+    },
+    {
+      "type": "existence",
+      "node_label": "Case",
+      "property": "trust_score",
+      "name": "case_trust_required"
+    },
+    {
+      "type": "uniqueness",
+      "node_label": "Section",
+      "property": "section_id",
+      "name": "section_id_unique"
+    },
+    {
+      "type": "existence",
+      "node_label": "Section",
+      "property": "source",
+      "name": "section_source_required"
+    }
+  ],
+  "rag_configuration": {
+    "chunk_size": 512,
+    "chunk_overlap": 50,
+    "embedding_model": "text-embedding-3-large",
+    "retrieval_strategy": "hybrid"
+  },
+  "changes_from_previous": [
+    "Initial schema design"
+  ],
+  "design_rationale": {
+    "legal_design": "8 entities covering Bangladesh legal system",
+    "rag_design": "Multi-granularity embeddings with 3 vector indexes",
+    "performance": "9 indexes for query optimization",
+    "quality": "4 constraints ensuring data integrity"
+  }
+}

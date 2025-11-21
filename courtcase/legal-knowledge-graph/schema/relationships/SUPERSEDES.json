@@ -1,0 +1,29 @@
+{
+  "relationship_type": "SUPERSEDES",
+  "description": "One version supersedes another (for temporal versioning)",
+  "from_node": ["Statute", "Section"],
+  "to_node": ["Statute", "Section"],
+  "properties": {
+    "supersede_date": {
+      "type": "date",
+      "required": true,
+      "indexed": true,
+      "description": "Date when superseding took effect"
+    },
+    "reason": {
+      "type": "string",
+      "required": false,
+      "description": "Reason for superseding",
+      "examples": ["Amendment", "Repeal", "Replacement"]
+    },
+    "created_at": {
+      "type": "datetime",
+      "required": true,
+      "description": "Timestamp of relationship creation"
+    }
+  },
+  "indexes": [
+    "CREATE INDEX supersedes_date IF NOT EXISTS FOR ()-[r:SUPERSEDES]-() ON (r.supersede_date)"
+  ],
+  "constraints": []
+}

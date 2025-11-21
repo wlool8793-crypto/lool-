@@ -1,0 +1,161 @@
+{
+  "evaluation_id": "88078ad9-41ae-4906-b7dd-0c9a7bc25efc",
+  "schema_version": "v1.0",
+  "timestamp": "2025-11-10T17:49:45.204321",
+  "overall_score": 8.86,
+  "dimension_scores": {
+    "legal_completeness": {
+      "score": 9.6,
+      "max_score": 10.0,
+      "details": {
+        "entity_coverage": "100.0%",
+        "relationship_coverage": "88.9%",
+        "present_entities": 19,
+        "present_relationships": 22
+      },
+      "missing_components": [
+        "REL:DEFINES",
+        "REL:APPLIES_CONCEPT"
+      ],
+      "strengths": [
+        "Good entity coverage: 100%",
+        "Good relationship coverage: 89%"
+      ]
+    },
+    "rag_effectiveness": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "has_chunk_entity": true,
+        "vector_indexes": 6,
+        "rag_relationships": 3,
+        "multi_granularity": true,
+        "rag_config": true
+      },
+      "missing_components": [],
+      "strengths": [
+        "All 6 vector indexes present",
+        "Multi-granularity embeddings implemented"
+      ]
+    },
+    "performance": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "total_indexes": 15,
+        "composite": 3,
+        "single": 4,
+        "fulltext": 2,
+        "vector": 6
+      },
+      "missing_components": [],
+      "strengths": [
+        "3 composite indexes for common queries",
+        "2 full-text indexes"
+      ]
+    },
+    "data_quality": {
+      "score": 3.3,
+      "max_score": 10.0,
+      "details": {
+        "provenance_coverage": "3/21",
+        "versioning_coverage": "5/21",
+        "trust_coverage": "2/21",
+        "constraints": 7
+      },
+      "missing_components": [
+        "Provenance tracking (only 3/21 nodes)",
+        "Versioning (only 5/21 nodes)",
+        "Trust scoring (only 2/21 nodes)"
+      ],
+      "strengths": [
+        "7 constraints for data integrity"
+      ]
+    },
+    "cross_jurisdictional": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "has_jurisdiction": true,
+        "has_court": true,
+        "has_cross_ref": false
+      },
+      "missing_components": [
+        "Cross-reference relationships between jurisdictions"
+      ],
+      "strengths": [
+        "Jurisdiction tracking present"
+      ]
+    },
+    "user_experience": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "clear_names": "21/21",
+        "has_descriptions": "21/21"
+      },
+      "missing_components": [],
+      "strengths": [
+        "Clear, concise entity naming",
+        "Good documentation coverage"
+      ]
+    },
+    "scalability": {
+      "score": 10.0,
+      "max_score": 10.0,
+      "details": {
+        "indexes": 15,
+        "has_partitioning_hints": true
+      },
+      "missing_components": [],
+      "strengths": [
+        "Comprehensive indexing (15 indexes)"
+      ]
+    },
+    "extensibility": {
+      "score": 9.0,
+      "max_score": 10.0,
+      "details": {
+        "has_versioning": true,
+        "has_metadata": false
+      },
+      "missing_components": [],
+      "strengths": [
+        "Versioning support for schema evolution"
+      ]
+    }
+  },
+  "critical_improvements": [
+    {
+      "priority": "HIGH",
+      "dimension": "data_quality",
+      "issue": "Missing: Provenance tracking (only 3/21 nodes)",
+      "impact": "Current score: 3.3/10, blocking production readiness",
+      "suggestion": "Add Provenance tracking (only 3/21 nodes) to improve data_quality"
+    },
+    {
+      "priority": "HIGH",
+      "dimension": "data_quality",
+      "issue": "Missing: Versioning (only 5/21 nodes)",
+      "impact": "Current score: 3.3/10, blocking production readiness",
+      "suggestion": "Add Versioning (only 5/21 nodes) to improve data_quality"
+    }
+  ],
+  "strengths": [
+    "legal_completeness: 9.6/10 - Excellent",
+    "Good entity coverage: 100%",
+    "Good relationship coverage: 89%",
+    "rag_effectiveness: 10.0/10 - Excellent",
+    "All 6 vector indexes present",
+    "Multi-granularity embeddings implemented",
+    "performance: 10.0/10 - Excellent",
+    "3 composite indexes for common queries",
+    "2 full-text indexes",
+    "7 constraints for data integrity"
+  ],
+  "ready_for_production": false,
+  "production_blockers": [
+    "Overall score 8.9 is below 9.0 threshold",
+    "data_quality score 3.3 is below 8.0 threshold"
+  ]
+}
