@@ -1,0 +1,166 @@
+# Party name patterns for Legal RAG Extraction System
+# Version: 1.0
+# Last Updated: 2025-01-22
+
+# Versus patterns (different variations)
+versus_patterns:
+  - pattern: '(.+?)\s+v\.?\s+(.+?)(?:\s|$|\.)'
+    description: "A v. B (most common)"
+    confidence: 0.95
+
+  - pattern: '(.+?)\s+vs\.?\s+(.+?)(?:\s|$|\.)'
+    description: "A vs. B"
+    confidence: 0.95
+
+  - pattern: '(.+?)\s+versus\s+(.+?)(?:\s|$|\.)'
+    description: "A versus B"
+    confidence: 0.95
+
+  - pattern: '(.+?)\s+V/s\.?\s+(.+?)(?:\s|$|\.)'
+    description: "A V/s B (Indian format)"
+    confidence: 0.90
+
+# Party type labels
+party_labels:
+  petitioner:
+    - "Petitioner"
+    - "Petitioners"
+    - "Appellant"
+    - "Appellants"
+    - "Plaintiff"
+    - "Plaintiffs"
+    - "Applicant"
+    - "Applicants"
+
+  respondent:
+    - "Respondent"
+    - "Respondents"
+    - "Defendant"
+    - "Defendants"
+    - "Opposite Party"
+    - "Opposite Parties"
+
+# Special parties (government entities)
+special_parties:
+  bangladesh:
+    - pattern: 'State of Bangladesh'
+      abbr: 'StateBD'
+      type: 'government'
+
+    - pattern: 'Government of Bangladesh'
+      abbr: 'GovBD'
+      type: 'government'
+
+    - pattern: 'Secretary,?\s+(.+?)\s+Ministry'
+      abbr: 'SecMin'
+      type: 'government_official'
+
+  india:
+    - pattern: 'State of (.+)'
+      abbr: 'State{state}'
+      type: 'government'
+
+    - pattern: 'Union of India'
+      abbr: 'UOI'
+      type: 'government'
+
+    - pattern: 'Government of India'
+      abbr: 'GOI'
+      type: 'government'
+
+  pakistan:
+    - pattern: 'Islamic Republic of Pakistan'
+      abbr: 'IRP'
+      type: 'government'
+
+    - pattern: 'Government of Pakistan'
+      abbr: 'GovPK'
+      type: 'government'
+
+# Titles to remove from party names
+titles_to_remove:
+  - 'Mr\.'
+  - 'Mrs\.'
+  - 'Ms\.'
+  - 'Miss'
+  - 'Dr\.'
+  - 'Prof\.'
+  - 'Md\.'
+  - 'Mst\.'
+  - 'Smt\.'
+  - 'Shri'
+  - 'Sheikh'
+  - 'Haji'
+  - 'Begum'
+  - 'Late'
+  - 'Deceased'
+  - 'Through'
+  - 'Rep\. by'
+  - 'Represented by'
+
+# Common party name patterns
+party_name_patterns:
+  individual:
+    pattern: '([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)'
+    description: "Individual name (capitalized words)"
+
+  company:
+    pattern: '(.+?)\s+(?:Ltd\.|Limited|Pvt\.|Private|Inc\.|Corporation|Co\.|Company)'
+    description: "Company name with suffix"
+
+  organization:
+    pattern: '(.+?)\s+(?:Association|Society|Trust|Foundation|Council|Board|Commission)'
+    description: "Organization name with suffix"
+
+# Abbreviation rules
+abbreviation_rules:
+  # Remove titles
+  remove_titles: true
+
+  # Keep last name for individuals
+  individual_format: 'last_name'
+
+  # Shorten "State of X" to "StateX"
+  state_format: 'State{code}'
+
+  # Company abbreviations
+  company_suffixes:
+    'Limited': 'Ltd'
+    'Private Limited': 'PvtLtd'
+    'Corporation': 'Corp'
+    'Company': 'Co'
+    'Incorporated': 'Inc'
+
+# Multiple parties handling
+multiple_parties:
+  separator_patterns:
+    - '&'
+    - 'and'
+    - 'Ors\.'
+    - 'Others'
+    - 'Anr\.'
+    - 'Another'
+
+  max_parties: 5  # Extract up to 5 parties per side
+
+# Confidence scoring
+confidence_rules:
+  high:
+    score: 0.95
+    conditions:
+      - "Clear versus pattern"
+      - "Both parties identified"
+      - "Standard format"
+
+  medium:
+    score: 0.85
+    conditions:
+      - "Versus pattern found"
+      - "Parties extracted"
+      - "Minor formatting issues"
+
+  low:
+    score: 0.70
+    conditions:
+      - "Parties found via labels"
+      - "Some ambiguity"

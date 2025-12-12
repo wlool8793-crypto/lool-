@@ -1,0 +1,366 @@
+# Legal terms dictionary for Legal RAG Extraction System
+# Version: 1.0
+# Last Updated: 2025-01-22
+
+# Legal term categories
+categories:
+  criminal_law:
+    weight: 1.5  # Boost weight for legal terms
+    terms:
+      - murder
+      - manslaughter
+      - culpable homicide
+      - assault
+      - battery
+      - theft
+      - robbery
+      - burglary
+      - fraud
+      - cheating
+      - embezzlement
+      - forgery
+      - perjury
+      - contempt
+      - sedition
+      - defamation
+      - libel
+      - slander
+      - rape
+      - sexual assault
+      - kidnapping
+      - abduction
+      - conspiracy
+      - attempt
+      - abetment
+      - criminal negligence
+      - mens rea
+      - actus reus
+
+  civil_law:
+    weight: 1.5
+    terms:
+      - contract
+      - breach
+      - damages
+      - compensation
+      - tort
+      - negligence
+      - nuisance
+      - trespass
+      - defamation
+      - injunction
+      - specific performance
+      - rescission
+      - restitution
+      - indemnity
+      - guarantee
+      - mortgage
+      - lease
+      - easement
+      - trust
+      - fiduciary
+      - partnership
+      - corporation
+      - arbitration
+      - mediation
+
+  constitutional_law:
+    weight: 1.5
+    terms:
+      - constitution
+      - fundamental rights
+      - directive principles
+      - judicial review
+      - writ
+      - habeas corpus
+      - mandamus
+      - certiorari
+      - prohibition
+      - quo warranto
+      - ultra vires
+      - separation of powers
+      - federalism
+      - amendment
+      - emergency
+      - ordinance
+      - proclamation
+
+  procedural_terms:
+    weight: 1.3
+    terms:
+      - plaintiff
+      - defendant
+      - petitioner
+      - respondent
+      - appellant
+      - applicant
+      - prosecution
+      - defense
+      - witness
+      - evidence
+      - testimony
+      - affidavit
+      - deposition
+      - examination
+      - cross-examination
+      - summons
+      - warrant
+      - bail
+      - custody
+      - remand
+      - appeal
+      - revision
+      - review
+      - jurisdiction
+      - venue
+      - pleading
+      - motion
+      - order
+      - decree
+      - judgment
+      - sentence
+
+  legal_principles:
+    weight: 1.4
+    terms:
+      - precedent
+      - stare decisis
+      - ratio decidendi
+      - obiter dicta
+      - res judicata
+      - res ipsa loquitur
+      - burden of proof
+      - standard of proof
+      - beyond reasonable doubt
+      - preponderance of evidence
+      - natural justice
+      - audi alteram partem
+      - nemo judex in causa sua
+      - equity
+      - good faith
+      - bona fide
+      - mala fide
+      - public interest
+      - locus standi
+
+  property_law:
+    weight: 1.3
+    terms:
+      - ownership
+      - possession
+      - title
+      - transfer
+      - conveyance
+      - deed
+      - registration
+      - encumbrance
+      - charge
+      - lien
+      - pledge
+      - hypothecation
+      - inheritance
+      - succession
+      - will
+      - probate
+      - intestate
+
+# Common legal phrases (multi-word)
+phrases:
+  - prima facie
+  - in camera
+  - ex parte
+  - suo motu
+  - per curiam
+  - inter alia
+  - mutatis mutandis
+  - ab initio
+  - de facto
+  - de jure
+  - ad hoc
+  - amicus curiae
+  - corpus delicti
+  - force majeure
+  - in limine
+  - lis pendens
+  - pendente lite
+  - quantum meruit
+
+# Stopwords (legal context - don't extract as keywords)
+legal_stopwords:
+  - court
+  - case
+  - said
+  - learned
+  - honourable
+  - held
+  - observed
+  - stated
+  - submitted
+  - argued
+  - contended
+  - counsel
+  - advocate
+  - lawyer
+
+# Keyword extraction config
+extraction_config:
+  max_keywords: 20
+  min_frequency: 2
+  min_word_length: 3
+
+  # TF-IDF parameters
+  tfidf:
+    max_features: 100
+    ngram_range: [1, 3]  # Unigrams, bigrams, trigrams
+    min_df: 1
+    max_df: 0.8
+
+  # Weight boosting
+  boost_legal_terms: true
+  legal_term_multiplier: 1.5
+
+# Subject keywords (for classification)
+subject_keywords:
+  CRM:  # Criminal
+    - criminal
+    - murder
+    - theft
+    - robbery
+    - assault
+    - penal
+    - conviction
+    - sentence
+    - accused
+    - prosecution
+
+  CIV:  # Civil
+    - civil
+    - contract
+    - damages
+    - compensation
+    - tort
+    - breach
+    - plaintiff
+    - suit
+    - claim
+
+  CON:  # Constitutional
+    - constitutional
+    - fundamental rights
+    - writ
+    - judicial review
+    - article
+    - constitution
+    - directive principles
+
+  FAM:  # Family
+    - marriage
+    - divorce
+    - custody
+    - maintenance
+    - alimony
+    - matrimonial
+    - family
+    - guardianship
+
+  LAB:  # Labour
+    - labour
+    - employment
+    - worker
+    - workman
+    - industrial dispute
+    - service
+    - termination
+    - wages
+
+  TAX:  # Taxation
+    - tax
+    - income tax
+    - customs
+    - excise
+    - assessment
+    - revenue
+    - duty
+
+  COM:  # Commercial
+    - commercial
+    - company
+    - corporate
+    - shareholder
+    - partnership
+    - business
+    - insolvency
+    - bankruptcy
+
+  PRO:  # Property
+    - property
+    - land
+    - immovable
+    - lease
+    - tenancy
+    - eviction
+    - title
+    - possession
+
+  BAN:  # Banking
+    - bank
+    - loan
+    - mortgage
+    - negotiable instrument
+    - cheque
+    - promissory note
+    - credit
+
+  CON:  # Consumer
+    - consumer
+    - deficiency
+    - service
+    - goods
+    - complaint
+    - consumer protection
+
+  ENV:  # Environment
+    - environment
+    - pollution
+    - forest
+    - wildlife
+    - ecological
+    - environmental protection
+
+  HUM:  # Human Rights
+    - human rights
+    - torture
+    - discrimination
+    - equality
+    - liberty
+    - dignity
+
+  ADM:  # Administrative
+    - administrative
+    - public servant
+    - government
+    - authority
+    - license
+    - permission
+
+  ELE:  # Election
+    - election
+    - electoral
+    - voter
+    - candidate
+    - election commission
+    - corrupt practice
+
+  INT:  # International
+    - international
+    - treaty
+    - extradition
+    - foreign
+    - bilateral
+
+  GEN:  # General
+    - appeal
+    - revision
+    - petition
+    - application
+    - miscellaneous

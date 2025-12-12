@@ -1,0 +1,351 @@
+# ============================================================================
+# Phase 4: Quality Gate Thresholds Configuration
+# Defines quality standards for 8 quality gates
+# ============================================================================
+
+# ============================================================================
+# QUALITY GATE #1: HTTP Response Validation
+# ============================================================================
+gate_1_http_response:
+  name: "HTTP Response Validation"
+  enabled: true
+
+  # Validation criteria
+  expected_status_code: 200
+  allowed_status_codes: [200]  # Only 200 accepted
+  expected_content_type: "application/pdf"
+  min_content_length_bytes: 1024  # 1 KB minimum
+  max_response_time_seconds: 30
+
+  # Retry configuration
+  retry_on_failure: true
+  max_retries: 3
+  retry_on_status_codes: [429, 503, 504]  # Rate limit, service unavailable
+
+
+# ============================================================================
+# QUALITY GATE #2: PDF Validation
+# ============================================================================
+gate_2_pdf_validation:
+  name: "PDF File Validation"
+  enabled: true
+
+  # PDF header validation
+  expected_pdf_signature: "%PDF"
+  min_pdf_version: 1.0
+  max_pdf_version: 2.0
+
+  # File size limits
+  min_pdf_size_bytes: 1024  # 1 KB
+  max_pdf_size_mb: 100  # 100 MB
+
+  # Integrity checks
+  check_page_count: true
+  min_pages: 1
+  check_encryption: true
+  allow_encrypted_pdfs: false  # Reject encrypted PDFs
+  check_eof_marker: true
+  check_xref_table: true
+
+  # Corruption detection
+  check_corruption: true
+  corruption_blacklist_enabled: true  # SHA-256 blacklist
+  attempt_repair: true  # Try pikepdf repair if corrupted
+
+  # Scoring thresholds
+  min_score_to_pass: 0.80
+  header_check_weight: 0.30
+  integrity_check_weight: 0.50
+  content_check_weight: 0.20
+
+
+# ============================================================================
+# QUALITY GATE #3: Text Extraction Quality
+# ============================================================================
+gate_3_text_quality:
+  name: "Text Extraction Quality"
+  enabled: true
+
+  # Text length requirements
+  min_text_length_chars: 100  # Absolute minimum (reject if less)
+  optimal_text_length_chars: 1000  # Optimal for scoring
+
+  # Readability requirements
+  min_readable_chars_percent: 0.95  # 95% must be readable
+  max_control_chars_percent: 0.01  # 1% max control characters
+  max_repeated_chars_percent: 0.05  # 5% max repeated (aaa...)
+
+  # Language detection
+  expected_languages: ["en", "bn"]  # English or Bengali
+  min_language_confidence: 0.80
+
+  # OCR quality (if OCR used)
+  min_ocr_confidence: 0.60  # 60% minimum
+  prefer_digital_extraction: true  # Try digital before OCR
+
+  # Dimension weights
+  length_weight: 0.30
+  readability_weight: 0.30
+  language_weight: 0.20
+  ocr_quality_weight: 0.20
+
+  # Thresholds
+  reject_below_score: 0.50  # Retry with OCR
+  flag_below_score: 0.70  # Flag as low quality but continue
+  pass_score: 0.70
+
+
+# ============================================================================
+# QUALITY GATE #4: Metadata Confidence
+# ============================================================================
+gate_4_metadata_confidence:
+  name: "Metadata Extraction Confidence"
+  enabled: true
+
+  # Critical fields (must extract at least min_critical_fields)
+  critical_fields:
+    citation:
+      min_confidence: 0.90
+      required: true
+    party_names:
+      min_confidence: 0.80
+      min_count: 1  # At least 1 party
+    judge_names:
+      min_confidence: 0.80
+      min_count: 1  # At least 1 judge
+    decision_date:
+      min_confidence: 0.90
+      required: false
+    court_code:
+      min_confidence: 0.95
+      required: true
+
+  min_critical_fields_extracted: 3  # Out of 5
+
+  # Optional fields (bonus points)
+  optional_fields:
+    - legal_sections
+    - bench_strength
+    - case_number
+    - filing_date
+
+  # Scoring weights
+  critical_fields_weight: 0.70
+  confidence_weight: 0.20
+  optional_fields_weight: 0.10
+
+  # Thresholds
+  reject_below_score: 0.40  # Too little metadata
+  flag_below_score: 0.70  # Medium quality
+  pass_score: 0.70
+
+
+# ============================================================================
+# QUALITY GATE #5: Overall Quality Score (Phase 3)
+# ============================================================================
+gate_5_overall_quality:
+  name: "Overall Quality Score (Phase 3 QualityAnalyzer)"
+  enabled: true
+
+  # Phase 3 dimension weights (from quality_analyzer.py)
+  dimensions:
+    completeness:
+      weight: 0.25
+    citation_quality:
+      weight: 0.25
+    text_quality:
+      weight: 0.20
+    metadata_quality:
+      weight: 0.20
+    consistency:
+      weight: 0.10
+
+  # Quality-based routing thresholds
+  excellent_threshold: 0.85  # Priority queue
+  good_threshold: 0.70  # Normal queue
+  acceptable_threshold: 0.50  # Low priority queue
+  reject_below: 0.50  # Manual review queue
+
+  # Actions by quality level
+  routing:
+    excellent:  # ≥ 0.85
+      queue: "PRIORITY"
+      priority_level: 1
+      fast_track: true
+    good:  # 0.70 - 0.85
+      queue: "NORMAL"
+      priority_level: 2
+      fast_track: false
+    acceptable:  # 0.50 - 0.70
+      queue: "LOW_PRIORITY"
+      priority_level: 3
+      flag_for_review: true
+    poor:  # < 0.50
+      queue: "MANUAL_REVIEW"
+      priority_level: 4
+      auto_save: false
+
+
+# ============================================================================
+# QUALITY GATE #6: Schema & Business Rules Validation
+# ============================================================================
+gate_6_validation:
+  name: "Schema and Business Rules Validation"
+  enabled: true
+
+  # Schema validation (Pydantic)
+  strict_schema_validation: true
+  allow_extra_fields: false
+
+  # Business rules
+  business_rules:
+    - name: "date_logic"
+      description: "Decision date must be <= filing date"
+      enabled: true
+      severity: "error"
+
+    - name: "court_citation_match"
+      description: "Court code must match citation pattern"
+      enabled: true
+      severity: "warning"
+
+    - name: "party_names_valid"
+      description: "Party names must not be empty or corrupted"
+      enabled: true
+      severity: "error"
+
+    - name: "citation_format"
+      description: "Citation must match court format standards"
+      enabled: true
+      severity: "warning"
+
+    - name: "subject_keywords_match"
+      description: "Subject code should match document keywords"
+      enabled: true
+      severity: "info"
+
+    - name: "no_duplicate_global_id"
+      description: "Global ID must be unique in database"
+      enabled: true
+      severity: "error"
+
+    - name: "no_duplicate_hash"
+      description: "Content hash must be unique (no duplicate PDFs)"
+      enabled: true
+      severity: "error"
+
+  # Deduplication
+  deduplication:
+    enabled: true
+    hash_algorithm: "sha256"
+    use_bloom_filter: true
+    bloom_filter_capacity: 1000000  # 1M documents
+    bloom_filter_error_rate: 0.001  # 0.1% false positive
+
+  # Scoring
+  min_business_rules_passed: 5  # Out of 7
+  min_score_to_pass: 0.80
+
+
+# ============================================================================
+# QUALITY GATE #7: Database Transaction Integrity
+# ============================================================================
+gate_7_database:
+  name: "Database Transaction Integrity"
+  enabled: true
+
+  # Transaction settings
+  use_acid_transactions: true
+  rollback_on_error: true
+
+  # Retry configuration
+  retry_on_failure: true
+  max_retries: 3
+  retry_delay_seconds: 1
+
+  # Post-save verification
+  verify_after_save: true
+  verify_foreign_keys: true
+  verify_fulltext_vector: true
+
+  # Batch optimization
+  enable_batch_insert: true
+  batch_size: 100
+  use_copy_command: true  # PostgreSQL COPY for speed
+
+
+# ============================================================================
+# QUALITY GATE #8: Google Drive Upload Verification
+# ============================================================================
+gate_8_drive_upload:
+  name: "Google Drive Upload Verification"
+  enabled: true
+
+  # Pre-upload validation
+  check_file_exists: true
+  verify_file_size: true
+  verify_hash_match: true
+  spot_check_pdf: true
+
+  # Upload configuration
+  batch_size: 50  # Drive API limit
+  parallel_batches: 5  # Max concurrent uploads
+  quota_limit_gb_per_day: 750  # Google Drive quota
+  rate_limit_uploads_per_second: 10
+
+  # 3-Tier storage strategy
+  tiers:
+    hot:
+      name: "HOT Storage"
+      age_threshold_days: 7
+      folder_path: "IndianKanoon_PDFs/{year}/HOT"
+      access_frequency: "frequent"
+
+    warm:
+      name: "WARM Storage"
+      age_threshold_days: 30
+      folder_path: "IndianKanoon_PDFs/{year}/WARM"
+      access_frequency: "occasional"
+
+    cold:
+      name: "COLD Storage"
+      age_threshold_days: 999999  # All older than 30 days
+      folder_path: "IndianKanoon_PDFs/{year}/COLD/{court}/{subject}"
+      access_frequency: "rare"
+
+  # Post-upload verification
+  verify_upload: true
+  download_sample_bytes: 1024  # Download first 1KB to verify
+  compare_checksums: true
+  verify_md5: true
+
+  # Retry configuration
+  max_retries: 5
+  retry_delay_base_seconds: 1
+  use_exponential_backoff: true
+
+  # Cleanup
+  delete_local_after_verify: true
+  keep_local_on_failure: true
+
+
+# ============================================================================
+# GLOBAL QUALITY SETTINGS
+# ============================================================================
+global:
+  # Overall quality targets
+  target_average_quality: 0.85
+  target_rejection_rate: 0.03  # 3%
+
+  # Quality gate statistics
+  track_gate_statistics: true
+  report_interval_documents: 1000
+
+  # Quality improvement
+  enable_adaptive_extraction: true  # Retry with better methods if low quality
+  enable_quality_learning: false  # ML predictor (Stage 3)
+
+  # Monitoring
+  prometheus_metrics: true
+  grafana_dashboards: true
+  quality_alerts: true

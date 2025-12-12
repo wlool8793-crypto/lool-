@@ -1,0 +1,125 @@
+# Database Configuration for Legal RAG System
+
+# PostgreSQL Primary Database
+database:
+  # Connection
+  host: localhost
+  port: 5433
+  database: legal_rag_db
+  user: legal_rag_user
+  password: secure_rag_password_2024
+
+  # Connection String
+  url: postgresql://legal_rag_user:secure_rag_password_2024@localhost:5433/legal_rag_db
+
+  # SQLAlchemy Pool Configuration
+  pool:
+    pool_size: 10                    # Number of connections to maintain
+    max_overflow: 20                 # Maximum overflow connections
+    pool_timeout: 30                 # Timeout for getting connection (seconds)
+    pool_recycle: 3600              # Recycle connections after 1 hour
+    pool_pre_ping: true             # Verify connections before using
+    echo: false                      # Set to true for SQL query logging
+    echo_pool: false                # Set to true for pool logging
+
+  # Query Configuration
+  query:
+    slow_query_threshold: 1.0       # Log queries slower than 1 second
+    statement_timeout: 30000         # 30 seconds timeout for queries
+
+  # Migration Configuration
+  migration:
+    auto_upgrade: false              # Auto-run migrations on startup
+    migration_dir: migrations
+
+# Storage Configuration
+storage:
+  # Google Drive (Primary Cold Storage)
+  google_drive:
+    enabled: true
+    credentials_file: credentials/google_drive_credentials.json
+    token_file: credentials/google_drive_token.json
+    root_folder_name: LegalRAG-Production
+    folder_structure: "{country_code}/{doc_type}/{year}/"
+    max_retries: 3
+    retry_delay: 2                  # seconds
+    upload_chunk_size: 5242880      # 5MB chunks
+
+  # Local Cache (Hot Storage)
+  local_cache:
+    enabled: true
+    cache_dir: data/cache
+    max_size_gb: 50                 # Maximum cache size
+    max_files: 1000                 # Maximum number of files
+    ttl_days: 7                     # Time-to-live for unused files
+    eviction_policy: lru            # Least Recently Used
+    auto_download: true             # Auto-download from Drive on miss
+
+  # File Integrity
+  integrity:
+    verify_on_upload: true
+    verify_on_download: true
+    hash_algorithm: sha256
+
+# Scraping Configuration
+scraping:
+  batch_size: 100                   # Documents per batch
+  concurrent_downloads: 5           # Parallel PDF downloads
+  request_delay: 1.0                # Delay between requests (seconds)
+  max_retries: 3
+  timeout: 30
+
+  # Checkpoints
+  checkpoint:
+    enabled: true
+    save_interval: 50               # Save after N documents
+
+# RAG Configuration
+rag:
+  chunking:
+    strategy: semantic              # sentence, paragraph, semantic, hybrid
+    chunk_size: 512                 # Target tokens per chunk
+    chunk_overlap: 50               # Overlap tokens
+    min_chunk_size: 100             # Minimum chunk size
+    max_chunk_size: 1000            # Maximum chunk size
+
+  embedding:
+    model: sentence-transformers/all-MiniLM-L6-v2
+    dimension: 384
+    batch_size: 32
+    device: cpu                     # cpu or cuda
+
+# Data Quality
+quality:
+  validation:
+    enabled: true
+    min_title_length: 10
+    min_content_length: 100
+    required_fields:
+      - title_full
+      - source_url
+      - doc_year
+
+  scoring:
+    enabled: true
+    factors:
+      - completeness                # All fields populated
+      - citation_quality            # Valid citations
+      - content_quality             # Sufficient content
+      - metadata_quality            # Clean metadata
+
+# Logging
+logging:
+  level: INFO                       # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: logs/database.log
+  max_size_mb: 100
+  backup_count: 5
+
+  # Specific loggers
+  loggers:
+    sqlalchemy.engine: WARNING      # SQL queries
+    sqlalchemy.pool: WARNING        # Connection pool
+    database: INFO                  # Our database module
+    storage: INFO                   # Storage operations
+    scraping: INFO                  # Scraping operations

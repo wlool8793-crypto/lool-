@@ -1,0 +1,226 @@
+# ============================================================================
+# POSTGRESQL PRODUCTION CONFIGURATION
+# Optimized for scraping with PostgreSQL backend
+# Production-grade metadata extraction and storage
+# ============================================================================
+
+# ============================================================================
+# PERFORMANCE - POSTGRESQL OPTIMIZED
+# ============================================================================
+performance:
+  # OPTIMIZED: 2 workers for single-IP, PostgreSQL can handle more concurrent writes
+  max_workers: 2  # Optimal for single-IP without rate limiting
+  connection_pool_size: 10  # Larger pool for PostgreSQL (better concurrency)
+  batch_size: 50  # Process 50 documents at a time
+  checkpoint_interval: 100  # Save progress every 100 documents
+
+# ============================================================================
+# SCRAPER SETTINGS
+# ============================================================================
+scraper:
+  # Base configuration
+  base_url: "https://indiankanoon.org"
+  headless: true
+  timeout_seconds: 30
+
+  # OPTIMIZED: Rate limiting with 2 workers
+  num_threads: 2  # Match max_workers
+  delay_between_requests: 0.5  # 500ms = 2 req/sec (safe limit)
+
+  # Retry configuration
+  max_retries: 3
+  retry_delay_seconds: 5  # Wait 5s before retry
+  exponential_backoff: true
+  backoff_multiplier: 2
+
+# ============================================================================
+# SAFETY & ERROR HANDLING
+# ============================================================================
+safety:
+  # Conservative rate limiting for single IP
+  max_requests_per_minute: 120  # 2 req/sec × 60 = 120/min (hard limit)
+  requests_per_second_per_proxy: 2.0  # Theoretical (no proxies, but keeping for consistency)
+
+  # Backoff if rate limited
+  backoff_on_429: true
+  backoff_multiplier: 3  # Aggressive backoff if rate limited
+  max_backoff_seconds: 60
+
+  # Error handling
+  max_consecutive_errors: 5  # Stop if too many errors in a row
+  skip_after_attempts: 3  # Skip document after N failed attempts
+  error_cooldown_seconds: 30  # Pause 30s after consecutive errors
+
+  # Validation
+  validate_pdf_header: true
+  min_pdf_size: 1024
+
+# ============================================================================
+# DATABASE - POSTGRESQL
+# ============================================================================
+database:
+  # PostgreSQL connection
+  url: "postgresql://indiankanoon_user:postgres@localhost:5433/indiankanoon"
+  pool_size: 10  # Larger pool for PostgreSQL
+  max_overflow: 20  # Allow up to 30 connections total
+  echo: false  # Set to true for SQL debugging
+
+  # Connection settings
+  timeout: 30
+  pool_pre_ping: true  # Verify connections before using
+  pool_recycle: 3600  # Recycle connections after 1 hour
+
+# ============================================================================
+# LOGGING
+# ============================================================================
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+  # Log files
+  main_log: "logs/postgresql_scraper.log"
+  error_log: "logs/postgresql_errors.log"
+  progress_log: "logs/postgresql_progress.log"
+
+  # Rotation
+  max_bytes: 10485760  # 10 MB
+  backup_count: 5
+
+# ============================================================================
+# QUALITY GATES
+# ============================================================================
+quality:
+  enable_quality_gates: true
+  strict_validation: true
+
+  # URL optimization
+  use_direct_http_for_pdfs: true  # Skip Selenium for direct PDF links
+  selenium_pool_size: 1  # Minimal Selenium (only when needed)
+  prefer_direct_download: true
+
+  # Quality thresholds
+  min_quality_score: 0.50  # Reject documents below this score
+  target_quality_score: 0.85  # Target average quality
+
+# ============================================================================
+# CHECKPOINTING & RESUME
+# ============================================================================
+checkpointing:
+  enabled: true
+  checkpoint_dir: "checkpoints"
+  checkpoint_interval: 100  # Save every 100 documents
+  auto_resume: true  # Automatically resume from last checkpoint
+  save_on_interrupt: true  # Save checkpoint on Ctrl+C
+
+# ============================================================================
+# PROGRESS TRACKING
+# ============================================================================
+progress:
+  # Statistics
+  report_interval: 50  # Print stats every 50 documents
+  detailed_stats: true
+
+  # Progress bar
+  show_progress_bar: true
+  progress_bar_width: 50
+
+  # Estimates
+  show_time_estimates: true
+  show_completion_eta: true
+
+# ============================================================================
+# ESTIMATIONS - POSTGRESQL PERFORMANCE
+# ============================================================================
+estimations:
+  total_documents: 1400000
+  average_pdf_size_mb: 0.3
+  total_storage_gb: 420
+
+  # PostgreSQL improves throughput ~40% vs SQLite
+  docs_per_hour_expected: 4200  # 3000 * 1.4 = 4200 docs/hour
+  hours_for_full_collection: 333  # 1.4M / 4200 = 333 hours
+  days_for_full_collection: 13.9  # 333 / 24 = 13.9 days
+
+  # Per-document timing
+  avg_download_time_seconds: 1.5  # Including delays
+  avg_processing_time_seconds: 0.4  # Faster with PostgreSQL
+
+# ============================================================================
+# OUTPUT & STORAGE
+# ============================================================================
+output:
+  # Local storage paths
+  pdf_directory: "data/pdfs"
+  temp_directory: "data/temp"
+  failed_directory: "data/failed"
+
+  # File organization
+  organize_by_date: false
+  organize_by_category: false  # Simple flat structure
+
+  # Cleanup
+  cleanup_temp_on_success: true
+  keep_failed_downloads: true
+
+# ============================================================================
+# MONITORING
+# ============================================================================
+monitoring:
+  # Performance metrics
+  track_throughput: true
+  track_success_rate: true
+  track_error_types: true
+
+  # Alerts (log-based)
+  alert_on_low_success_rate: true
+  success_rate_threshold: 0.90  # Alert if below 90%
+
+  alert_on_rate_limiting: true
+  alert_on_consecutive_failures: true
+  consecutive_failure_threshold: 10
+
+# ============================================================================
+# SPECIAL MODES
+# ============================================================================
+modes:
+  # Test mode (for verification)
+  test_mode: false
+  test_document_limit: 10
+
+  # Dry run (simulate without downloading)
+  dry_run: false
+
+  # Resume mode
+  resume_from_checkpoint: true
+
+  # Collection mode
+  collect_new_only: true  # Only collect documents not yet downloaded
+  recollect_failed: true  # Retry previously failed documents
+
+# ============================================================================
+# NOTES
+# ============================================================================
+# Expected Performance (PostgreSQL Backend):
+#   - Workers: 2 (max safe for single IP)
+#   - Rate: 2 req/sec (120 req/min)
+#   - Throughput: 3,500-5,000 docs/hour (+40% vs SQLite)
+#   - Time for 1.4M: 12-17 days (280-400 hours)
+#
+# PostgreSQL Benefits:
+#   - Better concurrent write performance
+#   - No threading deadlocks
+#   - Larger connection pool (10 vs 5)
+#   - Production-grade for metadata extraction
+#   - Supports complex queries and joins
+#   - Ready for embeddings/vector search
+#
+# Rate Limiting:
+#   - IndianKanoon limits: ~2-3 req/sec per IP
+#   - Configuration stays at 2 req/sec for safety
+#   - Automatic backoff if 429 errors detected
+#
+# Database:
+#   - PostgreSQL 16 in Docker (port 5433)
+#   - 600 documents already migrated
+#   - Production schema ready
+# ============================================================================

@@ -1,0 +1,157 @@
+# Citation patterns for Legal RAG Extraction System
+# Version: 1.0
+# Last Updated: 2025-01-22
+
+# Bangladesh Reporters
+bangladesh:
+  DLR:
+    full_name: "Dhaka Law Reports"
+    pattern: '(\d+)\s*\((\d{4})\)\s*DLR\s*\(([A-Z]{2,})\)\s*(\d+)'
+    country: "BD"
+    courts: ["HCD", "AD", "SC"]
+    encoding_format: "{volume}DLR{year_short}{court_code}{page}"
+
+  BLD:
+    full_name: "Bangladesh Legal Decisions"
+    pattern: '(\d+)\s*\((\d{4})\)\s*BLD\s*\(([A-Z]{2,})\)\s*(\d+)'
+    country: "BD"
+    courts: ["HCD", "AD"]
+    encoding_format: "{volume}BLD{year_short}{court_code}{page}"
+
+  BLC:
+    full_name: "Bangladesh Law Chronicles"
+    pattern: '(\d+)\s*\((\d{4})\)\s*BLC\s*\(([A-Z]{2,})\)\s*(\d+)'
+    country: "BD"
+    courts: ["HCD", "AD"]
+    encoding_format: "{volume}BLC{year_short}{court_code}{page}"
+
+  BCR:
+    full_name: "Bangladesh Criminal Reports"
+    pattern: '(\d+)\s*\((\d{4})\)\s*BCR\s*\(([A-Z]{2,})\)\s*(\d+)'
+    country: "BD"
+    courts: ["HCD", "AD"]
+    encoding_format: "{volume}BCR{year_short}{court_code}{page}"
+
+  MLR:
+    full_name: "Monthly Law Reports"
+    pattern: '(\d+)\s*MLR\s*\((\d{4})\)\s*(\d+)'
+    country: "BD"
+    courts: ["HCD"]
+    encoding_format: "{volume}MLR{year_short}{page}"
+
+# India Reporters
+india:
+  AIR:
+    full_name: "All India Reporter"
+    pattern: 'AIR\s+(\d{4})\s+([A-Z]{2,})\s+(\d+)'
+    country: "IN"
+    courts: ["SC", "Cal", "Bom", "Mad", "Del", "All", "Pat", "Ker", "Guj", "MP", "Ori", "P&H", "Raj", "Kant", "AP", "HP"]
+    encoding_format: "AIR{year_short}{court_code}{page}"
+
+  SCC:
+    full_name: "Supreme Court Cases"
+    pattern: '\((\d{4})\)\s+(\d+)\s+SCC\s+(\d+)'
+    country: "IN"
+    courts: ["SC"]
+    encoding_format: "{volume}SCC{year_short}{page}"
+
+  SCR:
+    full_name: "Supreme Court Reports"
+    pattern: '\((\d{4})\)\s+(\d+)\s+SCR\s+(\d+)'
+    country: "IN"
+    courts: ["SC"]
+    encoding_format: "{volume}SCR{year_short}{page}"
+
+# Pakistan Reporters
+pakistan:
+  PLD:
+    full_name: "Pakistan Legal Decisions"
+    pattern: 'PLD\s+(\d{4})\s+([A-Z]{2,})\s+(\d+)'
+    country: "PK"
+    courts: ["SC", "FSC", "Lah", "Kar", "Pesh", "Quetta", "AJK"]
+    encoding_format: "PLD{year_short}{court_code}{page}"
+
+  SCMR:
+    full_name: "Supreme Court Monthly Review"
+    pattern: '(\d{4})\s+SCMR\s+(\d+)'
+    country: "PK"
+    courts: ["SC"]
+    encoding_format: "SCMR{year_short}{page}"
+
+  CLC:
+    full_name: "Civil Law Cases"
+    pattern: '(\d{4})\s+CLC\s+(\d+)'
+    country: "PK"
+    courts: ["various"]
+    encoding_format: "CLC{year_short}{page}"
+
+# Court Code Mappings
+court_codes:
+  # Bangladesh
+  HCD: "High Court Division"
+  AD: "Appellate Division"
+  SC: "Supreme Court"
+
+  # India
+  Cal: "Calcutta High Court"
+  Bom: "Bombay High Court"
+  Mad: "Madras High Court"
+  Del: "Delhi High Court"
+  All: "Allahabad High Court"
+  Pat: "Patna High Court"
+  Ker: "Kerala High Court"
+  Guj: "Gujarat High Court"
+  MP: "Madhya Pradesh High Court"
+  Ori: "Orissa High Court"
+  "P&H": "Punjab & Haryana High Court"
+  Raj: "Rajasthan High Court"
+  Kant: "Karnataka High Court"
+  AP: "Andhra Pradesh High Court"
+  HP: "Himachal Pradesh High Court"
+
+  # Pakistan
+  FSC: "Federal Shariat Court"
+  Lah: "Lahore High Court"
+  Kar: "Karachi High Court"
+  Pesh: "Peshawar High Court"
+  Quetta: "Quetta High Court"
+  AJK: "Azad Jammu & Kashmir"
+
+# Confidence scoring
+confidence_rules:
+  perfect_match:
+    score: 0.95
+    conditions:
+      - "All components extracted"
+      - "Year in valid range (1800-2100)"
+      - "Court code recognized"
+
+  good_match:
+    score: 0.85
+    conditions:
+      - "Most components extracted"
+      - "Year valid"
+      - "Minor formatting differences"
+
+  partial_match:
+    score: 0.70
+    conditions:
+      - "Essential components present"
+      - "Some uncertainty in parsing"
+
+  weak_match:
+    score: 0.50
+    conditions:
+      - "Pattern matches but ambiguous"
+      - "May need manual verification"
+
+# Alternative formats (fuzzy matching)
+alternative_formats:
+  - pattern: '(\d+)\s+DLR\s+(\d{4})\s+\(([A-Z]{2,})\)\s+(\d+)'
+    description: "DLR with year before court"
+
+  - pattern: 'DLR\s+\(([A-Z]{2,})\)\s+(\d{4}),\s+Vol\.\s+(\d+),\s+p\.\s+(\d+)'
+    description: "DLR verbose format"
+
+  - pattern: '(\d{4})\s+(\d+)\s+([A-Z]{2,})\s+(\d+)'
+    description: "Generic year-volume-reporter-page"

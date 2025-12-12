@@ -1,0 +1,163 @@
+# Date patterns for Legal RAG Extraction System
+# Version: 1.0
+# Last Updated: 2025-01-22
+
+# Date type labels (for labeled date extraction)
+date_labels:
+  judgment:
+    - "Date of Judgment"
+    - "Date of Judgement"
+    - "Judgment Date"
+    - "Decided on"
+    - "Pronounced on"
+    - "Date of Order"
+
+  filing:
+    - "Date of Filing"
+    - "Filed on"
+    - "Date of Petition"
+    - "Date of Application"
+
+  hearing:
+    - "Date of Hearing"
+    - "Heard on"
+    - "Date of Arguments"
+    - "Arguments heard on"
+
+# Date formats (in order of preference)
+date_formats:
+  # DD Month YYYY formats
+  - pattern: '(\d{1,2})(?:st|nd|rd|th)?\s+(January|February|March|April|May|June|July|August|September|October|November|December),?\s+(\d{4})'
+    format: '%d %B %Y'
+    description: "1st January 2020"
+
+  - pattern: '(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.?,?\s+(\d{4})'
+    format: '%d %b %Y'
+    description: "1 Jan 2020"
+
+  # DD-MM-YYYY formats
+  - pattern: '(\d{1,2})-(\d{1,2})-(\d{4})'
+    format: '%d-%m-%Y'
+    description: "01-01-2020"
+
+  - pattern: '(\d{1,2})\.(\d{1,2})\.(\d{4})'
+    format: '%d.%m.%Y'
+    description: "01.01.2020"
+
+  - pattern: '(\d{1,2})/(\d{1,2})/(\d{4})'
+    format: '%d/%m/%Y'
+    description: "01/01/2020"
+
+  # YYYY-MM-DD formats (ISO)
+  - pattern: '(\d{4})-(\d{1,2})-(\d{1,2})'
+    format: '%Y-%m-%d'
+    description: "2020-01-01"
+
+  # Month DD, YYYY formats
+  - pattern: '(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})'
+    format: '%B %d %Y'
+    description: "January 1, 2020"
+
+  - pattern: '(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})'
+    format: '%b %d %Y'
+    description: "Jan 1, 2020"
+
+# Month name mappings
+month_names:
+  full:
+    - January
+    - February
+    - March
+    - April
+    - May
+    - June
+    - July
+    - August
+    - September
+    - October
+    - November
+    - December
+
+  abbreviated:
+    - Jan
+    - Feb
+    - Mar
+    - Apr
+    - May
+    - Jun
+    - Jul
+    - Aug
+    - Sep
+    - Sept
+    - Oct
+    - Nov
+    - Dec
+
+# Date normalization rules
+normalization:
+  # Remove ordinal suffixes
+  remove_ordinals: true
+
+  # Standardize separators to hyphen
+  standardize_separator: '-'
+
+  # Output format (ISO 8601)
+  output_format: '%Y-%m-%d'
+
+# Validation rules
+validation:
+  min_year: 1800
+  max_year: 2100
+
+  # Logical date ordering
+  check_order:
+    - filing_before_hearing: true
+    - hearing_before_judgment: true
+    - filing_before_judgment: true
+
+# Confidence scoring
+confidence_rules:
+  high:
+    score: 0.95
+    conditions:
+      - "Found with explicit label"
+      - "Date format standard"
+      - "Year in valid range"
+
+  medium:
+    score: 0.85
+    conditions:
+      - "Found near expected section"
+      - "Date format recognized"
+      - "Year valid"
+
+  low:
+    score: 0.70
+    conditions:
+      - "Inferred from context"
+      - "Date format ambiguous"
+
+# Common date extraction contexts
+extraction_contexts:
+  judgment_section:
+    - "IN THE HIGH COURT"
+    - "IN THE SUPREME COURT"
+    - "BEFORE"
+    - "CORAM"
+
+  filing_section:
+    - "PETITION"
+    - "APPLICATION"
+    - "APPEAL"
+
+  hearing_section:
+    - "ARGUMENTS"
+    - "HEARING"
+
+# Year extraction (when full date not available)
+year_patterns:
+  - pattern: '\((\d{4})\)'
+    description: "Year in parentheses (2020)"
+
+  - pattern: 'in\s+(\d{4})'
+    description: "in 2020"

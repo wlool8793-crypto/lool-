@@ -1,0 +1,135 @@
+{
+  "sample_case.html": {
+    "title": "Md. Rahman v. State of Bangladesh - 22 (1998) DLR (HCD) 205",
+    "court_name": "High Court of Bangladesh",
+    "case_number": "123/1997",
+    "citation": {
+      "citation_text": "22 (1998) DLR (HCD) 205",
+      "citation_encoded": "22DLR98H205",
+      "volume": 22,
+      "year": 1998,
+      "reporter": "DLR",
+      "court": "HCD",
+      "page": 205,
+      "is_primary": true,
+      "confidence": 0.95
+    },
+    "parties": [
+      {
+        "party_type": "petitioner",
+        "party_name": "Md. Rahman",
+        "party_name_abbr": "Rahman",
+        "party_order": 1,
+        "confidence": 0.95
+      },
+      {
+        "party_type": "respondent",
+        "party_name": "State of Bangladesh",
+        "party_name_abbr": "StateBD",
+        "party_order": 1,
+        "confidence": 0.95
+      }
+    ],
+    "judges": [
+      {
+        "judge_name": "Justice Md. Tafazzul Islam",
+        "is_presiding": true,
+        "is_author": true,
+        "opinion_type": "majority",
+        "judge_order": 1
+      },
+      {
+        "judge_name": "Justice A.B.M. Khairul Haque",
+        "is_presiding": false,
+        "is_author": true,
+        "opinion_type": "concurring",
+        "judge_order": 2
+      }
+    ],
+    "dates": {
+      "date_judgment": "1998-03-15",
+      "date_filing": "1997-05-20",
+      "date_hearing": "1998-02-10"
+    },
+    "sections_cited": [
+      {
+        "act_name": "Penal Code, 1860",
+        "section_number": "302",
+        "context": "conviction and sentence passed by the Court under Section 302",
+        "mention_count": 3
+      },
+      {
+        "act_name": "Penal Code, 1860",
+        "section_number": "300",
+        "context": "Definition of murder",
+        "mention_count": 1
+      },
+      {
+        "act_name": "Constitution of Bangladesh",
+        "section_number": "14",
+        "context": "Equality before law",
+        "mention_count": 1
+      }
+    ],
+    "citations_referenced": [
+      {
+        "citation_text": "18 (1993) BLD 125",
+        "citation_encoded": "18BLD93125",
+        "is_primary": false
+      },
+      {
+        "citation_text": "15 (1990) DLR (AD) 45",
+        "citation_encoded": "15DLR90A45",
+        "is_primary": false
+      },
+      {
+        "citation_text": "AIR 1975 SC 1250",
+        "citation_encoded": "AIR75S1250",
+        "is_primary": false
+      }
+    ],
+    "keywords": [
+      {"keyword": "murder", "weight": 0.85, "keyword_type": "legal_term", "frequency": 5},
+      {"keyword": "conviction", "weight": 0.75, "keyword_type": "legal_term", "frequency": 3},
+      {"keyword": "appeal", "weight": 0.70, "keyword_type": "legal_term", "frequency": 4},
+      {"keyword": "evidence", "weight": 0.65, "keyword_type": "legal_term", "frequency": 2},
+      {"keyword": "penal code", "weight": 0.60, "keyword_type": "legal_term", "frequency": 3}
+    ],
+    "subject_classification": {
+      "subject_primary": "CRM",
+      "subject_secondary": "PRO",
+      "confidence": 0.90,
+      "matched_keywords": ["murder", "penal", "criminal", "conviction"]
+    },
+    "quality_scores": {
+      "data_quality_score": 0.92,
+      "validation_status": "valid",
+      "quality_breakdown": {
+        "completeness": 0.95,
+        "citation_quality": 0.95,
+        "text_quality": 1.0,
+        "metadata_quality": 0.90,
+        "consistency": 0.80
+      },
+      "manual_review_needed": false
+    }
+  },
+  "test_pdf_text_based": {
+    "description": "Expected output for a text-based PDF",
+    "page_count": 25,
+    "word_count_min": 5000,
+    "quality": "high",
+    "is_scanned": false,
+    "extraction_method": "pdfplumber",
+    "hash_length": 16
+  },
+  "test_pdf_scanned": {
+    "description": "Expected output for a scanned PDF",
+    "page_count": 15,
+    "word_count_min": 3000,
+    "quality": "medium",
+    "is_scanned": true,
+    "extraction_method": "tesseract_ocr",
+    "ocr_confidence_min": 0.60
+  }
+}

@@ -1,0 +1,46 @@
+═══════════════════════════════════════════════════════════════════════
+  ANTIGRAVITY VNC - ULTIMATE COPY-PASTE INSTALLER
+═══════════════════════════════════════════════════════════════════════
+
+INSTRUCTIONS:
+1. SSH to your server: ssh root@152.42.229.221
+2. Copy EVERYTHING below this line (including the curl command)
+3. Paste into your server terminal
+4. Press ENTER
+5. Done!
+
+───────────────────────────────────────────────────────────────────────
+COPY FROM BELOW THIS LINE:
+───────────────────────────────────────────────────────────────────────
+
+curl -fsSL https://raw.githubusercontent.com/yourusername/vnc-setup/main/ONE_COMMAND_INSTALL.sh | bash
+
+───────────────────────────────────────────────────────────────────────
+
+NOTE: If you don't have the script in GitHub, use this alternative:
+───────────────────────────────────────────────────────────────────────
+
+ALTERNATIVE METHOD (COPY ALL OF THIS):
+───────────────────────────────────────────────────────────────────────
+
+cd /tmp && cat > vnc_install.sh << 'INSTALLER_SCRIPT_END'
+[PASTE CONTENTS OF ONE_COMMAND_INSTALL.sh HERE]
+INSTALLER_SCRIPT_END
+chmod +x vnc_install.sh && bash vnc_install.sh
+
+───────────────────────────────────────────────────────────────────────
+
+EVEN SIMPLER - DIRECT EXECUTION:
+───────────────────────────────────────────────────────────────────────
+
+Just SSH to your server and run:
+
+wget -O - https://your-domain.com/ONE_COMMAND_INSTALL.sh | bash
+
+OR if using local file:
+
+scp ONE_COMMAND_INSTALL.sh root@152.42.229.221:/tmp/
+ssh root@152.42.229.221
+bash /tmp/ONE_COMMAND_INSTALL.sh
+
+═══════════════════════════════════════════════════════════════════════

@@ -1,0 +1,70 @@
+# Bangladesh Laws Scraper Configuration
+# For bdlaws.minlaw.gov.bd
+
+source:
+  name: "Bangladesh Laws"
+  base_url: "http://bdlaws.minlaw.gov.bd"
+  index_url: "/laws-of-bangladesh-chronological-index.html"
+  country_code: "BD"
+
+scraper:
+  delay_between_requests: 1.0  # Respectful rate for government site
+  timeout_seconds: 30
+  max_retries: 3
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+database:
+  url: postgresql://indiankanoon_user:postgres@localhost:5433/indiankanoon
+  host: localhost
+  port: 5433
+  database: indiankanoon
+  user: indiankanoon_user
+  password: postgres
+
+storage:
+  pdf_dir: "./data/pdfs/bangladesh/bdlaws"
+  temp_dir: "./data/temp_pdfs"
+  organize_by: "year"  # year, flat, or doc_type
+  min_free_space_gb: 5
+  auto_cleanup_after_upload: false
+
+google_drive:
+  enabled: true
+  credentials_file: "./config/credentials.json"
+  token_file: "./config/token.pickle"
+  folder_name: "Bangladesh_Laws_PDFs"
+  folder_structure: "BD/{year}/"
+  batch_size: 50
+  max_retries: 3
+  retry_delay: 2
+
+performance:
+  max_workers: 2
+  batch_size: 50
+  checkpoint_interval: 25
+
+checkpointing:
+  enabled: true
+  checkpoint_dir: "./checkpoints"
+  checkpoint_interval: 25
+  save_on_interrupt: true
+
+logging:
+  level: INFO
+  log_file: "./logs/bangladesh_scraper.log"
+
+# Document type mapping for Bangladesh laws
+doc_types:
+  act: "ACT"
+  ordinance: "ORN"
+  order: "ORD"
+  rule: "RUL"
+  regulation: "REG"
+  code: "ACT"
+  constitution: "CON"
+
+# Quality thresholds
+quality:
+  min_pdf_size_bytes: 1024  # 1KB minimum
+  max_pdf_size_bytes: 104857600  # 100MB maximum
+  require_pdf_header: true

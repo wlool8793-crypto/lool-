@@ -47,12 +47,15 @@ def authenticate():
 
             flow = InstalledAppFlow.from_client_secrets_file(
                 credentials_file,
-                SCOPES,
-                redirect_uri='urn:ietf:wg:oauth:2.0:oob'  # Manual copy-paste mode
+                SCOPES
             )
 
-            # Get the authorization URL
-            auth_url, _ = flow.authorization_url(prompt='consent')
+            # Get the authorization URL with all required parameters
+            auth_url, _ = flow.authorization_url(
+                prompt='consent',
+                access_type='offline',
+                include_granted_scopes='true'
+            )
 
             print("\n" + "="*70)
             print("STEP 1: Open this URL in your browser:")

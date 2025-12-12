@@ -1,0 +1,149 @@
+# Section/statute reference patterns for Legal RAG Extraction System
+# Version: 1.0
+# Last Updated: 2025-01-22
+
+# Section reference patterns
+section_patterns:
+  # Standard section format
+  - pattern: 'Section\s+(\d+[A-Z]?)\s+of\s+(?:the\s+)?(.+?(?:Act|Code|Ordinance|Law|Constitution)(?:,?\s+\d{4})?)'
+    type: 'section'
+    description: "Section 302 of the Penal Code, 1860"
+
+  # Multiple sections
+  - pattern: 'Sections?\s+(\d+[A-Z]?(?:\s*,\s*\d+[A-Z]?)*)\s+of\s+(?:the\s+)?(.+?(?:Act|Code|Ordinance|Law)(?:,?\s+\d{4})?)'
+    type: 'sections'
+    description: "Sections 302, 304 of Penal Code"
+
+  # Article format (Constitution)
+  - pattern: 'Article\s+(\d+[A-Z]?)\s+of\s+(?:the\s+)?(.+?Constitution(?:,?\s+\d{4})?)'
+    type: 'article'
+    description: "Article 14 of the Constitution"
+
+  # Rule format
+  - pattern: 'Rule\s+(\d+[A-Z]?)\s+of\s+(?:the\s+)?(.+?(?:Rules?|Code)(?:,?\s+\d{4})?)'
+    type: 'rule'
+    description: "Rule 15 of Code of Civil Procedure"
+
+  # Order format
+  - pattern: 'Order\s+([IVXLCDM]+)\s+Rule\s+(\d+[A-Z]?)\s+of\s+(?:the\s+)?(.+?(?:Code|Rules?)(?:,?\s+\d{4})?)'
+    type: 'order_rule'
+    description: "Order XXI Rule 90 of CPC"
+
+  # Short reference (when act already mentioned)
+  - pattern: 'Section\s+(\d+[A-Z]?)'
+    type: 'section_short'
+    description: "Section 302"
+
+  - pattern: 'Article\s+(\d+[A-Z]?)'
+    type: 'article_short'
+    description: "Article 14"
+
+# Common acts and codes
+common_acts:
+  bangladesh:
+    - "Penal Code, 1860"
+    - "Code of Criminal Procedure, 1898"
+    - "Code of Civil Procedure, 1908"
+    - "Constitution of Bangladesh, 1972"
+    - "Evidence Act, 1872"
+    - "Contract Act, 1872"
+    - "Transfer of Property Act, 1882"
+    - "Specific Relief Act, 1877"
+    - "Limitation Act, 1908"
+    - "Registration Act, 1908"
+
+  india:
+    - "Indian Penal Code, 1860"
+    - "Code of Criminal Procedure, 1973"
+    - "Code of Civil Procedure, 1908"
+    - "Constitution of India, 1950"
+    - "Indian Evidence Act, 1872"
+    - "Indian Contract Act, 1872"
+    - "Transfer of Property Act, 1882"
+    - "Specific Relief Act, 1963"
+    - "Limitation Act, 1963"
+
+  pakistan:
+    - "Pakistan Penal Code, 1860"
+    - "Code of Criminal Procedure, 1898"
+    - "Code of Civil Procedure, 1908"
+    - "Constitution of Pakistan, 1973"
+    - "Qanun-e-Shahadat Order, 1984"
+
+# Act name abbreviations
+act_abbreviations:
+  "Penal Code": "PC"
+  "Code of Criminal Procedure": "CrPC"
+  "Code of Civil Procedure": "CPC"
+  "Constitution": "Const"
+  "Evidence Act": "EA"
+  "Contract Act": "CA"
+  "Transfer of Property Act": "TPA"
+
+# Section number normalization
+normalization:
+  # Split multiple sections
+  split_sections: true
+  separator: ','
+
+  # Handle ranges (e.g., "Sections 100-110")
+  expand_ranges: false
+
+# Context extraction
+context:
+  # Characters before and after to extract
+  chars_before: 50
+  chars_after: 100
+
+  # Stop words (don't include in context)
+  stop_at:
+    - "Section"
+    - "Article"
+    - "Rule"
+    - "Order"
+    - "\n\n"
+
+# Frequency tracking
+frequency:
+  # Track how many times each section is mentioned
+  track_mentions: true
+
+  # Merge duplicate sections
+  merge_duplicates: true
+
+# Confidence scoring
+confidence_rules:
+  high:
+    score: 0.95
+    conditions:
+      - "Full format with act name"
+      - "Act name recognized"
+      - "Section number valid"
+
+  medium:
+    score: 0.85
+    conditions:
+      - "Section number and act"
+      - "Minor formatting issues"
+
+  low:
+    score: 0.70
+    conditions:
+      - "Section number only"
+      - "Act inferred from context"
+
+# Special section handling
+special_sections:
+  # Common important sections
+  landmark_sections:
+    bangladesh:
+      "302": "Murder (Penal Code)"
+      "304": "Culpable homicide not amounting to murder"
+      "376": "Rape"
+      "420": "Cheating"
+
+    constitution:
+      "14": "Equality before law"
+      "26": "Right to freedom"
+      "32": "Right to constitutional remedies"
+      "102": "Writ jurisdiction"

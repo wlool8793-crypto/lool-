@@ -1,0 +1,131 @@
+# Judge name patterns for Legal RAG Extraction System
+# Version: 1.0
+# Last Updated: 2025-01-22
+
+# Bench composition labels
+bench_labels:
+  - "BEFORE"
+  - "BEFORE:"
+  - "CORAM"
+  - "CORAM:"
+  - "BENCH"
+  - "BENCH:"
+  - "PRESENT"
+  - "PRESENT:"
+
+# Judge title patterns
+judge_titles:
+  - "Hon'ble"
+  - "Honourable"
+  - "Hon'ble Justice"
+  - "Justice"
+  - "J\\."
+  - "CJ"  # Chief Justice
+  - "Chief Justice"
+  - "Mr\\. Justice"
+  - "Mrs\\. Justice"
+
+# Judge name patterns
+judge_name_patterns:
+  # Full format: Hon'ble Justice Name, J.
+  full_format:
+    pattern: "(Hon'ble\\s+)?(Justice\\s+)?([A-Z][a-z]+(?:\\s+[A-Z]\\.)?(?:\\s+[A-Z][a-z]+)+),?\\s*J\\.?"
+    description: "Standard format with title and J."
+
+  # Simple format: Justice Name
+  simple_format:
+    pattern: "(Hon'ble\\s+)?Justice\\s+([A-Z][a-z]+(?:\\s+[A-Z]\\.)?(?:\\s+[A-Z][a-z]+)+)"
+    description: "Simple justice + name"
+
+  # Name only (when following bench label)
+  name_only:
+    pattern: "([A-Z][a-z]+(?:\\s+[A-Z]\\.)?(?:\\s+[A-Z][a-z]+)+),?\\s*J\\.?"
+    description: "Name with J. suffix"
+
+# Judgment author indicators
+author_indicators:
+  - "JUDGMENT"
+  - "JUDGMENT:"
+  - "OPINION"
+  - "OPINION:"
+  - "Delivered by"
+  - "Per"
+  - "Speaking for the Court"
+
+# Opinion type indicators
+opinion_types:
+  majority:
+    - "Majority Opinion"
+    - "For the Court"
+    - "Speaking for the majority"
+
+  dissenting:
+    - "Dissenting Opinion"
+    - "Dissenting"
+    - "Dissent"
+    - "I dissent"
+
+  concurring:
+    - "Concurring Opinion"
+    - "Concurring"
+    - "I concur"
+    - "I agree"
+
+# Common name variations
+name_variations:
+  bangladesh:
+    - "Md\\."  # Mohammad/Muhammad
+    - "A\\.B\\.M\\."
+    - "A\\.T\\.M\\."
+    - "K\\.M\\."
+    - "S\\.M\\."
+
+  india:
+    - "Sri"
+    - "Smt\\."
+    - "Shri"
+    - "Kumari"
+
+  pakistan:
+    - "Mian"
+    - "Syed"
+    - "Malik"
+
+# Presiding judge detection
+presiding_indicators:
+  - "Chief Justice"
+  - "CJ"
+  - "Presiding"
+  - "First listed"  # Usually first judge is presiding
+
+# Titles to remove for clean names
+titles_to_remove:
+  - "Hon'ble"
+  - "Honourable"
+  - "Mr\\."
+  - "Mrs\\."
+  - "Ms\\."
+  - "\\(Retd\\.\\)"
+  - "\\(Retired\\)"
+
+# Confidence scoring
+confidence_rules:
+  high:
+    score: 0.90
+    conditions:
+      - "Found under BEFORE/CORAM label"
+      - "Has Justice title"
+      - "Has J. suffix"
+
+  medium:
+    score: 0.80
+    conditions:
+      - "Found in bench section"
+      - "Has Justice title"
+      - "Missing J. suffix"
+
+  low:
+    score: 0.65
+    conditions:
+      - "Found in judgment text"
+      - "Inferred from context"

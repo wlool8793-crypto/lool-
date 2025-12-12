@@ -1,0 +1,1890 @@
+================================================================================
+PHASE 4: DETAILED IMPLEMENTATION PLAN
+High-Performance Scraper with Quality Assurance
+================================================================================
+
+GOAL: Increase speed from 500 to 60,000 docs/hour (120X improvement)
+      Maintain 85% average quality score with <3% rejection rate
+
+================================================================================
+COMPLETE SYSTEM ARCHITECTURE
+================================================================================
+
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                  PHASE 4 COMPLETE SYSTEM                                    │
+│                           Speed: 60,000 docs/hour | Quality: 85% avg                       │
+└────────────────────────────────────────────────────────────────────────────────────────────┘
+
+                                    ┌─────────────────┐
+                                    │   START: URLs   │
+                                    │   from Phase 1  │
+                                    │   (1.4M total)  │
+                                    └────────┬────────┘
+                                             │
+                                             ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│  LAYER 1: INTELLIGENT SCRAPING WITH QUALITY VALIDATION                                     │
+├────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                              │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  URL QUEUE MANAGER (Priority-based)                                               │    │
+│   │  ┌────────────────┬────────────────┬────────────────┬────────────────┐           │    │
+│   │  │  PRIORITY      │  HIGH          │  MEDIUM        │  LOW           │           │    │
+│   │  │  Supreme Court │  High Courts   │  District      │  Historical    │           │    │
+│   │  │  Recent years  │  Recent years  │  All years     │  Pre-2000      │           │    │
+│   │  └────────┬───────┴────────┬───────┴────────┬───────┴────────┬───────┘           │    │
+│   └───────────┼────────────────┼────────────────┼────────────────┼────────────────────┘    │
+│               │                │                │                │                         │
+│               └────────────────┴────────────────┴────────────────┘                         │
+│                                      │                                                      │
+│                                      ▼                                                      │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ASYNC SCRAPER POOL (100 workers)                                                 │    │
+│   │                                                                                     │    │
+│   │  Worker 1 ──► Proxy 1  ─┐                                                         │    │
+│   │  Worker 2 ──► Proxy 2  ─┤                                                         │    │
+│   │  Worker 3 ──► Proxy 3  ─┤                                                         │    │
+│   │      ...        ...      ├──► Rate Limiter (2 req/sec per proxy)                  │    │
+│   │  Worker 98 ─► Proxy 98 ─┤                                                         │    │
+│   │  Worker 99 ─► Proxy 99 ─┤                                                         │    │
+│   │  Worker 100 ► Proxy 100 ┘                                                         │    │
+│   │                                                                                     │    │
+│   │  Each worker:                                                                      │    │
+│   │  • aiohttp ClientSession (persistent connection)                                  │    │
+│   │  • Connection pool: 5 connections per proxy                                       │    │
+│   │  • HTTP/2 multiplexing support                                                    │    │
+│   │  • Timeout: 30s request, 120s PDF download                                        │    │
+│   │  • Circuit breaker: 5 failures → disable proxy 60s                                │    │
+│   │  • Adaptive backoff: 429/503 → exponential delay                                  │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #1: HTTP Response Validation                                     │    │
+│   │  ├─ Status code = 200 ✓                                                           │    │
+│   │  ├─ Content-Type = application/pdf ✓                                              │    │
+│   │  ├─ Content-Length > 1KB ✓                                                        │    │
+│   │  └─ Response time < 30s ✓                                                         │    │
+│   │                                                                                     │    │
+│   │  IF FAIL: Retry with different proxy (max 3 retries) → Dead Letter Queue         │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #2: PDF Validation (pdf_validator.py)                            │    │
+│   │                                                                                     │    │
+│   │  Step 1: Header Check                                                             │    │
+│   │  ├─ First 4 bytes = b'%PDF' ✓                                                     │    │
+│   │  ├─ PDF version ≥ 1.0 (e.g., %PDF-1.4) ✓                                          │    │
+│   │  └─ File size: 1 KB - 100 MB ✓                                                    │    │
+│   │                                                                                     │    │
+│   │  Step 2: Integrity Check                                                          │    │
+│   │  ├─ Open with PyPDF2.PdfReader() ✓                                                │    │
+│   │  ├─ Page count > 0 ✓                                                              │    │
+│   │  ├─ Not encrypted (or decryptable) ✓                                              │    │
+│   │  ├─ EOF marker present ✓                                                          │    │
+│   │  └─ Cross-reference table valid ✓                                                 │    │
+│   │                                                                                     │    │
+│   │  Step 3: Content Sanity                                                           │    │
+│   │  ├─ Can extract text from page 1 ✓                                                │    │
+│   │  ├─ No suspicious patterns (malware check) ✓                                      │    │
+│   │  └─ SHA-256 hash not in corruption blacklist ✓                                    │    │
+│   │                                                                                     │    │
+│   │  IF FAIL: Retry download OR try PDF repair OR send to manual review              │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+└─────────────────────────────────────┼───────────────────────────────────────────────────────┘
+                                      │
+                                      │ Valid PDF bytes + metadata
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│  LAYER 2: INTELLIGENT EXTRACTION WITH QUALITY SCORING                                      │
+├────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                              │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  EXTRACTION QUEUE (async, priority-based)                                         │    │
+│   │  ├─ Queue capacity: 1000 PDFs                                                     │    │
+│   │  ├─ Worker pool: 20 CPU-bound workers                                             │    │
+│   │  ├─ Batch processing: 50 PDFs per batch                                           │    │
+│   │  └─ Priority: NEW > RETRY > LOW_PRIORITY                                          │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  PHASE 3 EXTRACTION PIPELINE (Existing - Integrated)                              │    │
+│   │                                                                                     │    │
+│   │  Stage 1: PDF → Text Extraction (Multi-Engine Strategy)                          │    │
+│   │  ┌─────────────────────────────────────────────────────────────────────────┐     │    │
+│   │  │  Try engines in order until quality threshold met:                      │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  1. pdfplumber (fast, good for digital PDFs)                            │     │    │
+│   │  │     ├─ Extract text + tables                                             │     │    │
+│   │  │     ├─ Quality check: text_length > 100, readable chars > 95%          │     │    │
+│   │  │     └─ If quality OK → use this, else try next                          │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  2. PyPDF2 (fallback, different parsing algorithm)                      │     │    │
+│   │  │     ├─ Extract text page by page                                         │     │    │
+│   │  │     ├─ Quality check: better than pdfplumber?                           │     │    │
+│   │  │     └─ If quality OK → use this, else try next                          │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  3. pdfminer.six (robust, handles complex layouts)                      │     │    │
+│   │  │     ├─ Deep PDF structure analysis                                       │     │    │
+│   │  │     ├─ Extract with layout preservation                                  │     │    │
+│   │  │     └─ If quality OK → use this, else try OCR                           │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  4. Tesseract OCR (last resort, for scanned documents)                  │     │    │
+│   │  │     ├─ Convert PDF → images                                              │     │    │
+│   │  │     ├─ OCR each page with confidence scores                              │     │    │
+│   │  │     ├─ Keep only if avg confidence > 60%                                 │     │    │
+│   │  │     └─ Slower but handles scanned docs                                   │     │    │
+│   │  └─────────────────────────────────────────────────────────────────────────┘     │    │
+│   │                                                                                     │    │
+│   │  Stage 2: Text Normalization                                                      │    │
+│   │  ├─ Fix encoding issues (UTF-8)                                                   │    │
+│   │  ├─ Remove control characters                                                     │    │
+│   │  ├─ Fix common OCR errors (l→I, 0→O, etc.)                                        │    │
+│   │  └─ Preserve legal formatting (citations, sections)                               │    │
+│   │                                                                                     │    │
+│   │  Stage 3: Metadata Extraction (Pattern-based + ML)                               │    │
+│   │  ├─ Citations (22 DLR (HCD) 98) - regex + validation                             │    │
+│   │  ├─ Parties (Petitioner vs Respondent) - NER + patterns                          │    │
+│   │  ├─ Judges (Hon'ble Justice...) - patterns + lookup                              │    │
+│   │  ├─ Dates (decision, filing) - dateparser + validation                           │    │
+│   │  ├─ Sections (IPC 302, Evidence Act 101) - patterns                              │    │
+│   │  └─ Each field has confidence score 0.0-1.0                                       │    │
+│   │                                                                                     │    │
+│   │  Stage 4: Analysis                                                                │    │
+│   │  ├─ Keywords (TF-IDF with legal term boost)                                      │    │
+│   │  ├─ Subject classification (CRM, CIV, CON, etc.)                                 │    │
+│   │  └─ Summary extraction (first paragraph + key points)                            │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #3: Text Extraction Quality (extraction_validator.py)            │    │
+│   │                                                                                     │    │
+│   │  Dimension 1: Text Length                                                         │    │
+│   │  ├─ Minimum: 100 characters (reject if less)                                      │    │
+│   │  ├─ Optimal: 1000+ characters                                                     │    │
+│   │  └─ Score: min(length / 1000, 1.0)                                                │    │
+│   │                                                                                     │    │
+│   │  Dimension 2: Text Quality                                                        │    │
+│   │  ├─ Readable characters (A-Z, 0-9) > 95%                                          │    │
+│   │  ├─ Control characters < 1%                                                       │    │
+│   │  ├─ Repeated characters (aaa...) < 5%                                             │    │
+│   │  └─ Score: (readable% + non_control% + non_repeat%) / 3                          │    │
+│   │                                                                                     │    │
+│   │  Dimension 3: Language Detection                                                  │    │
+│   │  ├─ Detect language (English or Bengali expected)                                │    │
+│   │  ├─ Confidence > 80%                                                              │    │
+│   │  └─ Score: lang_confidence                                                        │    │
+│   │                                                                                     │    │
+│   │  Dimension 4: OCR Quality (if OCR used)                                           │    │
+│   │  ├─ Average confidence across all words                                           │    │
+│   │  ├─ Minimum: 60% (configurable)                                                   │    │
+│   │  └─ Score: avg_ocr_confidence                                                     │    │
+│   │                                                                                     │    │
+│   │  TEXT_QUALITY_SCORE = average of all dimensions (0.0 - 1.0)                      │    │
+│   │  IF < 0.50: REJECT and retry with OCR                                            │    │
+│   │  IF 0.50-0.70: FLAG as low quality, continue                                     │    │
+│   │  IF > 0.70: PASS                                                                  │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #4: Metadata Confidence Check                                    │    │
+│   │                                                                                     │    │
+│   │  Critical Fields (must extract at least 3/5):                                     │    │
+│   │  ├─ Citation (confidence > 90%)                                                   │    │
+│   │  ├─ Party names (confidence > 80%, at least 1)                                    │    │
+│   │  ├─ Judge name (confidence > 80%, at least 1)                                     │    │
+│   │  ├─ Decision date (confidence > 90%)                                              │    │
+│   │  └─ Court code (confidence > 95%)                                                 │    │
+│   │                                                                                     │    │
+│   │  Optional Fields (bonus points):                                                  │    │
+│   │  ├─ Legal sections cited                                                          │    │
+│   │  ├─ Bench strength (Division Bench, Full Bench)                                  │    │
+│   │  └─ Case number                                                                   │    │
+│   │                                                                                     │    │
+│   │  METADATA_QUALITY_SCORE calculation:                                             │    │
+│   │  score = (critical_fields_extracted / 5) * 0.7 +                                 │    │
+│   │          (avg_confidence_of_extracted) * 0.2 +                                    │    │
+│   │          (optional_fields_extracted / 3) * 0.1                                    │    │
+│   │                                                                                     │    │
+│   │  IF < 0.40: REJECT (too little metadata)                                         │    │
+│   │  IF 0.40-0.70: FLAG as medium quality                                            │    │
+│   │  IF > 0.70: PASS                                                                  │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #5: Overall Quality Score (Phase 3 QualityAnalyzer)              │    │
+│   │                                                                                     │    │
+│   │  5 Quality Dimensions (from Phase 3):                                             │    │
+│   │                                                                                     │    │
+│   │  1. Completeness (weight: 0.25)                                                   │    │
+│   │     ├─ All required fields present?                                               │    │
+│   │     ├─ Text length adequate?                                                      │    │
+│   │     └─ No truncation detected?                                                    │    │
+│   │                                                                                     │    │
+│   │  2. Citation Quality (weight: 0.25)                                               │    │
+│   │     ├─ Citation format valid?                                                     │    │
+│   │     ├─ Citation confidence > 90%?                                                 │    │
+│   │     ├─ Cross-references valid?                                                    │    │
+│   │     └─ Related cases found?                                                       │    │
+│   │                                                                                     │    │
+│   │  3. Text Quality (weight: 0.20)                                                   │    │
+│   │     ├─ Readability score                                                          │    │
+│   │     ├─ Grammar/spelling (sampled)                                                 │    │
+│   │     └─ Legal language density                                                     │    │
+│   │                                                                                     │    │
+│   │  4. Metadata Quality (weight: 0.20)                                               │    │
+│   │     ├─ Field extraction confidence                                                │    │
+│   │     ├─ Data validation passed                                                     │    │
+│   │     └─ Consistency with text                                                      │    │
+│   │                                                                                     │    │
+│   │  5. Consistency (weight: 0.10)                                                    │    │
+│   │     ├─ Dates logical (decision ≤ filing)?                                         │    │
+│   │     ├─ Court matches citation?                                                    │    │
+│   │     ├─ Party names consistent throughout?                                         │    │
+│   │     └─ No contradictions detected?                                                │    │
+│   │                                                                                     │    │
+│   │  OVERALL_SCORE = Σ(dimension_score × weight)                                     │    │
+│   │                                                                                     │    │
+│   │  Quality-Based Routing:                                                           │    │
+│   │  ├─ EXCELLENT (0.85-1.00): Priority queue → Fast processing                      │    │
+│   │  ├─ GOOD (0.70-0.85): Normal queue → Standard processing                         │    │
+│   │  ├─ ACCEPTABLE (0.50-0.70): Low priority → Flag for review                       │    │
+│   │  └─ POOR (< 0.50): Manual review queue → Human verification                      │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+└─────────────────────────────────────┼───────────────────────────────────────────────────────┘
+                                      │
+                                      │ High-quality extraction result
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│  LAYER 3: VALIDATION & DATABASE STORAGE                                                    │
+├────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                              │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #6: Schema & Business Rules Validation                           │    │
+│   │                                                                                     │    │
+│   │  Schema Validation (Pydantic models):                                             │    │
+│   │  ┌─────────────────────────────────────────────────────────────────────────┐     │    │
+│   │  │  class DocumentSchema(BaseModel):                                        │     │    │
+│   │  │      global_id: str = Field(..., regex=r'^BD_')  # Must start with BD_  │     │    │
+│   │  │      filename_universal: str = Field(..., min_length=20)                 │     │    │
+│   │  │      court_code: str = Field(..., regex=r'^(HCD|SCD|ADT)$')              │     │    │
+│   │  │      decision_date: Optional[date] = Field(...)                          │     │    │
+│   │  │      filing_date: Optional[date] = Field(...)                            │     │    │
+│   │  │      subject_code: str = Field(..., regex=r'^(CRM|CIV|CON|...)$')        │     │    │
+│   │  │      quality_score: float = Field(..., ge=0.0, le=1.0)                   │     │    │
+│   │  │      # ... other fields with validation                                  │     │    │
+│   │  │                                                                            │     │    │
+│   │  │      @field_validator('decision_date', 'filing_date')                    │     │    │
+│   │  │      def validate_dates(cls, v):                                         │     │    │
+│   │  │          if v and (v.year < 1947 or v.year > 2025):                      │     │    │
+│   │  │              raise ValueError("Date out of reasonable range")            │     │    │
+│   │  │          return v                                                         │     │    │
+│   │  └─────────────────────────────────────────────────────────────────────────┘     │    │
+│   │                                                                                     │    │
+│   │  Business Rules Validation:                                                       │    │
+│   │  ├─ Rule 1: decision_date <= filing_date (if both present)                       │    │
+│   │  ├─ Rule 2: Court code matches citation pattern                                  │    │
+│   │  ├─ Rule 3: Party names not empty/corrupted                                      │    │
+│   │  ├─ Rule 4: Citation format matches court standards                              │    │
+│   │  ├─ Rule 5: Subject code matches keywords                                        │    │
+│   │  ├─ Rule 6: No duplicate global_id in database                                   │    │
+│   │  └─ Rule 7: File size matches hash matches content                               │    │
+│   │                                                                                     │    │
+│   │  Deduplication Check:                                                             │    │
+│   │  ├─ Calculate SHA-256 hash of PDF content                                        │    │
+│   │  ├─ Check Bloom filter (fast, in-memory, 0.1% false positive)                   │    │
+│   │  ├─ If potentially duplicate → check database                                    │    │
+│   │  └─ If duplicate found → skip (don't count as failure)                          │    │
+│   │                                                                                     │    │
+│   │  IF validation fails: Log errors + send to correction queue                     │    │
+│   │  IF passes: Continue to database save                                            │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #7: Database Transaction Integrity                               │    │
+│   │                                                                                     │    │
+│   │  PostgreSQL Transaction (ACID properties):                                        │    │
+│   │  ┌─────────────────────────────────────────────────────────────────────────┐     │    │
+│   │  │  async with db.transaction():  # BEGIN TRANSACTION                      │     │    │
+│   │  │                                                                           │     │    │
+│   │  │      # Step 1: Insert main document                                      │     │    │
+│   │  │      doc_id = await db.documents.insert({                                │     │    │
+│   │  │          global_id, filename_universal, court_code,                      │     │    │
+│   │  │          decision_date, subject_code, status, ...                        │     │    │
+│   │  │      })                                                                   │     │    │
+│   │  │                                                                           │     │    │
+│   │  │      # Step 2: Insert parties (batch)                                    │     │    │
+│   │  │      await db.parties.insert_many([                                      │     │    │
+│   │  │          {document_id: doc_id, party_name, party_type, ...},            │     │    │
+│   │  │          ...                                                              │     │    │
+│   │  │      ])                                                                   │     │    │
+│   │  │                                                                           │     │    │
+│   │  │      # Step 3: Insert judges (batch)                                     │     │    │
+│   │  │      await db.judges.insert_many([...])                                  │     │    │
+│   │  │                                                                           │     │    │
+│   │  │      # Step 4: Insert citations (batch)                                  │     │    │
+│   │  │      await db.citations.insert_many([...])                               │     │    │
+│   │  │                                                                           │     │    │
+│   │  │      # Step 5: Insert content with full-text search vector              │     │    │
+│   │  │      await db.content.insert({                                           │     │    │
+│   │  │          document_id: doc_id,                                            │     │    │
+│   │  │          full_text: text,                                                │     │    │
+│   │  │          search_vector: to_tsvector('english', text)  # PostgreSQL      │     │    │
+│   │  │      })                                                                   │     │    │
+│   │  │                                                                           │     │    │
+│   │  │      # Step 6: Insert quality scores                                     │     │    │
+│   │  │      await db.quality_scores.insert({                                    │     │    │
+│   │  │          document_id: doc_id,                                            │     │    │
+│   │  │          overall_score, completeness, citation_quality,                  │     │    │
+│   │  │          text_quality, metadata_quality, consistency,                    │     │    │
+│   │  │          gate_1_passed, gate_2_passed, ..., gate_8_passed               │     │    │
+│   │  │      })                                                                   │     │    │
+│   │  │                                                                           │     │    │
+│   │  │      # Step 7: Insert extraction metadata                                │     │    │
+│   │  │      await db.extraction_metadata.insert({                               │     │    │
+│   │  │          document_id: doc_id,                                            │     │    │
+│   │  │          extraction_method, extraction_time,                             │     │    │
+│   │  │          ocr_used, retry_count, ...                                      │     │    │
+│   │  │      })                                                                   │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  # END TRANSACTION (auto-commit if all succeed, rollback if any fail)   │     │    │
+│   │  └─────────────────────────────────────────────────────────────────────────┘     │    │
+│   │                                                                                     │    │
+│   │  Post-Save Verification:                                                          │    │
+│   │  ├─ Read document back from database                                             │    │
+│   │  ├─ Verify all foreign keys resolved correctly                                   │    │
+│   │  ├─ Check full-text search vector created                                        │    │
+│   │  └─ IF mismatch: Alert and mark for re-processing                               │    │
+│   │                                                                                     │    │
+│   │  Batch Optimization:                                                              │    │
+│   │  ├─ Accumulate 100 documents before bulk insert                                  │    │
+│   │  ├─ Use COPY command for fast insertion                                          │    │
+│   │  └─ Connection pooling: 20 connections                                           │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+└─────────────────────────────────────┼───────────────────────────────────────────────────────┘
+                                      │
+                                      │ Data safely stored
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│  LAYER 4: GOOGLE DRIVE UPLOAD (3-Tier Strategy)                                           │
+├────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                              │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ⚠️ QUALITY GATE #8: Upload Verification                                          │    │
+│   │                                                                                     │    │
+│   │  Pre-Upload Validation:                                                           │    │
+│   │  ├─ File exists on local disk ✓                                                   │    │
+│   │  ├─ File size matches database record ✓                                           │    │
+│   │  ├─ SHA-256 hash matches database ✓                                               │    │
+│   │  └─ PDF still valid (spot check) ✓                                                │    │
+│   │                                                                                     │    │
+│   │  3-Tier Upload Strategy:                                                          │    │
+│   │  ┌─────────────────────────────────────────────────────────────────────────┐     │    │
+│   │  │  TIER 1: HOT STORAGE (Recent Documents)                                  │     │    │
+│   │  │  ├─ Documents < 7 days old                                               │     │    │
+│   │  │  ├─ Upload to: /IndianKanoon_PDFs/2024/HOT/                              │     │    │
+│   │  │  ├─ Access: Frequent (for QA/verification)                               │     │    │
+│   │  │  └─ Batch size: 50 PDFs per upload                                       │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  TIER 2: WARM STORAGE (Recent Archive)                                   │     │    │
+│   │  │  ├─ Documents 7-30 days old                                              │     │    │
+│   │  │  ├─ Upload to: /IndianKanoon_PDFs/2024/WARM/                             │     │    │
+│   │  │  ├─ Access: Occasional                                                   │     │    │
+│   │  │  └─ Move from HOT to WARM daily                                          │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  TIER 3: COLD STORAGE (Long-term Archive)                                │     │    │
+│   │  │  ├─ Documents > 30 days old                                              │     │    │
+│   │  │  ├─ Upload to: /IndianKanoon_PDFs/2024/COLD/                             │     │    │
+│   │  │  ├─ Organized by: Court/Year/Subject                                     │     │    │
+│   │  │  └─ Move from WARM to COLD monthly                                       │     │    │
+│   │  └─────────────────────────────────────────────────────────────────────────┘     │    │
+│   │                                                                                     │    │
+│   │  Upload Process:                                                                  │    │
+│   │  ├─ Batch upload: 50 PDFs at once (Drive API limit)                              │    │
+│   │  ├─ Parallel uploads: 5 concurrent batches                                       │    │
+│   │  ├─ Quota management: Track 750 GB/day limit                                     │    │
+│   │  ├─ Retry logic: Exponential backoff (1s, 2s, 4s, 8s, 16s)                       │    │
+│   │  └─ Rate limiting: 10 uploads/second                                             │    │
+│   │                                                                                     │    │
+│   │  Post-Upload Verification:                                                        │    │
+│   │  ├─ Get Drive file ID and public URL                                             │    │
+│   │  ├─ Download first 1KB to verify integrity                                       │    │
+│   │  ├─ Compare checksum with original                                               │    │
+│   │  ├─ Update database with drive_file_id and drive_url                             │    │
+│   │  └─ Delete local file ONLY if verification passes                                │    │
+│   │                                                                                     │    │
+│   │  IF Upload Fails:                                                                 │    │
+│   │  ├─ Retry up to 5 times                                                           │    │
+│   │  ├─ Keep local file for manual upload                                            │    │
+│   │  ├─ Mark in database as "upload_pending"                                         │    │
+│   │  └─ Alert operator if persistent failures                                        │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+└─────────────────────────────────────┼───────────────────────────────────────────────────────┘
+                                      │
+                                      │ Upload complete + verified
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│  LAYER 5: MONITORING & QUALITY TRACKING                                                    │
+├────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                              │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  PROMETHEUS METRICS COLLECTOR                                                     │    │
+│   │                                                                                     │    │
+│   │  Performance Metrics:                                                             │    │
+│   │  ├─ documents_downloaded_total (counter)                                          │    │
+│   │  ├─ documents_downloaded_rate (gauge, docs/sec)                                   │    │
+│   │  ├─ documents_extracted_total (counter)                                           │    │
+│   │  ├─ documents_saved_total (counter)                                               │    │
+│   │  ├─ documents_uploaded_total (counter)                                            │    │
+│   │  └─ eta_hours_remaining (gauge)                                                   │    │
+│   │                                                                                     │    │
+│   │  Quality Metrics:                                                                 │    │
+│   │  ├─ quality_score_average (gauge, 0.0-1.0)                                        │    │
+│   │  ├─ quality_score_histogram (histogram, buckets: 0.5, 0.7, 0.85, 1.0)            │    │
+│   │  ├─ quality_gate_pass_rate{gate="1-8"} (gauge per gate, %)                       │    │
+│   │  ├─ documents_rejected_total (counter, quality < 0.50)                            │    │
+│   │  ├─ documents_low_quality_total (counter, quality 0.50-0.70)                      │    │
+│   │  └─ extraction_quality_improvement (gauge, retry vs initial)                      │    │
+│   │                                                                                     │    │
+│   │  Error Metrics:                                                                   │    │
+│   │  ├─ errors_total{type="download|extraction|db|upload"} (counter)                 │    │
+│   │  ├─ error_rate (gauge, errors/minute)                                             │    │
+│   │  ├─ retry_attempts_total (counter)                                                │    │
+│   │  └─ dead_letter_queue_size (gauge)                                                │    │
+│   │                                                                                     │    │
+│   │  Proxy Metrics:                                                                   │    │
+│   │  ├─ proxy_health{proxy_id="1-100"} (gauge, 0=down, 1=up)                         │    │
+│   │  ├─ proxy_success_rate{proxy_id} (gauge, %)                                      │    │
+│   │  ├─ proxy_avg_response_time{proxy_id} (gauge, seconds)                           │    │
+│   │  └─ proxy_requests_total{proxy_id} (counter)                                     │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  GRAFANA DASHBOARDS (Real-time Visualization)                                     │    │
+│   │                                                                                     │    │
+│   │  Dashboard 1: Scraping Overview                                                   │    │
+│   │  ┌─────────────────────────────────────────────────────────────────────────┐     │    │
+│   │  │  📊 Current Speed: 58,234 docs/hour                                      │     │    │
+│   │  │  📈 Progress: 847,392 / 1,400,000 (60.5%)                                │     │    │
+│   │  │  ⏱️  ETA: 9.4 hours remaining                                             │     │    │
+│   │  │  ✅ Success Rate: 97.2%                                                   │     │    │
+│   │  │  ⚠️  Error Rate: 2.8% (within threshold)                                 │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  [Line Graph: Documents/hour over last 24 hours]                         │     │    │
+│   │  │  [Bar Chart: Documents by court (HCD, SCD, etc.)]                        │     │    │
+│   │  │  [Pie Chart: Status distribution (completed, pending, failed)]           │     │    │
+│   │  └─────────────────────────────────────────────────────────────────────────┘     │    │
+│   │                                                                                     │    │
+│   │  Dashboard 2: Quality Monitoring                                                  │    │
+│   │  ┌─────────────────────────────────────────────────────────────────────────┐     │    │
+│   │  │  🎯 Average Quality: 0.857 (Target: >0.80)  ✅                            │     │    │
+│   │  │  📊 Quality Distribution:                                                 │     │    │
+│   │  │     Excellent (0.85-1.0):  42% ████████████████████                      │     │    │
+│   │  │     Good (0.70-0.85):      36% ████████████████                          │     │    │
+│   │  │     Acceptable (0.50-0.70): 19% ██████████                               │     │    │
+│   │  │     Poor (<0.50):           3% ███  ⚠️                                    │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  Quality Gates Pass Rates:                                               │     │    │
+│   │  │     Gate #1 (PDF Header):     99.2% ██████████████████████ ✅           │     │    │
+│   │  │     Gate #2 (PDF Integrity):  98.4% █████████████████████ ✅            │     │    │
+│   │  │     Gate #3 (Text Quality):   95.7% ████████████████████ ✅             │     │    │
+│   │  │     Gate #4 (Metadata):       91.2% ██████████████████ ✅               │     │    │
+│   │  │     Gate #5 (Overall):        92.8% ███████████████████ ✅              │     │    │
+│   │  │     Gate #6 (Validation):     96.9% ████████████████████ ✅             │     │    │
+│   │  │     Gate #7 (DB Save):        99.1% ██████████████████████ ✅           │     │    │
+│   │  │     Gate #8 (Upload):         98.3% █████████████████████ ✅            │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  [Heatmap: Quality by Court × Year]                                      │     │    │
+│   │  │  [Scatter: Extraction Time vs Quality Score]                             │     │    │
+│   │  └─────────────────────────────────────────────────────────────────────────┘     │    │
+│   │                                                                                     │    │
+│   │  Dashboard 3: Proxy Health                                                        │    │
+│   │  ┌─────────────────────────────────────────────────────────────────────────┐     │    │
+│   │  │  Active Proxies: 97/100 (3 disabled due to failures)                     │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  [Heatmap Grid: 10×10 grid showing proxy health]                         │     │    │
+│   │  │   🟢 Healthy (>95% success)   🟡 Warning (85-95%)  🔴 Failed (<85%)      │     │    │
+│   │  │                                                                           │     │    │
+│   │  │  [Line Graph: Requests per proxy over time]                              │     │    │
+│   │  │  [Bar Chart: Top 10 fastest proxies by avg response time]                │     │    │
+│   │  └─────────────────────────────────────────────────────────────────────────┘     │    │
+│   └─────────────────────────────────┬────────────────────────────────────────────────┘    │
+│                                     │                                                       │
+│                                     ▼                                                       │
+│   ┌──────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  ALERTING (Prometheus Alerts → Email/Slack)                                       │    │
+│   │                                                                                     │    │
+│   │  Critical Alerts (Immediate action):                                              │    │
+│   │  ├─ Quality score < 0.65 for 30 minutes → Page on-call engineer                  │    │
+│   │  ├─ Any quality gate < 80% pass rate → Page on-call engineer                     │    │
+│   │  ├─ Error rate > 10% for 15 minutes → Page on-call engineer                      │    │
+│   │  ├─ Download rate < 5 docs/sec for 10 min → Alert (system stuck?)                │    │
+│   │  └─ Database connection pool exhausted → Page DBA                                │    │
+│   │                                                                                     │    │
+│   │  Warning Alerts (Investigation needed):                                           │    │
+│   │  ├─ Quality score 0.65-0.75 for 1 hour → Slack notification                      │    │
+│   │  ├─ Rejection rate > 5% for 1 hour → Slack notification                          │    │
+│   │  ├─ >20 proxies disabled → Investigate proxy provider                            │    │
+│   │  ├─ Disk space < 50 GB → Clean up temp files                                     │    │
+│   │  └─ Drive upload failing > 10% → Check quota/credentials                         │    │
+│   │                                                                                     │    │
+│   │  Info Alerts (FYI):                                                               │    │
+│   │  ├─ Milestone reached (every 100K documents) → Slack celebration                 │    │
+│   │  ├─ Daily quality report generated → Email to team                               │    │
+│   │  └─ Weekly statistics summary → Email to stakeholders                            │    │
+│   └─────────────────────────────────────────────────────────────────────────────┘         │
+│                                                                                              │
+└────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+PERFORMANCE BOTTLENECK ANALYSIS
+================================================================================
+
+CURRENT STATE (BASELINE):
+═══════════════════════════════════════════════════════════════
+Throughput:         500 documents/hour
+Workers:            10 concurrent
+Rate Limiting:      10 req/sec TOTAL (120 req/min)
+Proxies:            100 available, only 10 used
+I/O Model:          Synchronous (blocking)
+Database:           SQLite (single writer lock)
+Selenium Usage:     ALL downloads (heavy overhead)
+Time to Complete:   2,800 hours (117 days)
+═══════════════════════════════════════════════════════════════
+
+BOTTLENECK #1: CONCURRENCY LIMITATION ⚠️ CRITICAL
+─────────────────────────────────────────────────
+Current:   10 workers
+Available: 100 proxies
+Impact:    90% of proxy capacity WASTED
+Fix:       Increase workers to 100 (1:1 with proxies)
+Gain:      10X improvement
+Result:    5,000 docs/hour
+
+BOTTLENECK #2: AGGRESSIVE RATE LIMITING ⚠️ CRITICAL
+─────────────────────────────────────────────────
+Current:   120 req/min = 2 req/sec TOTAL
+Per-Proxy: 2 req/sec × 100 proxies = 200 req/sec possible
+Impact:    Rate limiting applied GLOBALLY instead of per-proxy
+Fix:       Implement per-proxy rate limiting (2 req/sec each)
+Gain:      100X rate limit increase
+Result:    Combined with #1 = 10X improvement
+
+BOTTLENECK #3: SYNCHRONOUS I/O ⚠️ CRITICAL
+─────────────────────────────────────────────────
+Current:   Thread-based concurrency (blocking I/O)
+Issue:     Python GIL limits true parallelism
+           Threads spend 80% time waiting for I/O
+Fix:       Async/await with aiohttp (non-blocking)
+Gain:      5X improvement (better resource utilization)
+Result:    25,000 docs/hour
+
+BOTTLENECK #4: SELENIUM OVERHEAD ⚠️ HIGH
+─────────────────────────────────────────────────
+Current:   Selenium headless browser for ALL PDFs
+Issue:     2-5 seconds overhead per request
+           90% of PDFs are direct links (no JS needed)
+Fix:       Direct HTTP download for PDFs (aiohttp)
+           Only use Selenium for JavaScript pages (10%)
+Gain:      3X improvement
+Result:    50,000 docs/hour
+
+BOTTLENECK #5: DATABASE WRITE LOCKS ⚠️ MEDIUM
+─────────────────────────────────────────────────
+Current:   SQLite (single writer at a time)
+Issue:     Write serialization bottleneck
+           Lock contention with 100 workers
+Fix:       PostgreSQL with connection pooling (20 connections)
+           Batch inserts (100 records at once)
+Gain:      2X improvement
+Result:    60,000 docs/hour
+
+═══════════════════════════════════════════════════════════════
+FINAL TARGET: 60,000 documents/hour (120X improvement)
+TIME TO COMPLETE: 23.3 hours (vs current 2,800 hours)
+SAVINGS: 116 days → LESS THAN 1 DAY!
+═══════════════════════════════════════════════════════════════
+
+
+================================================================================
+4-STAGE IMPLEMENTATION PLAN
+================================================================================
+
+┌────────────────────────────────────────────────────────────────┐
+│ STAGE 1: CONFIGURATION & QUICK WINS (Day 1)                   │
+│ Target: 10X improvement (500 → 5,000 docs/hour)               │
+└────────────────────────────────────────────────────────────────┘
+
+OBJECTIVE: Maximize performance with configuration changes only
+           No code changes required - just tune existing system
+
+CHANGES TO MAKE:
+─────────────────────────────────────────────────────────────────
+
+1. config/config_production.yaml (UPDATE)
+   ────────────────────────────────────────
+   BEFORE:
+   ─────────
+   scraper:
+     num_threads: 10
+     delay_between_requests: 0.5
+
+   performance:
+     max_workers: 10
+     max_requests_per_minute: 120
+
+   AFTER:
+   ────────
+   scraper:
+     num_threads: 100              # 10X increase
+     delay_between_requests: 0.01  # 50X faster
+
+   performance:
+     max_workers: 100               # 10X increase
+     max_requests_per_minute: 12000 # 100X increase (200 req/sec)
+
+2. Enable All 100 Proxies
+   ────────────────────────────────────────
+   File: src/proxy_manager.py
+
+   Current: Loads 100 proxies but only 10 workers use them
+   Fix:     With 100 workers, all proxies utilized
+
+   Command to verify:
+   python -c "from src.proxy_manager import create_proxy_manager_from_env; \
+              pm = create_proxy_manager_from_env(); \
+              print(f'Loaded {len(pm.proxies)} proxies')"
+
+3. PostgreSQL Migration
+   ────────────────────────────────────────
+   Script: scripts/setup_postgres.sh
+
+   Steps:
+   a) Install PostgreSQL 15
+      sudo apt update
+      sudo apt install postgresql-15 postgresql-contrib
+
+   b) Create database and user
+      sudo -u postgres psql <<EOF
+      CREATE DATABASE indiankanoon;
+      CREATE USER indiankanoon_user WITH PASSWORD 'secure_pass_2024';
+      GRANT ALL PRIVILEGES ON DATABASE indiankanoon TO indiankanoon_user;
+      EOF
+
+   c) Run migrations
+      psql -U indiankanoon_user -d indiankanoon -f migrations/*.sql
+
+   d) Migrate existing SQLite data
+      python scripts/migrate_sqlite_to_pg.py
+
+   e) Update config
+      database:
+        url: "postgresql://indiankanoon_user:secure_pass_2024@localhost/indiankanoon"
+        pool_size: 20
+        max_overflow: 10
+
+4. Optimize Selenium Usage
+   ────────────────────────────────────────
+   File: src/scraper.py
+
+   Add URL classification:
+
+   def requires_javascript(url: str) -> bool:
+       """Check if URL needs Selenium or can use direct HTTP"""
+       # PDF URLs are direct downloads (90% of cases)
+       if url.endswith('.pdf') or '/doc/' in url:
+           return False
+       # Search pages need JavaScript
+       if '/search/' in url or '/browse/' in url:
+           return True
+       return False
+
+   Usage:
+   if requires_javascript(url):
+       content = selenium_driver.get(url)  # 10% of requests
+   else:
+       content = requests.get(url)         # 90% of requests (faster)
+
+EXPECTED RESULTS:
+─────────────────────────────────────────────────────────────────
+Before Stage 1:  500 docs/hour
+After Stage 1:   5,000 docs/hour (10X improvement)
+Time Investment: 4-6 hours
+Effort:          LOW (just config + DB setup)
+
+
+┌────────────────────────────────────────────────────────────────┐
+│ STAGE 2: ASYNC MIGRATION (Days 2-4)                           │
+│ Target: Additional 5X (5,000 → 25,000 docs/hour)              │
+└────────────────────────────────────────────────────────────────┘
+
+OBJECTIVE: Migrate from synchronous to asynchronous I/O
+           Eliminate blocking waits, maximize CPU utilization
+
+FILES TO CREATE:
+─────────────────────────────────────────────────────────────────
+
+1. src/scraper/async_scraper.py (~400 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Core async HTTP client with connection pooling
+
+   Key Components:
+
+   import aiohttp
+   import asyncio
+   from typing import Optional, Dict, Any
+
+   class AsyncScraper:
+       def __init__(self, proxy_manager, rate_limiter):
+           self.proxy_manager = proxy_manager
+           self.rate_limiter = rate_limiter
+           self.sessions = {}  # proxy_id -> aiohttp.ClientSession
+
+       async def create_session(self, proxy: ProxyInfo) -> aiohttp.ClientSession:
+           """Create persistent session with connection pooling"""
+           connector = aiohttp.TCPConnector(
+               limit=5,              # 5 connections per proxy
+               limit_per_host=5,
+               ttl_dns_cache=300,
+               enable_cleanup_closed=True
+           )
+
+           timeout = aiohttp.ClientTimeout(
+               total=120,            # Total timeout
+               connect=30,           # Connection timeout
+               sock_read=30          # Read timeout
+           )
+
+           session = aiohttp.ClientSession(
+               connector=connector,
+               timeout=timeout,
+               headers={'User-Agent': 'IndianKanoon Scraper v2.0'}
+           )
+
+           return session
+
+       async def download_pdf(self, url: str, proxy: ProxyInfo) -> bytes:
+           """Download PDF with quality gate #1 validation"""
+           # Get or create session for this proxy
+           if proxy.host not in self.sessions:
+               self.sessions[proxy.host] = await self.create_session(proxy)
+
+           session = self.sessions[proxy.host]
+
+           # Rate limiting (per-proxy)
+           await self.rate_limiter.acquire(proxy.host)
+
+           try:
+               async with session.get(
+                   url,
+                   proxy=proxy.get_proxy_url(),
+                   allow_redirects=True
+               ) as response:
+                   # Quality Gate #1: HTTP Response Validation
+                   gate1_result = await self._quality_gate_1(response)
+                   if not gate1_result.passed:
+                       raise QualityGateError(f"Gate #1 failed: {gate1_result.reason}")
+
+                   # Stream download in chunks
+                   pdf_bytes = bytearray()
+                   async for chunk in response.content.iter_chunked(8192):
+                       pdf_bytes.extend(chunk)
+
+                   return bytes(pdf_bytes)
+
+           except Exception as e:
+               proxy.record_failure()
+               raise
+
+       async def _quality_gate_1(self, response) -> GateResult:
+           """Quality Gate #1: HTTP Response Validation"""
+           if response.status != 200:
+               return GateResult(
+                   passed=False,
+                   reason=f"HTTP {response.status}",
+                   score=0.0,
+                   retry_recommended=(response.status in [429, 503])
+               )
+
+           content_type = response.headers.get('Content-Type', '')
+           if 'pdf' not in content_type.lower():
+               return GateResult(
+                   passed=False,
+                   reason=f"Not PDF: {content_type}",
+                   score=0.0
+               )
+
+           content_length = int(response.headers.get('Content-Length', 0))
+           if content_length < 1024:
+               return GateResult(
+                   passed=False,
+                   reason=f"Too small: {content_length} bytes",
+                   score=0.0
+               )
+
+           return GateResult(passed=True, reason="OK", score=1.0)
+
+2. src/scraper/async_download_manager.py (~500 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Orchestrate 100 async workers
+
+   class AsyncDownloadManager:
+       def __init__(self, num_workers=100):
+           self.num_workers = num_workers
+           self.scraper = AsyncScraper(proxy_manager, rate_limiter)
+           self.quality_gate_manager = QualityGateManager()
+           self.download_queue = asyncio.Queue(maxsize=1000)
+           self.results_queue = asyncio.Queue()
+
+       async def worker(self, worker_id: int):
+           """Individual async worker coroutine"""
+           while True:
+               try:
+                   # Get URL from queue
+                   url_task = await self.download_queue.get()
+                   if url_task is None:  # Shutdown signal
+                       break
+
+                   url = url_task['url']
+                   doc_id = url_task['doc_id']
+
+                   # Get proxy for this worker
+                   proxy = await self.proxy_manager.get_next_proxy()
+
+                   # Download with quality gate #1
+                   pdf_bytes = await self.scraper.download_pdf(url, proxy)
+
+                   # Quality Gate #2: PDF Validation
+                   gate2_result = await self.quality_gate_manager.run_gate(
+                       QualityGate.GATE_2,
+                       pdf_bytes
+                   )
+
+                   if not gate2_result.passed:
+                       # Retry with different proxy
+                       if url_task['retry_count'] < 3:
+                           url_task['retry_count'] += 1
+                           await self.download_queue.put(url_task)
+                       else:
+                           # Send to dead letter queue
+                           await self.dead_letter_queue.put(url_task)
+                       continue
+
+                   # Save PDF to disk
+                   pdf_path = f"./temp_pdfs/{doc_id}.pdf"
+                   async with aiofiles.open(pdf_path, 'wb') as f:
+                       await f.write(pdf_bytes)
+
+                   # Add to results queue for extraction
+                   await self.results_queue.put({
+                       'doc_id': doc_id,
+                       'pdf_path': pdf_path,
+                       'quality_gates': [gate2_result]
+                   })
+
+                   # Mark task done
+                   self.download_queue.task_done()
+
+               except Exception as e:
+                   logger.error(f"Worker {worker_id} error: {e}")
+                   self.download_queue.task_done()
+
+       async def run(self, urls: List[str]):
+           """Run all workers"""
+           # Create workers
+           workers = [
+               asyncio.create_task(self.worker(i))
+               for i in range(self.num_workers)
+           ]
+
+           # Feed URLs to queue
+           for url_data in urls:
+               await self.download_queue.put(url_data)
+
+           # Wait for all downloads to complete
+           await self.download_queue.join()
+
+           # Send shutdown signal to workers
+           for _ in range(self.num_workers):
+               await self.download_queue.put(None)
+
+           # Wait for workers to finish
+           await asyncio.gather(*workers)
+
+3. async_bulk_download.py (~700 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Main async script (replacement for bulk_download.py)
+
+   import asyncio
+   from src.scraper.async_download_manager import AsyncDownloadManager
+   from src.integration.extraction_worker import ExtractionWorker
+
+   async def main():
+       # Initialize managers
+       download_mgr = AsyncDownloadManager(num_workers=100)
+       extraction_worker = ExtractionWorker(num_workers=20)
+
+       # Get URLs from database
+       db = await get_async_database()
+       urls = await db.get_pending_urls(limit=10000)
+
+       # Start extraction worker in background
+       extraction_task = asyncio.create_task(
+           extraction_worker.run(download_mgr.results_queue)
+       )
+
+       # Run downloads
+       await download_mgr.run(urls)
+
+       # Wait for extraction to finish
+       await extraction_task
+
+   if __name__ == '__main__':
+       asyncio.run(main())
+
+4. src/database/connection.py (UPDATE - add ~150 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Add async database support
+
+   import asyncpg
+
+   class AsyncDatabase:
+       def __init__(self, db_url):
+           self.db_url = db_url
+           self.pool = None
+
+       async def connect(self):
+           """Create connection pool"""
+           self.pool = await asyncpg.create_pool(
+               self.db_url,
+               min_size=10,
+               max_size=20,
+               command_timeout=60
+           )
+
+       async def batch_insert_documents(self, documents: List[Dict]):
+           """Batch insert for performance"""
+           async with self.pool.acquire() as conn:
+               await conn.executemany(
+                   """
+                   INSERT INTO documents (global_id, filename_universal, ...)
+                   VALUES ($1, $2, ...)
+                   """,
+                   [(d['global_id'], d['filename_universal'], ...) for d in documents]
+               )
+
+5. requirements-phase4.txt (NEW)
+   ────────────────────────────────────────────────────
+   aiohttp[speedups]>=3.9.0
+   asyncpg>=0.29.0
+   aiofiles>=23.2.0
+   uvloop>=0.19.0  # Faster event loop
+
+EXPECTED RESULTS:
+─────────────────────────────────────────────────────────────────
+Before Stage 2:  5,000 docs/hour
+After Stage 2:   25,000 docs/hour (5X improvement)
+Time Investment: 2-3 days
+Effort:          MEDIUM (async migration requires careful coding)
+
+
+┌────────────────────────────────────────────────────────────────┐
+│ STAGE 3: ARCHITECTURE OPTIMIZATION (Days 5-7)                 │
+│ Target: Additional 2X (25,000 → 50,000 docs/hour)             │
+└────────────────────────────────────────────────────────────────┘
+
+OBJECTIVE: Add reliability patterns and advanced optimizations
+           Circuit breakers, adaptive rate limiting, deduplication
+
+FILES TO CREATE:
+─────────────────────────────────────────────────────────────────
+
+1. src/resilience/circuit_breaker.py (~250 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Prevent cascading failures
+
+   from enum import Enum
+   from datetime import datetime, timedelta
+
+   class CircuitState(Enum):
+       CLOSED = "closed"      # Normal operation
+       OPEN = "open"          # Failing, reject requests
+       HALF_OPEN = "half_open"  # Testing if recovered
+
+   class CircuitBreaker:
+       """Per-proxy circuit breaker"""
+
+       def __init__(
+           self,
+           failure_threshold: int = 5,
+           recovery_timeout: int = 60,
+           half_open_max_calls: int = 3
+       ):
+           self.failure_threshold = failure_threshold
+           self.recovery_timeout = recovery_timeout
+           self.half_open_max_calls = half_open_max_calls
+
+           self.state = CircuitState.CLOSED
+           self.failure_count = 0
+           self.last_failure_time = None
+           self.half_open_calls = 0
+
+       def call(self, func, *args, **kwargs):
+           """Execute function with circuit breaker protection"""
+
+           # Check if we should transition states
+           self._check_state_transition()
+
+           if self.state == CircuitState.OPEN:
+               raise CircuitBreakerOpen("Circuit breaker is OPEN")
+
+           try:
+               result = func(*args, **kwargs)
+               self._on_success()
+               return result
+
+           except Exception as e:
+               self._on_failure()
+               raise
+
+       def _check_state_transition(self):
+           """Check if state should change"""
+           if self.state == CircuitState.OPEN:
+               # Check if recovery timeout has passed
+               if datetime.now() - self.last_failure_time > timedelta(seconds=self.recovery_timeout):
+                   logger.info("Circuit breaker transitioning to HALF_OPEN")
+                   self.state = CircuitState.HALF_OPEN
+                   self.half_open_calls = 0
+
+       def _on_success(self):
+           """Handle successful call"""
+           if self.state == CircuitState.HALF_OPEN:
+               self.half_open_calls += 1
+               if self.half_open_calls >= self.half_open_max_calls:
+                   # Recovered! Go back to CLOSED
+                   logger.info("Circuit breaker recovered, transitioning to CLOSED")
+                   self.state = CircuitState.CLOSED
+                   self.failure_count = 0
+           elif self.state == CircuitState.CLOSED:
+               # Reset failure count on success
+               self.failure_count = 0
+
+       def _on_failure(self):
+           """Handle failed call"""
+           self.failure_count += 1
+           self.last_failure_time = datetime.now()
+
+           if self.state == CircuitState.HALF_OPEN:
+               # Fail in HALF_OPEN -> back to OPEN
+               logger.warning("Circuit breaker failed in HALF_OPEN, back to OPEN")
+               self.state = CircuitState.OPEN
+
+           elif self.failure_count >= self.failure_threshold:
+               # Too many failures -> OPEN
+               logger.warning(f"Circuit breaker OPEN after {self.failure_count} failures")
+               self.state = CircuitState.OPEN
+
+2. src/resilience/adaptive_limiter.py (~320 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Auto-adjust rate based on server responses
+
+   class AdaptiveRateLimiter:
+       """Per-proxy adaptive rate limiting"""
+
+       def __init__(self, initial_rate: float = 2.0):
+           self.current_rate = initial_rate  # req/sec
+           self.min_rate = 0.5
+           self.max_rate = 5.0
+
+           self.success_streak = 0
+           self.backoff_until = None
+           self.recent_responses = deque(maxlen=100)
+
+       async def acquire(self, proxy_id: str):
+           """Acquire permission to make request"""
+           # Check if in backoff
+           if self.backoff_until and datetime.now() < self.backoff_until:
+               wait_time = (self.backoff_until - datetime.now()).total_seconds()
+               await asyncio.sleep(wait_time)
+               self.backoff_until = None
+
+           # Rate limiting
+           await asyncio.sleep(1.0 / self.current_rate)
+
+       def record_response(self, status_code: int):
+           """Adjust rate based on response"""
+           self.recent_responses.append(status_code)
+
+           if status_code == 429:  # Too Many Requests
+               # Exponential backoff
+               self.current_rate = max(self.current_rate / 2, self.min_rate)
+               self.backoff_until = datetime.now() + timedelta(seconds=2 ** len([r for r in self.recent_responses if r == 429]))
+               self.success_streak = 0
+               logger.warning(f"Rate limited! Reducing to {self.current_rate} req/sec")
+
+           elif status_code == 503:  # Service Unavailable
+               self.backoff_until = datetime.now() + timedelta(seconds=5)
+               self.success_streak = 0
+
+           elif 200 <= status_code < 300:
+               # Success!
+               self.success_streak += 1
+
+               # After 10 consecutive successes, increase rate by 10%
+               if self.success_streak >= 10:
+                   self.current_rate = min(self.current_rate * 1.1, self.max_rate)
+                   self.success_streak = 0
+                   logger.info(f"Increasing rate to {self.current_rate} req/sec")
+
+3. src/resilience/dedup_manager.py (~300 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Detect duplicate PDFs before processing
+
+   import hashlib
+   from pybloom_live import BloomFilter
+
+   class DeduplicationManager:
+       """Fast duplicate detection using Bloom filter"""
+
+       def __init__(self, capacity: int = 1_000_000, error_rate: float = 0.001):
+           # Bloom filter for fast O(1) lookups
+           self.bloom = BloomFilter(capacity=capacity, error_rate=error_rate)
+
+           # Database connection for definitive checks
+           self.db = None
+
+       def calculate_hash(self, pdf_bytes: bytes) -> str:
+           """Calculate SHA-256 hash of PDF content"""
+           return hashlib.sha256(pdf_bytes).hexdigest()
+
+       async def is_duplicate(self, pdf_bytes: bytes) -> bool:
+           """Check if PDF is duplicate (fast check + DB verify)"""
+           content_hash = self.calculate_hash(pdf_bytes)
+
+           # Step 1: Fast Bloom filter check (O(1), in-memory)
+           if content_hash not in self.bloom:
+               # Definitely NOT a duplicate
+               self.bloom.add(content_hash)
+               return False
+
+           # Step 2: Bloom filter says "maybe duplicate"
+           # Need to check database for certainty (Bloom filters have false positives)
+           exists = await self.db.check_hash_exists(content_hash)
+
+           if exists:
+               logger.info(f"Duplicate detected: {content_hash[:8]}...")
+               return True
+           else:
+               # False positive from Bloom filter
+               self.bloom.add(content_hash)  # Ensure it's tracked
+               return False
+
+4. src/quality/quality_gate_manager.py (~320 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Orchestrate all 8 quality gates
+
+   from enum import Enum
+   from dataclasses import dataclass
+   from typing import Dict, Any
+
+   class QualityGate(Enum):
+       GATE_1 = "http_response_validation"
+       GATE_2 = "pdf_validation"
+       GATE_3 = "text_extraction_quality"
+       GATE_4 = "metadata_confidence"
+       GATE_5 = "overall_quality_score"
+       GATE_6 = "schema_validation"
+       GATE_7 = "database_transaction"
+       GATE_8 = "drive_upload_verification"
+
+   @dataclass
+   class GateResult:
+       passed: bool
+       reason: str
+       score: float  # 0.0 - 1.0
+       retry_recommended: bool = False
+       suggested_action: str = None
+       metadata: Dict[str, Any] = None
+
+   class QualityGateManager:
+       """Central manager for all quality gates"""
+
+       def __init__(self):
+           self.gate_statistics = {gate: {'passed': 0, 'failed': 0} for gate in QualityGate}
+
+           # Import gate implementations
+           from src.quality.pdf_validator import validate_pdf_header, validate_pdf_integrity
+           from src.quality.extraction_validator import validate_text_quality, validate_metadata_confidence
+           # ... etc
+
+           self.gate_functions = {
+               QualityGate.GATE_1: self._gate_1_http_response,
+               QualityGate.GATE_2: self._gate_2_pdf_validation,
+               QualityGate.GATE_3: self._gate_3_text_quality,
+               QualityGate.GATE_4: self._gate_4_metadata,
+               QualityGate.GATE_5: self._gate_5_overall,
+               QualityGate.GATE_6: self._gate_6_validation,
+               QualityGate.GATE_7: self._gate_7_database,
+               QualityGate.GATE_8: self._gate_8_upload,
+           }
+
+       async def run_gate(self, gate_id: QualityGate, data: Any) -> GateResult:
+           """Run a specific quality gate"""
+           gate_func = self.gate_functions[gate_id]
+
+           try:
+               result = await gate_func(data)
+
+               # Track statistics
+               if result.passed:
+                   self.gate_statistics[gate_id]['passed'] += 1
+               else:
+                   self.gate_statistics[gate_id]['failed'] += 1
+
+               return result
+
+           except Exception as e:
+               logger.error(f"Quality gate {gate_id.value} error: {e}")
+               self.gate_statistics[gate_id]['failed'] += 1
+               return GateResult(
+                   passed=False,
+                   reason=f"Gate error: {e}",
+                   score=0.0
+               )
+
+       def get_gate_pass_rates(self) -> Dict[QualityGate, float]:
+           """Get pass rate for each gate"""
+           pass_rates = {}
+           for gate, stats in self.gate_statistics.items():
+               total = stats['passed'] + stats['failed']
+               if total > 0:
+                   pass_rates[gate] = stats['passed'] / total
+               else:
+                   pass_rates[gate] = 1.0
+           return pass_rates
+
+EXPECTED RESULTS:
+─────────────────────────────────────────────────────────────────
+Before Stage 3:  25,000 docs/hour
+After Stage 3:   50,000 docs/hour (2X improvement)
+Time Investment: 2-3 days
+Effort:          MEDIUM-HIGH (complex patterns but well-defined)
+
+
+┌────────────────────────────────────────────────────────────────┐
+│ STAGE 4: INTEGRATION & MONITORING (Days 8-10)                 │
+│ Target: Additional 1.2X (50,000 → 60,000 docs/hour)           │
+└────────────────────────────────────────────────────────────────┘
+
+OBJECTIVE: Complete end-to-end integration
+           Production monitoring and quality tracking
+
+FILES TO CREATE:
+─────────────────────────────────────────────────────────────────
+
+1. src/integration/extraction_worker.py (~450 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Process PDFs through Phase 3 extraction
+
+   class ExtractionWorker:
+       def __init__(self, num_workers=20):
+           self.num_workers = num_workers
+           self.extraction_queue = asyncio.PriorityQueue()
+
+           # Import Phase 3 pipeline
+           from src.extractors.pipeline.extraction_pipeline import ExtractionPipeline
+           self.pipeline = ExtractionPipeline()
+
+       async def worker(self, worker_id: int):
+           """Extract metadata from PDFs"""
+           while True:
+               try:
+                   # Get PDF from queue (priority-based)
+                   priority, pdf_task = await self.extraction_queue.get()
+
+                   pdf_path = pdf_task['pdf_path']
+                   doc_id = pdf_task['doc_id']
+
+                   # Run Phase 3 extraction (sync, so run in executor)
+                   loop = asyncio.get_event_loop()
+                   extraction_result = await loop.run_in_executor(
+                       None,
+                       self.pipeline.extract_from_pdf,
+                       pdf_path,
+                       doc_id
+                   )
+
+                   # Quality Gate #3: Text Quality
+                   gate3 = await quality_gate_manager.run_gate(
+                       QualityGate.GATE_3,
+                       extraction_result
+                   )
+
+                   # Quality Gate #4: Metadata Confidence
+                   gate4 = await quality_gate_manager.run_gate(
+                       QualityGate.GATE_4,
+                       extraction_result
+                   )
+
+                   # Quality Gate #5: Overall Quality Score
+                   gate5 = await quality_gate_manager.run_gate(
+                       QualityGate.GATE_5,
+                       extraction_result
+                   )
+
+                   # Quality-based routing
+                   overall_score = gate5.score
+                   if overall_score >= 0.85:
+                       queue_type = "PRIORITY"
+                   elif overall_score >= 0.70:
+                       queue_type = "NORMAL"
+                   elif overall_score >= 0.50:
+                       queue_type = "LOW_PRIORITY"
+                   else:
+                       queue_type = "MANUAL_REVIEW"
+                       # Send to manual review queue
+                       await manual_review_queue.put(extraction_result)
+                       continue
+
+                   # Save to database (Quality Gate #7)
+                   await self.save_to_database(extraction_result)
+
+                   # Queue for Drive upload
+                   await drive_upload_queue.put(extraction_result)
+
+               except Exception as e:
+                   logger.error(f"Extraction worker {worker_id} error: {e}")
+
+2. src/integration/drive_uploader.py (~520 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Batch upload to Google Drive with verification
+
+   from googleapiclient.discovery import build
+   from googleapiclient.http import MediaFileUpload
+
+   class DriveUploader:
+       def __init__(self):
+           self.service = build('drive', 'v3', credentials=creds)
+           self.upload_queue = asyncio.Queue()
+           self.batch_size = 50
+
+       async def uploader_worker(self):
+           """Batch upload PDFs to Drive"""
+           while True:
+               # Collect batch of PDFs
+               batch = []
+               for _ in range(self.batch_size):
+                   try:
+                       item = await asyncio.wait_for(
+                           self.upload_queue.get(),
+                           timeout=5.0
+                       )
+                       batch.append(item)
+                   except asyncio.TimeoutError:
+                       break
+
+               if not batch:
+                   await asyncio.sleep(1)
+                   continue
+
+               # Upload batch
+               for item in batch:
+                   try:
+                       # Quality Gate #8: Pre-upload validation
+                       if not os.path.exists(item['pdf_path']):
+                           logger.error(f"File not found: {item['pdf_path']}")
+                           continue
+
+                       # Determine tier (HOT/WARM/COLD)
+                       tier = self._determine_tier(item['created_at'])
+                       folder_id = self.tier_folders[tier]
+
+                       # Upload to Drive
+                       file_metadata = {
+                           'name': item['filename'],
+                           'parents': [folder_id]
+                       }
+                       media = MediaFileUpload(
+                           item['pdf_path'],
+                           mimetype='application/pdf',
+                           resumable=True
+                       )
+
+                       drive_file = self.service.files().create(
+                           body=file_metadata,
+                           media_body=media,
+                           fields='id,webViewLink,md5Checksum'
+                       ).execute()
+
+                       # Verify upload (Quality Gate #8)
+                       verification_passed = await self._verify_upload(
+                           item['pdf_path'],
+                           drive_file['id'],
+                           drive_file.get('md5Checksum')
+                       )
+
+                       if verification_passed:
+                           # Update database with Drive URL
+                           await db.update_document(
+                               item['doc_id'],
+                               drive_file_id=drive_file['id'],
+                               drive_url=drive_file['webViewLink'],
+                               upload_verified=True
+                           )
+
+                           # Delete local file
+                           os.remove(item['pdf_path'])
+                       else:
+                           logger.warning(f"Upload verification failed: {item['doc_id']}")
+
+                   except Exception as e:
+                       logger.error(f"Upload error: {e}")
+
+3. src/monitoring/prometheus_exporter.py (~350 lines)
+   ────────────────────────────────────────────────────
+   Purpose: Expose metrics for Prometheus
+
+   from prometheus_client import Counter, Gauge, Histogram, start_http_server
+
+   # Define metrics
+   documents_downloaded = Counter(
+       'documents_downloaded_total',
+       'Total documents downloaded'
+   )
+
+   documents_extracted = Counter(
+       'documents_extracted_total',
+       'Total documents extracted'
+   )
+
+   download_rate = Gauge(
+       'download_rate_docs_per_second',
+       'Current download rate'
+   )
+
+   quality_score_avg = Gauge(
+       'quality_score_average',
+       'Average quality score'
+   )
+
+   quality_score_histogram = Histogram(
+       'quality_score_distribution',
+       'Distribution of quality scores',
+       buckets=[0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+   )
+
+   quality_gate_pass_rate = Gauge(
+       'quality_gate_pass_rate',
+       'Pass rate for each quality gate',
+       ['gate']
+   )
+
+   proxy_health = Gauge(
+       'proxy_health_status',
+       'Proxy health (0=down, 1=up)',
+       ['proxy_id']
+   )
+
+   errors_total = Counter(
+       'errors_total',
+       'Total errors by type',
+       ['error_type']
+   )
+
+   # Start HTTP server for metrics
+   start_http_server(9090)  # Metrics available at :9090/metrics
+
+4. monitoring/grafana_dashboards/scraping_overview.json
+   ────────────────────────────────────────────────────
+   Grafana dashboard configuration (JSON)
+
+5. monitoring/grafana_dashboards/quality_monitoring.json
+   ────────────────────────────────────────────────────
+   Quality-focused dashboard
+
+6. monitoring/alerting_rules.yml
+   ────────────────────────────────────────────────────
+   Prometheus alert rules
+
+   groups:
+     - name: scraping_alerts
+       interval: 30s
+       rules:
+         - alert: HighErrorRate
+           expr: rate(errors_total[5m]) > 0.1
+           for: 15m
+           labels:
+             severity: critical
+           annotations:
+             summary: "Error rate above 10%"
+
+         - alert: LowQualityScore
+           expr: quality_score_average < 0.65
+           for: 30m
+           labels:
+             severity: critical
+           annotations:
+             summary: "Quality score below 0.65"
+
+         - alert: QualityGateFailing
+           expr: quality_gate_pass_rate < 0.80
+           for: 15m
+           labels:
+             severity: warning
+           annotations:
+             summary: "Quality gate pass rate below 80%"
+
+7. PHASE_4_COMPLETE.md (Documentation)
+   ────────────────────────────────────────────────────
+   Complete documentation of Phase 4 implementation
+
+8. DEPLOYMENT_GUIDE.md (Operations runbook)
+   ────────────────────────────────────────────────────
+   Step-by-step deployment and operations guide
+
+EXPECTED RESULTS:
+─────────────────────────────────────────────────────────────────
+Before Stage 4:  50,000 docs/hour
+After Stage 4:   60,000 docs/hour (1.2X improvement)
+Time Investment: 2-3 days
+Effort:          MEDIUM (integration + configuration)
+
+
+================================================================================
+QUALITY GATES: DETAILED SPECIFICATIONS
+================================================================================
+
+GATE #1: HTTP Response Validation
+──────────────────────────────────────────────────────────────────
+Location:    src/scraper/async_scraper.py
+Timing:      Immediately after HTTP response
+Purpose:     Catch network/server errors early
+
+Checks:
+1. Status code = 200 (not 404, 500, etc.)
+2. Content-Type = 'application/pdf'
+3. Content-Length > 1KB
+4. Response time < 30s
+
+Actions:
+- PASS: Continue to download
+- FAIL: Retry with different proxy (max 3 retries)
+- FAIL (429/503): Exponential backoff before retry
+- FAIL (permanent): Send to dead letter queue
+
+Target Pass Rate: 99%
+
+
+GATE #2: PDF Validation
+──────────────────────────────────────────────────────────────────
+Location:    src/quality/pdf_validator.py
+Timing:      After PDF bytes downloaded
+Purpose:     Ensure PDF is valid and not corrupted
+
+Stage 1: Header Check
+- First 4 bytes = b'%PDF'
+- PDF version 1.0-2.0
+- File size 1KB - 100MB
+
+Stage 2: Integrity Check
+- Can open with PyPDF2.PdfReader()
+- Page count > 0
+- Not encrypted (or decryptable)
+- EOF marker present
+- Cross-reference table valid
+
+Stage 3: Content Sanity
+- Can extract text from page 1
+- No malware signatures
+- SHA-256 not in corruption blacklist
+
+Scoring:
+- Header OK: 0.3 points
+- Integrity OK: 0.5 points
+- Content OK: 0.2 points
+- Total: 1.0 = PASS
+
+Actions:
+- Score ≥ 0.8: PASS
+- Score 0.5-0.8: Try PDF repair → retry
+- Score < 0.5: Manual review queue
+
+Target Pass Rate: 98%
+
+
+GATE #3: Text Extraction Quality
+──────────────────────────────────────────────────────────────────
+Location:    src/quality/extraction_validator.py
+Timing:      After Phase 3 text extraction
+Purpose:     Ensure extracted text is readable
+
+Dimensions:
+1. Length (weight 0.30)
+   - Min: 100 chars (reject if less)
+   - Optimal: 1000+ chars
+   - Score: min(length/1000, 1.0)
+
+2. Readability (weight 0.30)
+   - Readable chars (A-Z, 0-9, etc.) > 95%
+   - Score: readable_chars / total_chars
+
+3. Language (weight 0.20)
+   - English or Bengali expected
+   - Confidence > 80%
+   - Score: lang_confidence
+
+4. OCR Quality (weight 0.20, if OCR used)
+   - Min: 60%
+   - Score: avg_ocr_confidence
+
+Final Score: weighted sum
+
+Actions:
+- Score < 0.50: Retry with OCR
+- Score 0.50-0.70: Flag as low quality
+- Score ≥ 0.70: PASS
+
+Target Pass Rate: 95%
+
+
+GATE #4: Metadata Confidence Check
+──────────────────────────────────────────────────────────────────
+Location:    src/quality/extraction_validator.py
+Timing:      After Phase 3 metadata extraction
+Purpose:     Ensure critical metadata extracted
+
+Critical Fields (need ≥3 of 5):
+1. Citation (confidence > 90%)
+2. Party names (confidence > 80%, ≥1)
+3. Judge name (confidence > 80%, ≥1)
+4. Decision date (confidence > 90%)
+5. Court code (confidence > 95%)
+
+Optional Fields (bonus):
+- Legal sections
+- Bench strength
+- Case number
+
+Scoring:
+score = (critical_fields / 5) × 0.70 +
+        (avg_confidence) × 0.20 +
+        (optional_fields / 3) × 0.10
+
+Actions:
+- Score < 0.40: Reject
+- Score 0.40-0.70: Flag as medium quality
+- Score ≥ 0.70: PASS
+
+Target Pass Rate: 91%
+
+
+GATE #5: Overall Quality Score (Phase 3)
+──────────────────────────────────────────────────────────────────
+Location:    src/extractors/analysis/quality_analyzer.py
+Timing:      After Phase 3 complete analysis
+Purpose:     Comprehensive quality assessment
+
+5 Dimensions (from Phase 3):
+1. Completeness (weight 0.25)
+2. Citation Quality (weight 0.25)
+3. Text Quality (weight 0.20)
+4. Metadata Quality (weight 0.20)
+5. Consistency (weight 0.10)
+
+Quality-Based Routing:
+- EXCELLENT (0.85-1.00): Priority queue
+- GOOD (0.70-0.85): Normal queue
+- ACCEPTABLE (0.50-0.70): Low priority + flag
+- POOR (< 0.50): Manual review queue
+
+Actions:
+- Score < 0.50: Manual review
+- Score 0.50-0.70: Low priority processing
+- Score ≥ 0.70: PASS
+
+Target Pass Rate: 92%
+
+
+GATE #6: Schema & Business Rules Validation
+──────────────────────────────────────────────────────────────────
+Location:    src/quality/schema_validator.py
+Timing:      Before database save
+Purpose:     Ensure data meets requirements
+
+Schema Validation (Pydantic):
+- All required fields present
+- Correct data types
+- Format validation (regex)
+- Value ranges valid
+
+Business Rules (7 rules):
+1. decision_date ≤ filing_date
+2. Court code matches citation
+3. Party names not empty
+4. Citation format valid
+5. Subject code matches keywords
+6. No duplicate global_id
+7. No duplicate content hash
+
+Deduplication:
+- SHA-256 hash check
+- Bloom filter (fast, O(1))
+- Database verification
+
+Actions:
+- Duplicate: Skip (not error)
+- Schema fail: Correction queue
+- Business rule fail: Flag if score ≥ 0.60
+
+Target Pass Rate: 97%
+
+
+GATE #7: Database Transaction Integrity
+──────────────────────────────────────────────────────────────────
+Location:    src/database/connection.py
+Timing:      During database save
+Purpose:     Ensure ACID transaction succeeds
+
+PostgreSQL Transaction:
+BEGIN TRANSACTION
+  1. Insert document
+  2. Insert parties (batch)
+  3. Insert judges (batch)
+  4. Insert citations (batch)
+  5. Insert content + tsvector
+  6. Insert quality_scores
+  7. Insert extraction_metadata
+COMMIT (or ROLLBACK on error)
+
+Post-Save Verification:
+- Read document back
+- Verify foreign keys
+- Check tsvector created
+
+Actions:
+- Success: PASS
+- Failure: Auto-rollback, retry 3x
+- Persistent fail: Manual review
+
+Target Pass Rate: 99%
+
+
+GATE #8: Google Drive Upload Verification
+──────────────────────────────────────────────────────────────────
+Location:    src/integration/drive_uploader.py
+Timing:      After Drive upload
+Purpose:     Verify upload integrity
+
+Pre-Upload:
+- File exists locally
+- Size matches database
+- Hash matches database
+
+Upload Process:
+- Batch: 50 PDFs at once
+- Retry: Exponential backoff
+- Quota: Track 750GB/day limit
+
+Post-Upload Verification:
+- Get Drive file ID
+- Download first 1KB
+- Compare checksums
+- Update DB with drive_url
+
+Actions:
+- Verification passes: Delete local file
+- Verification fails: Retry (max 5x)
+- Persistent fail: Keep local, alert
+
+Target Pass Rate: 98%
+
+
+================================================================================
+FINAL PERFORMANCE TARGETS
+================================================================================
+
+SINGLE-MACHINE PERFORMANCE TARGETS
+═══════════════════════════════════════════════════════════════
+
+Current Baseline:        500 docs/hour
+├─ 10 workers
+├─ 2 req/sec total
+├─ Selenium for all
+└─ SQLite
+
+After Stage 1 (Config):  5,000 docs/hour  (10X)
+├─ 100 workers
+├─ 200 req/sec (2/proxy × 100)
+├─ Direct HTTP for 90%
+└─ PostgreSQL
+
+After Stage 2 (Async):   25,000 docs/hour (5X)
+├─ aiohttp non-blocking
+├─ Connection pooling
+├─ HTTP/2 multiplexing
+└─ Async DB writes
+
+After Stage 3 (Optimize): 50,000 docs/hour (2X)
+├─ Circuit breaker
+├─ Adaptive rate limiting
+├─ Batch DB operations
+└─ Deduplication
+
+After Stage 4 (Complete): 60,000 docs/hour (1.2X)
+├─ Extraction pipeline
+├─ Drive uploads
+├─ Monitoring tuning
+└─ Production hardening
+
+═══════════════════════════════════════════════════════════════
+FINAL TARGET: 60,000 documents/hour (120X improvement)
+TIME TO COMPLETE 1.4M DOCS: 23-24 hours (vs current 2,800)
+═══════════════════════════════════════════════════════════════
+
+QUALITY TARGETS:
+═══════════════════════════════════════════════════════════════
+Average Quality Score:     0.85 (target > 0.80)
+Rejection Rate:            3% (target < 5%)
+
+Quality Distribution:
+├─ Excellent (0.85-1.0):   40%
+├─ Good (0.70-0.85):       35%
+├─ Acceptable (0.50-0.70): 20%
+└─ Poor (< 0.50):          5% (rejected)
+
+Quality Gates Pass Rates:
+├─ Gate #1: 99% (HTTP response)
+├─ Gate #2: 98% (PDF integrity)
+├─ Gate #3: 95% (Text quality)
+├─ Gate #4: 91% (Metadata)
+├─ Gate #5: 92% (Overall quality)
+├─ Gate #6: 97% (Validation)
+├─ Gate #7: 99% (DB transaction)
+└─ Gate #8: 98% (Drive upload)
+
+═══════════════════════════════════════════════════════════════
+RESULT: Fast AND high-quality data collection
+        95%+ confidence in data integrity
+        Full traceability and monitoring
+═══════════════════════════════════════════════════════════════
+
+
+================================================================================
+END OF PHASE 4 DETAILED PLAN
+================================================================================

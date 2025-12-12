@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: legal_rag_postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: legal_rag_user
+      POSTGRES_PASSWORD: secure_rag_password_2024
+      POSTGRES_DB: legal_rag_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8"
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+    ports:
+      - "5433:5432"  # Map to 5433 to avoid conflicts
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U legal_rag_user -d legal_rag_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=256MB"           # Memory for caching
+      - "-c"
+      - "effective_cache_size=1GB"       # Expected cache size
+      - "-c"
+      - "maintenance_work_mem=64MB"      # For vacuum, index creation
+      - "-c"
+      - "checkpoint_completion_target=0.9"
+      - "-c"
+      - "wal_buffers=16MB"
+      - "-c"
+      - "default_statistics_target=100"
+      - "-c"
+      - "random_page_cost=1.1"           # SSD optimization
+      - "-c"
+      - "effective_io_concurrency=200"   # SSD optimization
+      - "-c"
+      - "work_mem=4MB"                   # Per-operation memory
+      - "-c"
+      - "min_wal_size=1GB"
+      - "-c"
+      - "max_wal_size=4GB"
+      - "-c"
+      - "max_connections=100"
+      - "-c"
+      - "log_min_duration_statement=1000" # Log slow queries (1s+)
+
+    networks:
+      - legal_rag_network
+
+  # PgAdmin (optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: legal_rag_pgadmin
+    restart: unless-stopped
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@legalrag.local
+      PGADMIN_DEFAULT_PASSWORD: admin_password_2024
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+
+    ports:
+      - "5050:80"
+
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+    depends_on:
+      - postgres
+
+    networks:
+      - legal_rag_network
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  legal_rag_network:
+    driver: bridge

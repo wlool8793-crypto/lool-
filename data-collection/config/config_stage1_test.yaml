@@ -65,7 +65,7 @@ google_drive:
 # ============================================================================
 database:
   # PostgreSQL (PHASE 4: Production scale with async support)
-  url: "postgresql://indiankanoon_user:secure_pass_2024@localhost:5432/indiankanoon"
+  url: "sqlite:///data/indiankanoon.db"  # Using SQLite for Stage 1 testing
 
   # SQLite (fallback for development only)
   # url: "sqlite:///data/indiankanoon_production.db"
