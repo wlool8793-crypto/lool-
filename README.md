@@ -42,7 +42,7 @@ Full-service AI law firm powered by **Google Gemini 2.5 Pro** with specialized l
 ```bash
 cd lawbrain
 pip install -r requirements.txt
-langgraph dev
+langgpraph dev
 ```
 
 **Documentation:** See [lawbrain/README.md](lawbrain/README.md)
@@ -160,6 +160,7 @@ npm run dev
 - **LangGraph** - Agent orchestration and workflows
 - **Google Gemini 2.5 Pro** - Language model
 - **LangChain** - LLM application framework
+
 - **RAG** - Retrieval-Augmented Generation
 
 ### Databases
